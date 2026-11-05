@@ -1,19 +1,6 @@
 use crate::internal::*;
 
 #[test]
-fn sign_and_verify() {
-    let ts = 1_700_000_000;
-    let sig = sign("s3cret", ts, "post", "/internal/v1/x?a=1", b"{}");
-    assert!(verify("s3cret", &ts.to_string(), &sig, "POST", "/internal/v1/x?a=1", b"{}", ts + 10));
-    // wrong secret / body / path / too old
-    assert!(!verify("other", &ts.to_string(), &sig, "POST", "/internal/v1/x?a=1", b"{}", ts));
-    assert!(!verify("s3cret", &ts.to_string(), &sig, "POST", "/internal/v1/x?a=1", b"{ }", ts));
-    assert!(!verify("s3cret", &ts.to_string(), &sig, "POST", "/internal/v1/y", b"{}", ts));
-    assert!(!verify("s3cret", &ts.to_string(), &sig, "POST", "/internal/v1/x?a=1", b"{}", ts + 1000));
-    assert!(!verify("s3cret", "garbage", &sig, "POST", "/internal/v1/x?a=1", b"{}", ts));
-}
-
-#[test]
 fn domains_normalise() {
     assert_eq!(normalize_domain("https://www.Co-Lan.vn/abc?x").as_deref(), Some("www.co-lan.vn"));
     assert_eq!(normalize_domain("colan.vn:443").as_deref(), Some("colan.vn"));

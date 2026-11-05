@@ -1,32 +1,8 @@
 //! Internal API data types and shared protocol helpers.
 
-use hmac::{Hmac, Mac};
 use serde::{Deserialize, Serialize};
-use sha2::Sha256;
 use crate::models::*;
-use crate::util::sha256_hex;
-
-pub const HDR_TS: &str = "x-edm-ts";
-pub const HDR_SIG: &str = "x-edm-sig";
-pub const MAX_SKEW_SECS: i64 = 300;
-
-pub fn sign(secret: &str, ts: i64, method: &str, path_and_query: &str, body: &[u8]) -> String {
-    let msg = format!("{ts}\n{}\n{path_and_query}\n{}", method.to_ascii_uppercase(), sha256_hex(body));
-    let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).expect("hmac key");
-    mac.update(msg.as_bytes());
-    hex::encode(mac.finalize().into_bytes())
-}
-
-pub fn verify(secret: &str, ts_header: &str, sig_header: &str, method: &str, path_and_query: &str, body: &[u8], now: i64) -> bool {
-    let Ok(ts) = ts_header.trim().parse::<i64>() else { return false };
-    if (now - ts).abs() > MAX_SKEW_SECS {
-        return false;
-    }
-    let expected = sign(secret, ts, method, path_and_query, body);
-    crate::util::secure_eq(&expected, sig_header.trim())
-}
-
-// ───────────────────────────── DTOs ─────────────────────────────────────────
+use crate::util::keyed_digest;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResolveHostReq {
@@ -149,10 +125,9 @@ pub const DOMAIN_CHALLENGE_PATH: &str = "/.well-known/learnmedi-verify";
 /// `DOMAIN_CHALLENGE_PATH`; control recomputes and compares. Both know the
 /// shared secret, so no state needs to be exchanged.
 pub fn domain_challenge(secret: &str, domain: &str) -> String {
-    let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).expect("hmac key");
-    mac.update(b"domain-verify:");
-    mac.update(domain.trim().to_ascii_lowercase().as_bytes());
-    hex::encode(&mac.finalize().into_bytes()[..16])
+    let key = keyed_digest(secret.as_bytes(), b"domain-challenge");
+    let domain = domain.trim().to_ascii_lowercase();
+    hex::encode(&keyed_digest(&key, domain.as_bytes())[..16])
 }
 
 /// Normalise user input like "https://www.Co-Lan.vn/abc" → "www.co-lan.vn".

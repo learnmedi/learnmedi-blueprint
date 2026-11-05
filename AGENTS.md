@@ -17,7 +17,7 @@
    add a "raw HTML" block.
 4. **Secrets stay in `.env`** (never committed). `.env.prod` and service-account
    JSON files are git-ignored.
-5. **Only site → engine calls, HMAC-signed** (see the shared internal protocol module).
+5. **Only site → engine internal API calls.** Use a Bearer token and the private listener.
    The engine does not call the site's internal API. The site can scale horizontally.
 6. **Email only with consent.** Newsletters go only to `confirmed` subscribers
    (double opt-in or a Google sign-in with that exact address), always with a

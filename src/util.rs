@@ -191,3 +191,13 @@ pub fn strip_port(host: &str) -> &str {
         _ => host,
     }
 }
+
+/// Derive a purpose-specific key or authenticate bytes with an existing key.
+pub fn keyed_digest(key: &[u8], bytes: &[u8]) -> [u8; 32] {
+    use hmac::{Hmac, Mac};
+    use sha2::Sha256;
+
+    let mut mac = Hmac::<Sha256>::new_from_slice(key).expect("valid key length");
+    mac.update(bytes);
+    mac.finalize().into_bytes().into()
+}
