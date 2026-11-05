@@ -85,7 +85,9 @@ pub struct SiteRecord {
     pub custom_domains: Vec<CustomDomain>,
     /// Monthly AI token budget; None = platform default.
     #[serde(default)]
-    pub ai_monthly_token_limit: Option<i64>,
+    /// AI credits per month (USD cost × `ai_credits_per_usd`). None = platform default.
+    #[serde(alias = "ai_monthly_token_limit")]
+    pub ai_monthly_credit_limit: Option<i64>,
     /// Starter template used when the sites service first seeds content.
     #[serde(default)]
     pub template: String,
