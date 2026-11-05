@@ -81,11 +81,3 @@ fn prompt_catalog_mentions_every_type() {
     }
 }
 
-#[test]
-fn templates_build() {
-    for (t, _) in crate::templates::TEMPLATES {
-        let (_, pages) = crate::templates::seed(t, "site1", "Cô Lan");
-        assert!(!pages.is_empty());
-        assert!(pages.iter().any(|p| p.slug.is_empty()), "{t} has a home page");
-    }
-}

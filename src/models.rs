@@ -154,3 +154,25 @@ pub struct Order {
     #[serde(default)]
     pub ts_paid: i64,
 }
+
+/// Money the platform owes each teacher site (platform collects, pays out later).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LedgerEntry {
+    #[serde(rename = "_id")]
+    pub id: String,
+    pub site_id: String,
+    /// `sale` (credit) | `payout` (debit) | `adjust`
+    pub kind: String,
+    #[serde(default)]
+    pub order_id: Option<String>,
+    pub gross_vnd: i64,
+    pub fee_vnd: i64,
+    /// Positive = platform owes the teacher more; negative = paid out.
+    pub net_vnd: i64,
+    #[serde(default)]
+    pub note: String,
+    #[serde(default)]
+    pub actor_id: String,
+    pub ts: i64,
+}
+

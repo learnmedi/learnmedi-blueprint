@@ -139,6 +139,9 @@ pub struct UsageSummary {
     pub used: i64,
     pub limit: i64,
     pub calls: i64,
+    pub by_user: Vec<(String, i64)>,
+}
+
 /// Path the control service fetches on a custom domain to prove it points at us.
 pub const DOMAIN_CHALLENGE_PATH: &str = "/.well-known/learnmedi-verify";
 
