@@ -15,6 +15,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value, json};
 
+use crate::tabs::{BlockGroup, COLLECTION_TEMPLATES, TAB_KINDS};
 use crate::theme::{ANIMATIONS, normalize_color};
 
 // ───────────────────────────── Data ─────────────────────────────────────────
@@ -125,6 +126,7 @@ pub struct Field {
 
 #[derive(Debug)]
 pub struct BlockType {
+    pub group: BlockGroup,
     pub key: &'static str,
     pub label: &'static str,
     pub description: &'static str,
@@ -212,6 +214,7 @@ const QUOTE_ITEM: &[Field] = &[req("text", "Lời trích", md(800), "\"\""), f("
 
 pub static REGISTRY: &[BlockType] = &[
     BlockType {
+        group: BlockGroup::Presentation,
         key: "hero",
         label: "Banner đầu trang",
         description: "Phần mở đầu lớn: dòng nhỏ, tiêu đề lớn, mô tả, các vai trò dạng nhãn, câu trích, nút bấm và 1–2 ảnh. Layout split (chữ bên trái, ảnh bên phải) giống tranhoangyen.com.",
@@ -232,6 +235,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "heading",
         label: "Tiêu đề mục",
         description: "Đầu một mục: dòng nhỏ + tiêu đề + đoạn mô tả. Layout 'split' đặt mô tả bên phải tiêu đề.",
@@ -244,12 +248,14 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "text",
         label: "Đoạn văn",
         description: "Văn bản dài định dạng Markdown (tiêu đề ##, danh sách, **đậm**, *nghiêng*, liên kết).",
         fields: &[req("body", "Nội dung (Markdown)", md(20000), "\"Nội dung…\""), f("lead", "Chữ to (đoạn mở đầu)", Kind::Bool, "false")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "image",
         label: "Ảnh",
         description: "Một ảnh, có chú thích và liên kết tuỳ chọn.",
@@ -263,6 +269,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "gallery",
         label: "Bộ sưu tập ảnh",
         description: "Lưới nhiều ảnh.",
@@ -273,6 +280,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "media_text",
         label: "Ảnh + chữ",
         description: "Một câu chuyện: tiêu đề, đoạn văn, câu trích và 1–3 ảnh ghép bên cạnh (trái/phải). Dùng cho 'Về tôi', 'Câu chuyện'.",
@@ -288,6 +296,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "features",
         label: "Lưới điểm nổi bật",
         description: "2–4 cột, mỗi ô có biểu tượng, tiêu đề, mô tả, liên kết. Ví dụ 'Bốn thế giới, một mục đích'.",
@@ -298,6 +307,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "cards",
         label: "Thẻ (sách, sản phẩm, dự án)",
         description: "Lưới thẻ có ảnh bìa, dòng nhỏ, tiêu đề, mô tả, thông tin phụ (giá) và nút. Dùng cho sách, dự án, tài liệu.",
@@ -308,18 +318,21 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "rows",
         label: "Danh sách hàng ngang",
         description: "Danh sách có số thứ tự lớn (i., ii., 01…), tiêu đề, mô tả và nhãn bên phải — như danh sách sản phẩm/dự án.",
         fields: &[req("items", "Các hàng", Kind::List { item: ROW_ITEM, max: 30 }, "[]")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "buttons",
         label: "Hàng nút",
         description: "Một hoặc nhiều nút bấm.",
         fields: &[req("buttons", "Nút", Kind::List { item: BUTTON_FIELDS, max: 6 }, "[]")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "cta",
         label: "Kêu gọi hành động",
         description: "Dải nổi bật: tiêu đề + mô tả + nút (vd 'Liên hệ hợp tác', 'Đăng ký khoá học').",
@@ -332,24 +345,28 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "quote",
         label: "Trích dẫn",
         description: "Một hoặc nhiều câu trích dẫn lớn (phương châm, cảm nhận học sinh có thật).",
         fields: &[req("items", "Trích dẫn", Kind::List { item: QUOTE_ITEM, max: 6 }, "[]")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "video",
         label: "Video",
         description: "Video YouTube/Vimeo hoặc video tải lên.",
         fields: &[req("video", "Video (link YouTube/Vimeo hoặc video tải lên)", Kind::Video, "\"\""), f("caption", "Chú thích", text(300), "\"\"")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "stats",
         label: "Con số ấn tượng",
         description: "Hàng các con số + nhãn (vd 15 năm giảng dạy).",
         fields: &[req("items", "Con số", Kind::List { item: STAT_ITEM, max: 6 }, "[]")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "timeline",
         label: "Dòng thời gian / danh sách công trình",
         description: "Các mốc thời gian hoặc danh sách bài báo, công trình (thời gian, tiêu đề, mô tả, nhãn trạng thái).",
@@ -359,12 +376,14 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "faq",
         label: "Hỏi đáp",
         description: "Câu hỏi thường gặp (mở/đóng).",
         fields: &[req("items", "Câu hỏi", Kind::List { item: FAQ_ITEM, max: 40 }, "[]")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "contact",
         label: "Liên hệ",
         description: "Thông tin liên hệ: email, điện thoại, địa chỉ, các liên kết mạng xã hội.",
@@ -378,8 +397,45 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        key: "blog_index", group: BlockGroup::Core, label: "Blog",
+        description: "Khối chính của tab Blog.",
+        fields: &[
+            f("layout", "Kiểu", Kind::Select(&["grid","list"]), "\"grid\""),
+            f("per_page", "Số bài mỗi trang", Kind::Number { min: 1.0, max: 50.0 }, "12"),
+            f("show_tags_filter", "Lọc thẻ", Kind::Bool, "true"),
+            f("show_excerpt", "Hiện tóm tắt", Kind::Bool, "true"),
+        ],
+    },
+    BlockType {
+        key: "course_index", group: BlockGroup::Core, label: "Khoá học",
+        description: "Khối chính của tab Khoá học.",
+        fields: &[
+            f("layout", "Kiểu", Kind::Select(&["grid","list"]), "\"grid\""),
+            f("show_price", "Hiện giá", Kind::Bool, "true"),
+        ],
+    },
+    BlockType {
+        key: "collection_index", group: BlockGroup::Core, label: "Danh mục",
+        description: "Khối chính của tab Danh mục.",
+        fields: &[
+            f("layout", "Kiểu", Kind::Select(&["timeline","cards","table"]), "\"timeline\""),
+            f("group_by_year", "Nhóm theo năm", Kind::Bool, "true"),
+            f("show_filters", "Hiện bộ lọc", Kind::Bool, "true"),
+        ],
+    },
+    BlockType {
+        key: "collection_list", group: BlockGroup::Excerpt, label: "Mục danh mục mới",
+        description: "Trích các mục mới nhất của một tab Danh mục.",
+        fields: &[
+            f("title", "Tiêu đề", title(160), "\"Mục mới\""),
+            f("page_id", "Tab danh mục (id hoặc slug)", text(100), "\"\""),
+            f("limit", "Số mục", Kind::Number { min: 1.0, max: 24.0 }, "3"),
+        ],
+    },
+    BlockType {
+        group: BlockGroup::Excerpt,
         key: "post_list",
-        label: "Danh sách bài viết",
+        label: "Bài viết mới nhất",
         description: "Tự động hiện các bài viết đã xuất bản mới nhất.",
         fields: &[
             f("title", "Tiêu đề", title(160), "\"Bài viết mới\""),
@@ -389,8 +445,9 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Excerpt,
         key: "course_list",
-        label: "Danh sách khoá học",
+        label: "Khoá học mới nhất",
         description: "Tự động hiện các khoá học đã xuất bản, có giá và nút đăng ký.",
         fields: &[
             f("title", "Tiêu đề", title(160), "\"Khoá học\""),
@@ -399,6 +456,7 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "subscribe",
         label: "Đăng ký nhận tin",
         description: "Ô nhập email để khách đăng ký nhận bản tin của site (xác nhận qua email).",
@@ -414,12 +472,14 @@ pub static REGISTRY: &[BlockType] = &[
         ],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "divider",
         label: "Đường kẻ",
         description: "Đường phân cách giữa các mục.",
         fields: &[f("variant", "Kiểu", Kind::Select(&["line", "dots", "wave"]), "\"line\"")],
     },
     BlockType {
+        group: BlockGroup::Presentation,
         key: "spacer",
         label: "Khoảng trống",
         description: "Khoảng trống dọc.",
@@ -706,13 +766,15 @@ fn fields_json(fields: &[Field]) -> Value {
 pub fn registry_json() -> Value {
     json!({
         "types": REGISTRY.iter().map(|b| json!({
-            "key": b.key, "label": b.label, "description": b.description, "fields": fields_json(b.fields)
+            "key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(b.fields)
         })).collect::<Vec<_>>(),
         "style": {
             "padding": PADDINGS, "align": ALIGNS, "width": WIDTHS, "animation": ANIMATIONS,
             "colors": crate::theme::COLOR_TOKENS,
         },
         "icons": ICONS,
+        "tab_kinds": TAB_KINDS,
+        "collection_templates": COLLECTION_TEMPLATES,
     })
 }
 
@@ -755,5 +817,5 @@ pub fn catalog_for_prompt() -> String {
 
 /// Detailed schema of one type (AI tool `get_block_schema`).
 pub fn type_schema_json(key: &str) -> Option<Value> {
-    block_type(key).map(|b| json!({"key": b.key, "label": b.label, "description": b.description, "fields": fields_json(b.fields), "example_props": default_props(b)}))
+    block_type(key).map(|b| json!({"key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(b.fields), "example_props": default_props(b)}))
 }

@@ -5,6 +5,7 @@ pub mod error;
 pub mod internal;
 pub mod models;
 pub mod templates;
+pub mod tabs;
 pub mod theme;
 pub mod util;
 
