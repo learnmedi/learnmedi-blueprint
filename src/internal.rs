@@ -179,10 +179,6 @@ pub fn validate_slug(slug: &str) -> Result<(), String> {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(default)]
 pub struct SiteSettings {
-    pub mail_from_email: String,
-    pub mail_from_name: String,
-    pub mail_log_only: bool,
-    pub newsletter_daily_limit: i64,
     pub openai_model: String,
     pub ai_session_max_tokens: i64,
     pub ai_session_max_user_turns: usize,
@@ -195,10 +191,6 @@ pub struct SiteSettings {
 impl Default for SiteSettings {
     fn default() -> Self {
         Self {
-            mail_from_email: "no-reply@learnmedi.com".into(),
-            mail_from_name: "Learnmedi".into(),
-            mail_log_only: true,
-            newsletter_daily_limit: 300,
             openai_model: "gpt-4.1-mini".into(),
             ai_session_max_tokens: 200000,
             ai_session_max_user_turns: 20,
