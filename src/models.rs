@@ -16,6 +16,10 @@ pub struct User {
     #[serde(rename = "_id")]
     pub id: String,
     pub email: String,
+    #[serde(default)]
+    pub email_verified: bool,
+    #[serde(default)]
+    pub session_version: i64,
     pub name: String,
     #[serde(default)]
     pub picture: Option<String>,
@@ -175,4 +179,3 @@ pub struct LedgerEntry {
     pub actor_id: String,
     pub ts: i64,
 }
-

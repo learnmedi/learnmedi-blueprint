@@ -209,3 +209,26 @@ impl Default for SiteSettings {
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ValidateSessionReq {
+    pub user_id: String,
+    pub version: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum MembershipKind {
+    Student,
+    Monitor,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MembershipUpdate {
+    pub user_id: String,
+    pub site_id: String,
+    pub kind: MembershipKind,
+    pub active: bool,
+    #[serde(default)]
+    pub revision: i64,
+}
