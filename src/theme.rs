@@ -196,6 +196,7 @@ fn set_enum(slot: &mut String, val: &Value, allowed: &[&str], key: &str, changes
     Ok(())
 }
 
+/// Machine-readable description for the AI prompt / editor.
 pub fn schema_json() -> Value {
     json!({
         "presets": PRESETS.iter().map(|p| json!({"key": p.key, "label": p.label})).collect::<Vec<_>>(),

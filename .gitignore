@@ -1,5 +1,11 @@
+/target
 .env
 .env.*
 !.env.example
-/target
+*.service-account.json
+gcs-service-account*.json
+dev_uploads/
+.idea/
+.DS_Store
+.sync-bundle*.tar.gz
 *.json.key
