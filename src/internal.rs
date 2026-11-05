@@ -186,6 +186,8 @@ pub struct SiteSettings {
     pub max_upload_bytes: i64,
     pub max_video_bytes: i64,
     pub max_student_upload_bytes: i64,
+    /// Storage each user may fill across all their uploads.
+    pub user_storage_bytes: i64,
 }
 
 impl Default for SiteSettings {
@@ -198,6 +200,7 @@ impl Default for SiteSettings {
             max_upload_bytes: 26214400,
             max_video_bytes: 2147483648,
             max_student_upload_bytes: 20971520,
+            user_storage_bytes: 1073741824,
         }
     }
 }
