@@ -17,8 +17,8 @@
    add a "raw HTML" block.
 4. **Secrets stay in `.env`** (never committed). `.env.prod` and service-account
    JSON files are git-ignored.
-5. **Only sites → control calls, HMAC-signed** (`the shared internal protocol module`).
-   Control never calls sites servers, so sites can scale horizontally.
+5. **Only site → engine calls, HMAC-signed** (see the shared internal protocol module).
+   The engine does not call the site's internal API. The site can scale horizontally.
 6. **Email only with consent.** Newsletters go only to `confirmed` subscribers
    (double opt-in or a Google sign-in with that exact address), always with a
    personal unsubscribe link, and count against the site's daily quota
