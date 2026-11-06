@@ -227,3 +227,32 @@ pub struct MembershipUpdate {
     #[serde(default)]
     pub revision: i64,
 }
+
+/// `POST /internal/v1/api-tokens/verify` request.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VerifyTokenReq {
+    pub token: String,
+    pub site_id: String,
+}
+
+/// Who an API token acts as on a site.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VerifyTokenResp {
+    pub user: User,
+    /// Set for a share-link token: it ends at this time (ms) and may only edit
+    /// layout and content (never courses, quizzes, classes, newsletters or money).
+    pub share_expires_at: Option<i64>,
+}
+
+/// `POST /internal/v1/share-tokens`: a share-link token for a staff member of a site.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CreateShareTokenReq {
+    pub site_id: String,
+    pub user_id: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CreateShareTokenResp {
+    pub token: String,
+    pub expires_at: i64,
+}
