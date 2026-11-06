@@ -80,7 +80,8 @@ fn t(colors: [&str; 6], heading: &str, body: &str, radius: &str, header: &str, b
 
 pub const PRESETS: &[Preset] = &[
     // Warm editorial look, inspired by tranhoangyen.com (Fraunces + Be Vietnam Pro).
-    Preset { key: "swiftlet", label: "Swiftlet — ấm áp, biên tập", theme: || t(["#1f4d3a", "#c8793a", "#fbf7f0", "#ffffff", "#1d1b18", "#6b645a"], "Fraunces", "Be Vietnam Pro", "lg", "simple", "solid") },
+    // navy #14223f · sage-deep #47664f · paper #fbf8f2 · beige #f4ede1 · ink #1a2236 (tranhoangyen.com tokens)
+    Preset { key: "swiftlet", label: "Swiftlet — ấm áp, biên tập", theme: || t(["#14223f", "#47664f", "#fbf8f2", "#f4ede1", "#1a2236", "#5f6678"], "Fraunces", "Be Vietnam Pro", "lg", "simple", "solid") },
     Preset { key: "ocean", label: "Đại dương — xanh, hiện đại", theme: || t(["#1d4ed8", "#06b6d4", "#f8fafc", "#ffffff", "#0f172a", "#64748b"], "Montserrat", "Inter", "md", "simple", "solid") },
     Preset { key: "classroom", label: "Lớp học — tươi vui", theme: || t(["#7c3aed", "#f59e0b", "#fffdf7", "#ffffff", "#1f1b2e", "#6b6880"], "Quicksand", "Nunito", "pill", "centered", "soft") },
     Preset { key: "academic", label: "Học thuật — trang nhã", theme: || t(["#7f1d1d", "#b45309", "#fafaf9", "#ffffff", "#1c1917", "#57534e"], "Playfair Display", "Source Sans 3", "sm", "simple", "outline") },
