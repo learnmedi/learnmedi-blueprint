@@ -2,6 +2,7 @@
 
 pub mod blocks;
 pub mod error;
+pub mod i18n;
 pub mod internal;
 pub mod models;
 pub mod templates;
