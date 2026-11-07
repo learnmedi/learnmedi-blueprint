@@ -95,10 +95,11 @@ pub const WIDTHS: &[&str] = &["narrow", "normal", "wide", "full"];
 
 // ───────────────────────────── Schema ───────────────────────────────────────
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum Kind {
     /// Single line. `title` = accepts *emphasis*.
-    Text { max: usize, title: bool },
+    Text { max: usize, #[serde(default, rename = "emphasis")] title: bool },
     /// Markdown (headings, lists, links, bold…). Raw HTML is escaped.
     Markdown { max: usize },
     Url,
@@ -107,46 +108,32 @@ pub enum Kind {
     /// Asset id (uploaded video) or YouTube/Vimeo/https URL.
     Video,
     Color,
-    Select(&'static [&'static str]),
+    Select { options: Vec<String> },
     Number { min: f64, max: f64 },
     Bool,
     Icon,
-    List { item: &'static [Field], max: usize },
+    List { item: Vec<Field>, max: usize },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Field {
-    pub key: &'static str,
-    pub label: &'static str,
+    pub key: String,
+    pub label: String,
+    #[serde(flatten)]
     pub kind: Kind,
+    #[serde(default)]
     pub required: bool,
-    /// JSON literal.
-    pub default: &'static str,
+    pub default: Value,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct BlockType {
     pub group: BlockGroup,
-    pub key: &'static str,
-    pub label: &'static str,
-    pub description: &'static str,
-    pub fields: &'static [Field],
-}
-
-const fn f(key: &'static str, label: &'static str, kind: Kind, default: &'static str) -> Field {
-    Field { key, label, kind, required: false, default }
-}
-const fn req(key: &'static str, label: &'static str, kind: Kind, default: &'static str) -> Field {
-    Field { key, label, kind, required: true, default }
-}
-const fn text(max: usize) -> Kind {
-    Kind::Text { max, title: false }
-}
-const fn title(max: usize) -> Kind {
-    Kind::Text { max, title: true }
-}
-const fn md(max: usize) -> Kind {
-    Kind::Markdown { max }
+    pub key: String,
+    pub label: String,
+    pub description: String,
+    pub fields: Vec<Field>,
 }
 
 pub const ICONS: &[&str] = &[
@@ -154,372 +141,65 @@ pub const ICONS: &[&str] = &[
     "check", "calendar", "mail", "phone", "pin", "music", "code", "chart", "lightbulb", "child", "puzzle",
 ];
 
-pub const BUTTON_FIELDS: &[Field] = &[
-    req("label", "Chữ trên nút", text(60), "\"Xem thêm\""),
-    req("url", "Liên kết", Kind::Url, "\"#\""),
-    f("variant", "Kiểu", Kind::Select(&["primary", "secondary", "ghost"]), "\"primary\""),
-    f("new_tab", "Mở tab mới", Kind::Bool, "false"),
+const BLOCK_FILES: &[(&str, &str)] = &[
+    ("01-hero.yaml", include_str!("../ui/blocks/01-hero.yaml")),
+    ("02-heading.yaml", include_str!("../ui/blocks/02-heading.yaml")),
+    ("03-text.yaml", include_str!("../ui/blocks/03-text.yaml")),
+    ("04-image.yaml", include_str!("../ui/blocks/04-image.yaml")),
+    ("05-gallery.yaml", include_str!("../ui/blocks/05-gallery.yaml")),
+    ("06-media_text.yaml", include_str!("../ui/blocks/06-media_text.yaml")),
+    ("07-features.yaml", include_str!("../ui/blocks/07-features.yaml")),
+    ("08-cards.yaml", include_str!("../ui/blocks/08-cards.yaml")),
+    ("09-rows.yaml", include_str!("../ui/blocks/09-rows.yaml")),
+    ("10-buttons.yaml", include_str!("../ui/blocks/10-buttons.yaml")),
+    ("11-cta.yaml", include_str!("../ui/blocks/11-cta.yaml")),
+    ("12-quote.yaml", include_str!("../ui/blocks/12-quote.yaml")),
+    ("13-video.yaml", include_str!("../ui/blocks/13-video.yaml")),
+    ("14-stats.yaml", include_str!("../ui/blocks/14-stats.yaml")),
+    ("15-timeline.yaml", include_str!("../ui/blocks/15-timeline.yaml")),
+    ("16-faq.yaml", include_str!("../ui/blocks/16-faq.yaml")),
+    ("17-contact.yaml", include_str!("../ui/blocks/17-contact.yaml")),
+    ("18-blog_index.yaml", include_str!("../ui/blocks/18-blog_index.yaml")),
+    ("19-course_index.yaml", include_str!("../ui/blocks/19-course_index.yaml")),
+    ("20-collection_index.yaml", include_str!("../ui/blocks/20-collection_index.yaml")),
+    ("21-collection_list.yaml", include_str!("../ui/blocks/21-collection_list.yaml")),
+    ("22-post_list.yaml", include_str!("../ui/blocks/22-post_list.yaml")),
+    ("23-course_list.yaml", include_str!("../ui/blocks/23-course_list.yaml")),
+    ("24-subscribe.yaml", include_str!("../ui/blocks/24-subscribe.yaml")),
+    ("25-divider.yaml", include_str!("../ui/blocks/25-divider.yaml")),
+    ("26-spacer.yaml", include_str!("../ui/blocks/26-spacer.yaml")),
+    ("27-product_list.yaml", include_str!("../ui/blocks/27-product_list.yaml")),
 ];
 
-const IMAGE_ITEM: &[Field] = &[
-    req("image", "Ảnh", Kind::Image, "\"\""),
-    f("alt", "Mô tả ảnh (cho người khiếm thị/SEO)", text(200), "\"\""),
-    f("caption", "Chú thích", text(200), "\"\""),
-];
-
-const TAG_ITEM: &[Field] = &[req("text", "Nội dung", text(60), "\"\"")];
-
-const FEATURE_ITEM: &[Field] = &[
-    f("icon", "Biểu tượng", Kind::Icon, "\"star\""),
-    req("title", "Tiêu đề", title(120), "\"Tiêu đề\""),
-    f("body", "Nội dung", md(1200), "\"\""),
-    f("link", "Liên kết", Kind::Url, "\"\""),
-    f("link_label", "Chữ liên kết", text(60), "\"\""),
-];
-
-const CARD_ITEM: &[Field] = &[
-    f("image", "Ảnh", Kind::Image, "\"\""),
-    f("alt", "Mô tả ảnh", text(200), "\"\""),
-    f("kicker", "Dòng nhỏ phía trên", text(80), "\"\""),
-    req("title", "Tiêu đề", title(160), "\"Tiêu đề\""),
-    f("subtitle", "Mô tả ngắn", md(600), "\"\""),
-    f("meta", "Thông tin phụ (giá, định dạng…)", text(120), "\"\""),
-    f("link", "Liên kết", Kind::Url, "\"\""),
-    f("button_label", "Chữ nút", text(60), "\"\""),
-];
-
-const ROW_ITEM: &[Field] = &[
-    f("index", "Số thứ tự hiển thị (i., 01…)", text(12), "\"\""),
-    req("title", "Tiêu đề", title(160), "\"Tiêu đề\""),
-    f("body", "Nội dung", md(1200), "\"\""),
-    f("badge", "Nhãn", text(60), "\"\""),
-    f("link", "Liên kết", Kind::Url, "\"\""),
-];
-
-const STAT_ITEM: &[Field] = &[req("value", "Con số", text(30), "\"100+\""), req("label", "Nhãn", text(120), "\"học sinh\"")];
-
-const TIMELINE_ITEM: &[Field] = &[
-    f("date", "Thời gian", text(60), "\"\""),
-    req("title", "Tiêu đề", title(200), "\"Sự kiện\""),
-    f("body", "Nội dung", md(1500), "\"\""),
-    f("badge", "Nhãn (vd: Đã xuất bản)", text(60), "\"\""),
-    f("link", "Liên kết", Kind::Url, "\"\""),
-];
-
-const FAQ_ITEM: &[Field] = &[req("question", "Câu hỏi", text(300), "\"Câu hỏi?\""), req("answer", "Trả lời", md(3000), "\"\"")];
-
-const LINK_ITEM: &[Field] = &[req("label", "Tên", text(80), "\"\""), req("url", "Liên kết", Kind::Url, "\"\"")];
-
-const QUOTE_ITEM: &[Field] = &[req("text", "Lời trích", md(800), "\"\""), f("author", "Người nói", text(120), "\"\""), f("role", "Vai trò", text(120), "\"\"")];
-
-pub static REGISTRY: &[BlockType] = &[
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "hero",
-        label: "Banner đầu trang",
-        description: "Phần mở đầu lớn: dòng nhỏ, tiêu đề lớn, mô tả, các vai trò dạng nhãn, câu trích, nút bấm và 1–2 ảnh. Layout split (chữ bên trái, ảnh bên phải) giống tranhoangyen.com.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ phía trên", text(80), "\"\""),
-            req("title", "Tiêu đề lớn", title(160), "\"Xin chào, tôi là …\""),
-            f("title_line2", "Dòng 2 của tiêu đề (vd tên tách hai dòng)", title(120), "\"\""),
-            f("subtitle", "Dòng phụ dưới tiêu đề", text(160), "\"\""),
-            f("body", "Đoạn giới thiệu", md(1500), "\"\""),
-            f("tags", "Nhãn vai trò", Kind::List { item: TAG_ITEM, max: 8 }, "[]"),
-            f("quote", "Câu trích (in nghiêng)", text(300), "\"\""),
-            f("buttons", "Nút bấm", Kind::List { item: BUTTON_FIELDS, max: 3 }, "[]"),
-            f("image", "Ảnh chính", Kind::Image, "\"\""),
-            f("image_alt", "Mô tả ảnh chính", text(200), "\"\""),
-            f("image_secondary", "Ảnh phụ (nhỏ, chồng lên)", Kind::Image, "\"\""),
-            f("image_secondary_alt", "Mô tả ảnh phụ", text(200), "\"\""),
-            f("badges", "Nhãn nổi trên ảnh", Kind::List { item: TAG_ITEM, max: 3 }, "[]"),
-            f("layout", "Bố cục", Kind::Select(&["split", "split-reverse", "centered"]), "\"split\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "heading",
-        label: "Tiêu đề mục",
-        description: "Đầu một mục: dòng nhỏ + tiêu đề + đoạn mô tả. Layout 'split' đặt mô tả bên phải tiêu đề.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ", text(80), "\"\""),
-            req("title", "Tiêu đề", title(200), "\"Tiêu đề mục\""),
-            f("body", "Mô tả", md(1500), "\"\""),
-            f("level", "Cấp", Kind::Select(&["h1", "h2", "h3"]), "\"h2\""),
-            f("layout", "Bố cục", Kind::Select(&["stacked", "split"]), "\"stacked\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "text",
-        label: "Đoạn văn",
-        description: "Văn bản dài định dạng Markdown (tiêu đề ##, danh sách, **đậm**, *nghiêng*, liên kết).",
-        fields: &[req("body", "Nội dung (Markdown)", md(20000), "\"Nội dung…\""), f("lead", "Chữ to (đoạn mở đầu)", Kind::Bool, "false")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "image",
-        label: "Ảnh",
-        description: "Một ảnh, có chú thích và liên kết tuỳ chọn.",
-        fields: &[
-            req("image", "Ảnh", Kind::Image, "\"\""),
-            f("alt", "Mô tả ảnh", text(200), "\"\""),
-            f("caption", "Chú thích", text(300), "\"\""),
-            f("link", "Liên kết khi bấm", Kind::Url, "\"\""),
-            f("size", "Kích thước", Kind::Select(&["small", "medium", "large", "full"]), "\"large\""),
-            f("rounded", "Bo góc", Kind::Bool, "true"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "gallery",
-        label: "Bộ sưu tập ảnh",
-        description: "Lưới nhiều ảnh.",
-        fields: &[
-            req("images", "Ảnh", Kind::List { item: IMAGE_ITEM, max: 30 }, "[]"),
-            f("columns", "Số cột", Kind::Number { min: 2.0, max: 5.0 }, "3"),
-            f("style", "Kiểu", Kind::Select(&["grid", "masonry", "collage"]), "\"grid\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "media_text",
-        label: "Ảnh + chữ",
-        description: "Một câu chuyện: tiêu đề, đoạn văn, câu trích và 1–3 ảnh ghép bên cạnh (trái/phải). Dùng cho 'Về tôi', 'Câu chuyện'.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ", text(80), "\"\""),
-            req("title", "Tiêu đề", title(200), "\"Câu chuyện của tôi\""),
-            f("body", "Nội dung", md(5000), "\"\""),
-            f("quote", "Câu trích", text(400), "\"\""),
-            f("quote_author", "Ký tên câu trích", text(120), "\"\""),
-            f("images", "Ảnh (1–3)", Kind::List { item: IMAGE_ITEM, max: 3 }, "[]"),
-            f("image_side", "Ảnh nằm bên", Kind::Select(&["left", "right"]), "\"left\""),
-            f("buttons", "Nút", Kind::List { item: BUTTON_FIELDS, max: 3 }, "[]"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "features",
-        label: "Lưới điểm nổi bật",
-        description: "2–4 cột, mỗi ô có biểu tượng, tiêu đề, mô tả, liên kết. Có thể kèm tiêu đề mục (eyebrow/title/intro) ngay trong khối. numbered=true hiện số 01, 02… lớn và biểu tượng góc phải, như 'Bốn thế giới, một mục đích'.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ của mục", text(80), "\"\""),
-            f("title", "Tiêu đề mục", title(200), "\"\""),
-            f("intro", "Mô tả mục (bên phải tiêu đề)", md(1000), "\"\""),
-            req("items", "Các ô", Kind::List { item: FEATURE_ITEM, max: 12 }, "[]"),
-            f("columns", "Số cột", Kind::Number { min: 1.0, max: 4.0 }, "4"),
-            f("card", "Hiện dạng thẻ", Kind::Bool, "true"),
-            f("numbered", "Đánh số 01, 02…", Kind::Bool, "false"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "cards",
-        label: "Thẻ (sách, sản phẩm, dự án)",
-        description: "Lưới thẻ có ảnh bìa, dòng nhỏ, tiêu đề, mô tả, thông tin phụ (giá) và nút. Dùng cho sách, dự án, tài liệu. image_ratio=cover hiện bìa sách nguyên vẹn (không cắt, có bóng). Có thể kèm tiêu đề mục và hàng nút bên dưới.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ của mục", text(80), "\"\""),
-            f("title", "Tiêu đề mục", title(200), "\"\""),
-            f("intro", "Mô tả mục (bên phải tiêu đề)", md(1000), "\"\""),
-            req("items", "Các thẻ", Kind::List { item: CARD_ITEM, max: 24 }, "[]"),
-            f("columns", "Số cột", Kind::Number { min: 1.0, max: 4.0 }, "3"),
-            f("image_ratio", "Tỉ lệ ảnh", Kind::Select(&["portrait", "square", "landscape", "cover"]), "\"portrait\""),
-            f("buttons", "Nút bên dưới", Kind::List { item: BUTTON_FIELDS, max: 3 }, "[]"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "rows",
-        label: "Danh sách hàng ngang",
-        description: "Danh sách có số thứ tự lớn (i., ii., 01…), tiêu đề, mô tả và nhãn bên phải — như danh sách sản phẩm/dự án. Có thể kèm tiêu đề mục; đặt style.background tối (vd #14223f) để có dải nền xanh đậm.",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ của mục", text(80), "\"\""),
-            f("title", "Tiêu đề mục", title(200), "\"\""),
-            f("intro", "Mô tả mục (bên phải tiêu đề)", md(1000), "\"\""),
-            req("items", "Các hàng", Kind::List { item: ROW_ITEM, max: 30 }, "[]"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "buttons",
-        label: "Hàng nút",
-        description: "Một hoặc nhiều nút bấm.",
-        fields: &[req("buttons", "Nút", Kind::List { item: BUTTON_FIELDS, max: 6 }, "[]")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "cta",
-        label: "Kêu gọi hành động",
-        description: "Dải nổi bật: tiêu đề + mô tả + nút (vd 'Liên hệ hợp tác', 'Đăng ký khoá học').",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ", text(80), "\"\""),
-            req("title", "Tiêu đề", title(200), "\"Cùng bắt đầu nhé\""),
-            f("body", "Mô tả", md(1000), "\"\""),
-            f("buttons", "Nút", Kind::List { item: BUTTON_FIELDS, max: 3 }, "[]"),
-            f("layout", "Bố cục", Kind::Select(&["split", "centered"]), "\"split\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "quote",
-        label: "Trích dẫn",
-        description: "Một hoặc nhiều câu trích dẫn lớn (phương châm, cảm nhận học sinh có thật).",
-        fields: &[req("items", "Trích dẫn", Kind::List { item: QUOTE_ITEM, max: 6 }, "[]")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "video",
-        label: "Video",
-        description: "Video YouTube/Vimeo hoặc video tải lên.",
-        fields: &[req("video", "Video (link YouTube/Vimeo hoặc video tải lên)", Kind::Video, "\"\""), f("caption", "Chú thích", text(300), "\"\"")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "stats",
-        label: "Con số ấn tượng",
-        description: "Hàng các con số + nhãn (vd 15 năm giảng dạy).",
-        fields: &[req("items", "Con số", Kind::List { item: STAT_ITEM, max: 6 }, "[]")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "timeline",
-        label: "Dòng thời gian / danh sách công trình",
-        description: "Các mốc thời gian hoặc danh sách bài báo, công trình (thời gian, tiêu đề, mô tả, nhãn trạng thái).",
-        fields: &[
-            req("items", "Mốc", Kind::List { item: TIMELINE_ITEM, max: 100 }, "[]"),
-            f("filterable", "Cho lọc theo nhãn", Kind::Bool, "false"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "faq",
-        label: "Hỏi đáp",
-        description: "Câu hỏi thường gặp (mở/đóng).",
-        fields: &[req("items", "Câu hỏi", Kind::List { item: FAQ_ITEM, max: 40 }, "[]")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "contact",
-        label: "Liên hệ",
-        description: "Thông tin liên hệ: email, điện thoại, địa chỉ, các liên kết mạng xã hội.",
-        fields: &[
-            f("title", "Tiêu đề", title(160), "\"Liên hệ\""),
-            f("body", "Mô tả", md(1500), "\"\""),
-            f("email", "Email", text(160), "\"\""),
-            f("phone", "Điện thoại", text(40), "\"\""),
-            f("address", "Địa chỉ", text(300), "\"\""),
-            f("links", "Liên kết", Kind::List { item: LINK_ITEM, max: 12 }, "[]"),
-        ],
-    },
-    BlockType {
-        key: "blog_index", group: BlockGroup::Core, label: "Blog",
-        description: "Khối chính của tab Blog.",
-        fields: &[
-            f("layout", "Kiểu", Kind::Select(&["grid","list"]), "\"grid\""),
-            f("per_page", "Số bài mỗi trang", Kind::Number { min: 1.0, max: 50.0 }, "12"),
-            f("show_tags_filter", "Lọc thẻ", Kind::Bool, "true"),
-            f("show_excerpt", "Hiện tóm tắt", Kind::Bool, "true"),
-        ],
-    },
-    BlockType {
-        key: "course_index", group: BlockGroup::Core, label: "Khoá học",
-        description: "Khối chính của tab Khoá học.",
-        fields: &[
-            f("layout", "Kiểu", Kind::Select(&["grid","list"]), "\"grid\""),
-            f("show_price", "Hiện giá", Kind::Bool, "true"),
-        ],
-    },
-    BlockType {
-        key: "collection_index", group: BlockGroup::Core, label: "Danh mục",
-        description: "Khối chính của tab Danh mục.",
-        fields: &[
-            f("layout", "Kiểu", Kind::Select(&["timeline","cards","table"]), "\"timeline\""),
-            f("group_by_year", "Nhóm theo năm", Kind::Bool, "true"),
-            f("show_filters", "Hiện bộ lọc", Kind::Bool, "true"),
-        ],
-    },
-    BlockType {
-        key: "collection_list", group: BlockGroup::Excerpt, label: "Mục danh mục mới",
-        description: "Trích các mục mới nhất của một tab Danh mục.",
-        fields: &[
-            f("title", "Tiêu đề", title(160), "\"Mục mới\""),
-            f("page_id", "Tab danh mục (id hoặc slug)", text(100), "\"\""),
-            f("limit", "Số mục", Kind::Number { min: 1.0, max: 24.0 }, "3"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Excerpt,
-        key: "post_list",
-        label: "Bài viết mới nhất",
-        description: "Tự động hiện các bài viết đã xuất bản mới nhất.",
-        fields: &[
-            f("title", "Tiêu đề", title(160), "\"Bài viết mới\""),
-            f("limit", "Số bài", Kind::Number { min: 1.0, max: 24.0 }, "3"),
-            f("layout", "Kiểu", Kind::Select(&["grid", "list"]), "\"grid\""),
-            f("tag", "Chỉ hiện bài có thẻ", text(60), "\"\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Excerpt,
-        key: "course_list",
-        label: "Khoá học mới nhất",
-        description: "Tự động hiện các khoá học đã xuất bản, có giá và nút đăng ký.",
-        fields: &[
-            f("title", "Tiêu đề", title(160), "\"Khoá học\""),
-            f("limit", "Số khoá", Kind::Number { min: 1.0, max: 24.0 }, "6"),
-            f("show_price", "Hiện giá", Kind::Bool, "true"),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "subscribe",
-        label: "Đăng ký nhận tin",
-        description: "Ô nhập email để khách đăng ký nhận bản tin của site (xác nhận qua email).",
-        fields: &[
-            f("eyebrow", "Dòng nhỏ", text(80), "\"\""),
-            req("title", "Tiêu đề", title(200), "\"Nhận bài viết mới qua email\""),
-            f("body", "Mô tả", md(1000), "\"Mỗi khi có bài mới, mình sẽ gửi tới hộp thư của bạn. Huỷ bất cứ lúc nào.\""),
-            f("ask_name", "Hỏi tên", Kind::Bool, "false"),
-            f("placeholder", "Gợi ý ô email", text(80), "\"Email của bạn\""),
-            f("button_label", "Chữ trên nút", text(40), "\"Đăng ký\""),
-            f("success_message", "Lời cảm ơn", text(300), "\"\""),
-            f("layout", "Bố cục", Kind::Select(&["split", "centered"]), "\"split\""),
-        ],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "divider",
-        label: "Đường kẻ",
-        description: "Đường phân cách giữa các mục.",
-        fields: &[f("variant", "Kiểu", Kind::Select(&["line", "dots", "wave"]), "\"line\"")],
-    },
-    BlockType {
-        group: BlockGroup::Presentation,
-        key: "spacer",
-        label: "Khoảng trống",
-        description: "Khoảng trống dọc.",
-        fields: &[f("size", "Độ cao", Kind::Select(&["sm", "md", "lg", "xl"]), "\"md\"")],
-    },
-];
+pub static REGISTRY: std::sync::LazyLock<Vec<BlockType>> = std::sync::LazyLock::new(|| {
+    let mut keys = std::collections::HashSet::new();
+    BLOCK_FILES.iter().map(|(name, yaml)| {
+        let block: BlockType = serde_yaml_ng::from_str(yaml)
+            .unwrap_or_else(|e| panic!("invalid block catalog entry {name}: {e}"));
+        assert!(keys.insert(block.key.clone()), "duplicate block key {}", block.key);
+        block
+    }).collect()
+});
 
 pub fn block_type(key: &str) -> Option<&'static BlockType> {
     REGISTRY.iter().find(|b| b.key == key)
 }
 
 pub fn type_keys() -> Vec<&'static str> {
-    REGISTRY.iter().map(|b| b.key).collect()
+    REGISTRY.iter().map(|b| b.key.as_str()).collect()
 }
 
 // ───────────────────────────── Validation ───────────────────────────────────
 
 fn parse_default(field: &Field) -> Value {
-    serde_json::from_str(field.default).unwrap_or(Value::Null)
+    field.default.clone()
 }
 
 /// Default props for a block type.
 pub fn default_props(bt: &BlockType) -> Value {
     let mut m = Map::new();
-    for fd in bt.fields {
-        m.insert(fd.key.into(), parse_default(fd));
+    for fd in &bt.fields {
+        m.insert(fd.key.clone(), parse_default(fd));
     }
     Value::Object(m)
 }
@@ -590,9 +270,9 @@ fn validate_field(fd: &Field, v: Option<&Value>, path: &str, assets: &mut Vec<St
             let s = as_string(&v)?;
             Value::String(normalize_color(&s).ok_or_else(|| format!("{p}: màu không hợp lệ '{s}'"))?)
         }
-        Kind::Select(opts) => {
+        Kind::Select { options: opts } => {
             let s = as_string(&v)?;
-            if !opts.contains(&s.as_str()) {
+            if !opts.contains(&s) {
                 return Err(format!("{p}: '{s}' không hợp lệ, chọn một trong: {}", opts.join(", ")));
             }
             Value::String(s)
@@ -644,15 +324,15 @@ fn validate_field(fd: &Field, v: Option<&Value>, path: &str, assets: &mut Vec<St
 
 fn validate_object(fields: &[Field], obj: &Map<String, Value>, path: &str, assets: &mut Vec<String>) -> Result<Value, String> {
     for k in obj.keys() {
-        if !fields.iter().any(|f| f.key == k) {
-            let allowed: Vec<_> = fields.iter().map(|f| f.key).collect();
+        if !fields.iter().any(|f| &f.key == k) {
+            let allowed: Vec<_> = fields.iter().map(|f| f.key.as_str()).collect();
             let p = if path.is_empty() { k.clone() } else { format!("{path}.{k}") };
             return Err(format!("{p}: trường không tồn tại. Các trường hợp lệ: {}", allowed.join(", ")));
         }
     }
     let mut out = Map::new();
     for fd in fields {
-        out.insert(fd.key.into(), validate_field(fd, obj.get(fd.key), path, assets)?);
+        out.insert(fd.key.clone(), validate_field(fd, obj.get(&fd.key), path, assets)?);
     }
     Ok(Value::Object(out))
 }
@@ -668,7 +348,7 @@ pub fn validate_props(kind: &str, props: &Value) -> Result<(Value, Vec<String>),
         _ => return Err("props phải là object".into()),
     };
     let mut assets = Vec::new();
-    let v = validate_object(bt.fields, obj, "", &mut assets)?;
+    let v = validate_object(&bt.fields, obj, "", &mut assets)?;
     Ok((v, assets))
 }
 
@@ -752,7 +432,7 @@ fn kind_json(k: &Kind) -> Value {
         Kind::Image => json!({"type": "image"}),
         Kind::Video => json!({"type": "video"}),
         Kind::Color => json!({"type": "color"}),
-        Kind::Select(o) => json!({"type": "select", "options": o}),
+        Kind::Select { options: o } => json!({"type": "select", "options": o}),
         Kind::Number { min, max } => json!({"type": "number", "min": min, "max": max}),
         Kind::Bool => json!({"type": "bool"}),
         Kind::Icon => json!({"type": "icon", "options": ICONS}),
@@ -780,7 +460,7 @@ fn fields_json(fields: &[Field]) -> Value {
 pub fn registry_json() -> Value {
     json!({
         "types": REGISTRY.iter().map(|b| json!({
-            "key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(b.fields)
+            "key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(&b.fields)
         })).collect::<Vec<_>>(),
         "style": {
             "padding": PADDINGS, "align": ALIGNS, "width": WIDTHS, "animation": ANIMATIONS,
@@ -801,7 +481,7 @@ fn kind_short(k: &Kind) -> String {
         Kind::Image => "image".into(),
         Kind::Video => "video".into(),
         Kind::Color => "color".into(),
-        Kind::Select(o) => o.join("|"),
+        Kind::Select { options: o } => o.join("|"),
         Kind::Number { min, max } => format!("number {min}..{max}"),
         Kind::Bool => "bool".into(),
         Kind::Icon => "icon".into(),
@@ -815,7 +495,7 @@ fn kind_short(k: &Kind) -> String {
 /// Compact one-line-per-type catalog for the AI system prompt.
 pub fn catalog_for_prompt() -> String {
     let mut s = String::new();
-    for b in REGISTRY {
+    for b in REGISTRY.iter() {
         s.push_str(&format!("- {} ({}): {}\n  props: ", b.key, b.label, b.description));
         s.push_str(
             &b.fields
@@ -831,5 +511,5 @@ pub fn catalog_for_prompt() -> String {
 
 /// Detailed schema of one type (AI tool `get_block_schema`).
 pub fn type_schema_json(key: &str) -> Option<Value> {
-    block_type(key).map(|b| json!({"key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(b.fields), "example_props": default_props(b)}))
+    block_type(key).map(|b| json!({"key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(&b.fields), "example_props": default_props(b)}))
 }

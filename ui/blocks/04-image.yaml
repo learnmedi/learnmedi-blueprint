@@ -1,0 +1,37 @@
+key: image
+group: presentation
+label: Ảnh
+description: Một ảnh, có chú thích và liên kết tuỳ chọn.
+fields:
+- type: image
+  key: image
+  label: Ảnh
+  required: true
+  default: ''
+- type: text
+  max: 200
+  key: alt
+  label: Mô tả ảnh
+  default: ''
+- type: text
+  max: 300
+  key: caption
+  label: Chú thích
+  default: ''
+- type: url
+  key: link
+  label: Liên kết khi bấm
+  default: ''
+- type: select
+  options:
+  - small
+  - medium
+  - large
+  - full
+  key: size
+  label: Kích thước
+  default: large
+- type: bool
+  key: rounded
+  label: Bo góc
+  default: true

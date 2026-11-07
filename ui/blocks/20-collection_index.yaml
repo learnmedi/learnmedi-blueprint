@@ -1,0 +1,21 @@
+key: collection_index
+group: core
+label: Danh mục
+description: Khối chính của tab Danh mục.
+fields:
+- type: select
+  options:
+  - timeline
+  - cards
+  - table
+  key: layout
+  label: Kiểu
+  default: timeline
+- type: bool
+  key: group_by_year
+  label: Nhóm theo năm
+  default: true
+- type: bool
+  key: show_filters
+  label: Hiện bộ lọc
+  default: true

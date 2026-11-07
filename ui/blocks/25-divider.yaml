@@ -1,0 +1,13 @@
+key: divider
+group: presentation
+label: Đường kẻ
+description: Đường phân cách giữa các mục.
+fields:
+- type: select
+  options:
+  - line
+  - dots
+  - wave
+  key: variant
+  label: Kiểu
+  default: line

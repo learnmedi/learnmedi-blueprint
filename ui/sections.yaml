@@ -1,0 +1,15 @@
+layouts:
+  - key: stack
+    label: Một cột
+    description: Các khối xếp theo thứ tự từ trên xuống.
+  - key: split
+    label: Hai cột
+    description: Hai cột có chiều rộng bằng nhau, xếp thành một cột trên điện thoại.
+  - key: feature
+    label: Một lớn, hai nhỏ
+    description: Khối đầu tiên chiếm cột lớn; hai khối kế tiếp nằm bên cạnh.
+heights:
+  - key: content
+    label: Theo nội dung
+  - key: screen
+    label: Toàn màn hình

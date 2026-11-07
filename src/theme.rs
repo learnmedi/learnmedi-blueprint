@@ -47,55 +47,47 @@ pub const FONTS: &[&str] = &[
     "Source Sans 3",
 ];
 pub const RADII: &[&str] = &["none", "sm", "md", "lg", "pill"];
-pub const HEADER_STYLES: &[&str] = &["simple", "centered", "bold"];
+pub const HEADER_STYLES: &[&str] = &["simple", "centered", "bold", "sidebar", "toggle"];
 pub const BUTTON_STYLES: &[&str] = &["solid", "outline", "soft"];
 pub const ANIMATIONS: &[&str] = &["none", "fade-up", "fade-in", "zoom-in", "slide-left", "slide-right"];
 pub const COLOR_TOKENS: &[&str] = &["primary", "accent", "background", "surface", "text", "muted"];
 
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Preset {
-    pub key: &'static str,
-    pub label: &'static str,
-    pub theme: fn() -> Theme,
+    pub key: String,
+    pub label: String,
+    pub description: String,
+    pub featured: bool,
+    pub theme: Theme,
 }
 
-fn t(colors: [&str; 6], heading: &str, body: &str, radius: &str, header: &str, button: &str) -> Theme {
-    Theme {
-        colors: ThemeColors {
-            primary: colors[0].into(),
-            accent: colors[1].into(),
-            background: colors[2].into(),
-            surface: colors[3].into(),
-            text: colors[4].into(),
-            muted: colors[5].into(),
-        },
-        font_heading: heading.into(),
-        font_body: body.into(),
-        radius: radius.into(),
-        header_style: header.into(),
-        button_style: button.into(),
-        base_font_size: 17,
-        default_animation: "fade-up".into(),
+pub static PRESETS: std::sync::LazyLock<Vec<Preset>> = std::sync::LazyLock::new(|| {
+    let presets: Vec<Preset> = serde_yaml_ng::from_str(include_str!("../ui/themes.yaml"))
+        .expect("valid bundled theme catalog");
+    let mut keys = std::collections::HashSet::new();
+    for preset in &presets {
+        assert!(keys.insert(&preset.key), "duplicate theme key {}", preset.key);
     }
-}
-
-pub const PRESETS: &[Preset] = &[
-    // Warm editorial look, inspired by tranhoangyen.com (Fraunces + Be Vietnam Pro).
-    // navy #14223f · sage-deep #47664f · paper #fbf8f2 · beige #f4ede1 · ink #1a2236 (tranhoangyen.com tokens)
-    Preset { key: "swiftlet", label: "Swiftlet — ấm áp, biên tập", theme: || t(["#14223f", "#47664f", "#fbf8f2", "#f4ede1", "#1a2236", "#5f6678"], "Fraunces", "Be Vietnam Pro", "lg", "simple", "solid") },
-    Preset { key: "ocean", label: "Đại dương — xanh, hiện đại", theme: || t(["#1d4ed8", "#06b6d4", "#f8fafc", "#ffffff", "#0f172a", "#64748b"], "Montserrat", "Inter", "md", "simple", "solid") },
-    Preset { key: "classroom", label: "Lớp học — tươi vui", theme: || t(["#7c3aed", "#f59e0b", "#fffdf7", "#ffffff", "#1f1b2e", "#6b6880"], "Quicksand", "Nunito", "pill", "centered", "soft") },
-    Preset { key: "academic", label: "Học thuật — trang nhã", theme: || t(["#7f1d1d", "#b45309", "#fafaf9", "#ffffff", "#1c1917", "#57534e"], "Playfair Display", "Source Sans 3", "sm", "simple", "outline") },
-    Preset { key: "midnight", label: "Đêm — tối, nổi bật", theme: || t(["#a78bfa", "#f472b6", "#0f0f17", "#1a1a26", "#ececf4", "#a1a1b5"], "Montserrat", "Inter", "lg", "bold", "solid") },
-];
+    presets
+});
 
 impl Default for Theme {
     fn default() -> Self {
-        (PRESETS[0].theme)()
+        preset("swiftlet").expect("legacy default theme is included")
     }
 }
 
 pub fn preset(key: &str) -> Option<Theme> {
-    PRESETS.iter().find(|p| p.key == key).map(|p| (p.theme)())
+    PRESETS.iter().find(|p| p.key == key).map(|p| p.theme.clone())
+}
+
+pub fn presets_json() -> Value {
+    json!(PRESETS.iter().map(|p| json!({
+        "key": p.key, "label": p.label, "description": p.description, "featured": p.featured,
+        "palette": p.theme.colors, "font_heading": p.theme.font_heading, "font_body": p.theme.font_body,
+        "header_style": p.theme.header_style,
+    })).collect::<Vec<_>>())
 }
 
 pub fn is_hex_color(s: &str) -> bool {
@@ -140,7 +132,7 @@ pub fn apply_patch(theme: &mut Theme, patch: &Value) -> Result<Vec<String>, Stri
     let obj = patch.as_object().ok_or("theme patch phải là object")?;
     let mut changes = Vec::new();
     if let Some(p) = obj.get("preset").and_then(|v| v.as_str()) {
-        *theme = preset(p).ok_or_else(|| format!("preset không tồn tại: {p}. Có: {}", PRESETS.iter().map(|p| p.key).collect::<Vec<_>>().join(", ")))?;
+        *theme = preset(p).ok_or_else(|| format!("preset không tồn tại: {p}. Có: {}", PRESETS.iter().map(|p| p.key.as_str()).collect::<Vec<_>>().join(", ")))?;
         changes.push(format!("áp dụng preset {p}"));
     }
     for (key, val) in obj {
@@ -200,7 +192,7 @@ fn set_enum(slot: &mut String, val: &Value, allowed: &[&str], key: &str, changes
 /// Machine-readable description for the AI prompt / editor.
 pub fn schema_json() -> Value {
     json!({
-        "presets": PRESETS.iter().map(|p| json!({"key": p.key, "label": p.label})).collect::<Vec<_>>(),
+        "presets": presets_json(),
         "colors": COLOR_TOKENS,
         "fonts": FONTS,
         "radius": RADII,

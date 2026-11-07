@@ -1,0 +1,15 @@
+key: video
+group: presentation
+label: Video
+description: Video YouTube/Vimeo hoặc video tải lên.
+fields:
+- type: video
+  key: video
+  label: Video (link YouTube/Vimeo hoặc video tải lên)
+  required: true
+  default: ''
+- type: text
+  max: 300
+  key: caption
+  label: Chú thích
+  default: ''

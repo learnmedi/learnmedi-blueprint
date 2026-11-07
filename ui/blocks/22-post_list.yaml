@@ -1,0 +1,29 @@
+key: post_list
+group: excerpt
+label: Bài viết mới nhất
+description: Tự động hiện các bài viết đã xuất bản mới nhất.
+fields:
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  default: Bài viết mới
+- type: number
+  min: 1.0
+  max: 24.0
+  key: limit
+  label: Số bài
+  default: 3
+- type: select
+  options:
+  - grid
+  - list
+  key: layout
+  label: Kiểu
+  default: grid
+- type: text
+  max: 60
+  key: tag
+  label: Chỉ hiện bài có thẻ
+  default: ''

@@ -1,0 +1,68 @@
+key: features
+group: presentation
+label: Lưới điểm nổi bật
+description: Hiển thị lưới từ hai đến bốn cột. Mỗi mục có biểu tượng, tiêu đề, mô tả và liên kết; có thể đánh
+  số và thêm tiêu đề chung.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ của mục
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề mục
+  default: ''
+- type: markdown
+  max: 1000
+  key: intro
+  label: Mô tả mục (bên phải tiêu đề)
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: icon
+    key: icon
+    label: Biểu tượng
+    default: star
+  - type: text
+    max: 120
+    emphasis: true
+    key: title
+    label: Tiêu đề
+    required: true
+    default: Tiêu đề
+  - type: markdown
+    max: 1200
+    key: body
+    label: Nội dung
+    default: ''
+  - type: url
+    key: link
+    label: Liên kết
+    default: ''
+  - type: text
+    max: 60
+    key: link_label
+    label: Chữ liên kết
+    default: ''
+  key: items
+  label: Các ô
+  required: true
+  default: []
+- type: number
+  min: 1.0
+  max: 4.0
+  key: columns
+  label: Số cột
+  default: 4
+- type: bool
+  key: card
+  label: Hiện dạng thẻ
+  default: true
+- type: bool
+  key: numbered
+  label: Đánh số 01, 02…
+  default: false

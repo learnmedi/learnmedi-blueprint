@@ -1,0 +1,37 @@
+key: heading
+group: presentation
+label: Tiêu đề mục
+description: Hiển thị dòng dẫn, tiêu đề và mô tả. Bố cục tách đặt mô tả cạnh tiêu đề.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  required: true
+  default: Tiêu đề mục
+- type: markdown
+  max: 1500
+  key: body
+  label: Mô tả
+  default: ''
+- type: select
+  options:
+  - h1
+  - h2
+  - h3
+  key: level
+  label: Cấp
+  default: h2
+- type: select
+  options:
+  - stacked
+  - split
+  key: layout
+  label: Bố cục
+  default: stacked

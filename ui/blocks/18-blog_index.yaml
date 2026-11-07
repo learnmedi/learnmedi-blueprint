@@ -1,0 +1,26 @@
+key: blog_index
+group: core
+label: Blog
+description: Khối chính của tab Blog.
+fields:
+- type: select
+  options:
+  - grid
+  - list
+  key: layout
+  label: Kiểu
+  default: grid
+- type: number
+  min: 1.0
+  max: 50.0
+  key: per_page
+  label: Số bài mỗi trang
+  default: 12
+- type: bool
+  key: show_tags_filter
+  label: Lọc thẻ
+  default: true
+- type: bool
+  key: show_excerpt
+  label: Hiện tóm tắt
+  default: true

@@ -1,0 +1,41 @@
+key: gallery
+group: presentation
+label: Bộ sưu tập ảnh
+description: Lưới nhiều ảnh.
+fields:
+- type: list
+  max: 30
+  item:
+  - type: image
+    key: image
+    label: Ảnh
+    required: true
+    default: ''
+  - type: text
+    max: 200
+    key: alt
+    label: Mô tả ảnh (cho người khiếm thị/SEO)
+    default: ''
+  - type: text
+    max: 200
+    key: caption
+    label: Chú thích
+    default: ''
+  key: images
+  label: Ảnh
+  required: true
+  default: []
+- type: number
+  min: 2.0
+  max: 5.0
+  key: columns
+  label: Số cột
+  default: 3
+- type: select
+  options:
+  - grid
+  - masonry
+  - collage
+  key: style
+  label: Kiểu
+  default: grid

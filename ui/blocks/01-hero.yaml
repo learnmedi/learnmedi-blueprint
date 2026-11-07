@@ -1,0 +1,118 @@
+key: hero
+group: presentation
+label: Banner đầu trang
+description: Hiển thị tiêu đề, mô tả, nhãn, nút và tối đa hai ảnh. Bố cục tách đặt chữ và ảnh cạnh nhau; bố
+  cục căn giữa đặt nội dung ở giữa.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ phía trên
+  default: ''
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề lớn
+  required: true
+  default: Xin chào, tôi là …
+- type: text
+  max: 120
+  emphasis: true
+  key: title_line2
+  label: Dòng 2 của tiêu đề (vd tên tách hai dòng)
+  default: ''
+- type: text
+  max: 160
+  key: subtitle
+  label: Dòng phụ dưới tiêu đề
+  default: ''
+- type: markdown
+  max: 1500
+  key: body
+  label: Đoạn giới thiệu
+  default: ''
+- type: list
+  max: 8
+  item:
+  - type: text
+    max: 60
+    key: text
+    label: Nội dung
+    required: true
+    default: ''
+  key: tags
+  label: Nhãn vai trò
+  default: []
+- type: text
+  max: 300
+  key: quote
+  label: Câu trích (in nghiêng)
+  default: ''
+- type: list
+  max: 3
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Chữ trên nút
+    required: true
+    default: Xem thêm
+  - type: url
+    key: url
+    label: Liên kết
+    required: true
+    default: '#'
+  - type: select
+    options:
+    - primary
+    - secondary
+    - ghost
+    key: variant
+    label: Kiểu
+    default: primary
+  - type: bool
+    key: new_tab
+    label: Mở tab mới
+    default: false
+  key: buttons
+  label: Nút bấm
+  default: []
+- type: image
+  key: image
+  label: Ảnh chính
+  default: ''
+- type: text
+  max: 200
+  key: image_alt
+  label: Mô tả ảnh chính
+  default: ''
+- type: image
+  key: image_secondary
+  label: Ảnh phụ (nhỏ, chồng lên)
+  default: ''
+- type: text
+  max: 200
+  key: image_secondary_alt
+  label: Mô tả ảnh phụ
+  default: ''
+- type: list
+  max: 3
+  item:
+  - type: text
+    max: 60
+    key: text
+    label: Nội dung
+    required: true
+    default: ''
+  key: badges
+  label: Nhãn nổi trên ảnh
+  default: []
+- type: select
+  options:
+  - split
+  - split-reverse
+  - centered
+  key: layout
+  label: Bố cục
+  default: split

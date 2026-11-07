@@ -3,8 +3,8 @@ use serde_json::json;
 
 #[test]
 fn every_type_validates_its_defaults() {
-    for bt in REGISTRY {
-        let (p, _) = validate_props(bt.key, &default_props(bt)).unwrap_or_else(|e| panic!("{}: {e}", bt.key));
+    for bt in REGISTRY.iter() {
+        let (p, _) = validate_props(&bt.key, &default_props(bt)).unwrap_or_else(|e| panic!("{}: {e}", bt.key));
         assert!(p.is_object());
     }
 }
@@ -80,4 +80,3 @@ fn prompt_catalog_mentions_every_type() {
         assert!(c.contains(&format!("- {k} ")), "{k}");
     }
 }
-

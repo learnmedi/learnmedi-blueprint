@@ -1,0 +1,15 @@
+key: text
+group: presentation
+label: Đoạn văn
+description: 'Văn bản dài định dạng Markdown (tiêu đề ##, danh sách, **đậm**, *nghiêng*, liên kết).'
+fields:
+- type: markdown
+  max: 20000
+  key: body
+  label: Nội dung (Markdown)
+  required: true
+  default: Nội dung…
+- type: bool
+  key: lead
+  label: Chữ to (đoạn mở đầu)
+  default: false

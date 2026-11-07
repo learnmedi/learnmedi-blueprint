@@ -1,0 +1,35 @@
+key: buttons
+group: presentation
+label: Hàng nút
+description: Một hoặc nhiều nút bấm.
+fields:
+- type: list
+  max: 6
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Chữ trên nút
+    required: true
+    default: Xem thêm
+  - type: url
+    key: url
+    label: Liên kết
+    required: true
+    default: '#'
+  - type: select
+    options:
+    - primary
+    - secondary
+    - ghost
+    key: variant
+    label: Kiểu
+    default: primary
+  - type: bool
+    key: new_tab
+    label: Mở tab mới
+    default: false
+  key: buttons
+  label: Nút
+  required: true
+  default: []

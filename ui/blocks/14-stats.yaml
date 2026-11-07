@@ -1,0 +1,24 @@
+key: stats
+group: presentation
+label: Con số ấn tượng
+description: Hiển thị một hàng các giá trị nổi bật, mỗi giá trị có nhãn riêng.
+fields:
+- type: list
+  max: 6
+  item:
+  - type: text
+    max: 30
+    key: value
+    label: Con số
+    required: true
+    default: 100+
+  - type: text
+    max: 120
+    key: label
+    label: Nhãn
+    required: true
+    default: học sinh
+  key: items
+  label: Con số
+  required: true
+  default: []

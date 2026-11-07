@@ -1,0 +1,14 @@
+key: spacer
+group: presentation
+label: Khoảng trống
+description: Khoảng trống dọc.
+fields:
+- type: select
+  options:
+  - sm
+  - md
+  - lg
+  - xl
+  key: size
+  label: Độ cao
+  default: md

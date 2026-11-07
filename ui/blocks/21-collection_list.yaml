@@ -1,0 +1,22 @@
+key: collection_list
+group: excerpt
+label: Mục danh mục mới
+description: Trích các mục mới nhất của một tab Danh mục.
+fields:
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  default: Mục mới
+- type: text
+  max: 100
+  key: page_id
+  label: Tab danh mục (id hoặc slug)
+  default: ''
+- type: number
+  min: 1.0
+  max: 24.0
+  key: limit
+  label: Số mục
+  default: 3

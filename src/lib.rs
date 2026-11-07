@@ -1,6 +1,7 @@
 //! Shared Learnmedi data types and validation.
 
 pub mod blocks;
+pub mod sections;
 pub mod error;
 pub mod i18n;
 pub mod internal;

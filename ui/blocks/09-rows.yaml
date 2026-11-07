@@ -1,0 +1,54 @@
+key: rows
+group: presentation
+label: Danh sách hàng ngang
+description: Hiển thị các hàng gồm số thứ tự, tiêu đề, mô tả, nhãn và liên kết. Có thể thêm tiêu đề chung.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ của mục
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề mục
+  default: ''
+- type: markdown
+  max: 1000
+  key: intro
+  label: Mô tả mục (bên phải tiêu đề)
+  default: ''
+- type: list
+  max: 30
+  item:
+  - type: text
+    max: 12
+    key: index
+    label: Số thứ tự hiển thị (i., 01…)
+    default: ''
+  - type: text
+    max: 160
+    emphasis: true
+    key: title
+    label: Tiêu đề
+    required: true
+    default: Tiêu đề
+  - type: markdown
+    max: 1200
+    key: body
+    label: Nội dung
+    default: ''
+  - type: text
+    max: 60
+    key: badge
+    label: Nhãn
+    default: ''
+  - type: url
+    key: link
+    label: Liên kết
+    default: ''
+  key: items
+  label: Các hàng
+  required: true
+  default: []

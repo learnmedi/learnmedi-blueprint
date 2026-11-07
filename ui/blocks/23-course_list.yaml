@@ -1,0 +1,21 @@
+key: course_list
+group: excerpt
+label: Khoá học mới nhất
+description: Tự động hiện các khoá học đã xuất bản, có giá và nút đăng ký.
+fields:
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  default: Khoá học
+- type: number
+  min: 1.0
+  max: 24.0
+  key: limit
+  label: Số khoá
+  default: 6
+- type: bool
+  key: show_price
+  label: Hiện giá
+  default: true

@@ -1,0 +1,48 @@
+key: subscribe
+group: presentation
+label: Đăng ký nhận tin
+description: Ô nhập email để khách đăng ký nhận bản tin của site (xác nhận qua email).
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  required: true
+  default: Nhận bài viết mới qua email
+- type: markdown
+  max: 1000
+  key: body
+  label: Mô tả
+  default: Mỗi khi có bài mới, mình sẽ gửi tới hộp thư của bạn. Huỷ bất cứ lúc nào.
+- type: bool
+  key: ask_name
+  label: Hỏi tên
+  default: false
+- type: text
+  max: 80
+  key: placeholder
+  label: Gợi ý ô email
+  default: Email của bạn
+- type: text
+  max: 40
+  key: button_label
+  label: Chữ trên nút
+  default: Đăng ký
+- type: text
+  max: 300
+  key: success_message
+  label: Lời cảm ơn
+  default: ''
+- type: select
+  options:
+  - split
+  - centered
+  key: layout
+  label: Bố cục
+  default: split

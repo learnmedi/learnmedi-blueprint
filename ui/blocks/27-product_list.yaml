@@ -1,0 +1,112 @@
+key: product_list
+group: excerpt
+label: Sản phẩm nổi bật
+description: Hiển thị thẻ sản phẩm có ảnh, tên, mô tả, giá và liên kết mua.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ của mục
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề mục
+  default: ''
+- type: markdown
+  max: 1000
+  key: intro
+  label: Mô tả mục (bên phải tiêu đề)
+  default: ''
+- type: list
+  max: 24
+  item:
+  - type: image
+    key: image
+    label: Ảnh
+    default: ''
+  - type: text
+    max: 200
+    key: alt
+    label: Mô tả ảnh
+    default: ''
+  - type: text
+    max: 80
+    key: kicker
+    label: Dòng nhỏ phía trên
+    default: ''
+  - type: text
+    max: 160
+    emphasis: true
+    key: title
+    label: Tiêu đề
+    required: true
+    default: Tiêu đề
+  - type: markdown
+    max: 600
+    key: subtitle
+    label: Mô tả ngắn
+    default: ''
+  - type: text
+    max: 120
+    key: meta
+    label: Thông tin phụ (giá, định dạng…)
+    default: ''
+  - type: url
+    key: link
+    label: Liên kết
+    default: ''
+  - type: text
+    max: 60
+    key: button_label
+    label: Chữ nút
+    default: ''
+  key: items
+  label: Các thẻ
+  required: true
+  default: []
+- type: number
+  min: 1.0
+  max: 4.0
+  key: columns
+  label: Số cột
+  default: 3
+- type: select
+  options:
+  - portrait
+  - square
+  - landscape
+  - cover
+  key: image_ratio
+  label: Tỉ lệ ảnh
+  default: portrait
+- type: list
+  max: 3
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Chữ trên nút
+    required: true
+    default: Xem thêm
+  - type: url
+    key: url
+    label: Liên kết
+    required: true
+    default: '#'
+  - type: select
+    options:
+    - primary
+    - secondary
+    - ghost
+    key: variant
+    label: Kiểu
+    default: primary
+  - type: bool
+    key: new_tab
+    label: Mở tab mới
+    default: false
+  key: buttons
+  label: Nút bên dưới
+  default: []

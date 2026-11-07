@@ -1,6 +1,6 @@
 [package]
 name = "learnmedi_blueprint"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2024"
 description = "Shared data types and validation for Learnmedi"
 
@@ -25,3 +25,4 @@ actix-web = { version = "4.9", default-features = false, features = ["macros", "
 tracing = { version = "0.1", optional = true }
 mongodb = { version = "3", optional = true }
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"], optional = true }
+serde_yaml_ng = "0.10.0"

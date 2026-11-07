@@ -14,7 +14,7 @@ pub enum TabKind {
     Link,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum BlockGroup { Presentation, Core, Excerpt }
 

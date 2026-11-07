@@ -28,8 +28,8 @@ fn named_colours_work() {
 
 #[test]
 fn presets_exist() {
-    for p in PRESETS {
-        assert!(is_hex_color(&(p.theme)().colors.primary));
+    for p in PRESETS.iter() {
+        assert!(is_hex_color(&p.theme.clone().colors.primary));
     }
     let mut t = Theme::default();
     apply_patch(&mut t, &json!({"preset": "ocean"})).unwrap();

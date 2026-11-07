@@ -1,0 +1,58 @@
+key: cta
+group: presentation
+label: Kêu gọi hành động
+description: Hiển thị tiêu đề, mô tả và các nút liên kết trong một dải nổi bật.
+fields:
+- type: text
+  max: 80
+  key: eyebrow
+  label: Dòng nhỏ
+  default: ''
+- type: text
+  max: 200
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  required: true
+  default: Cùng bắt đầu nhé
+- type: markdown
+  max: 1000
+  key: body
+  label: Mô tả
+  default: ''
+- type: list
+  max: 3
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Chữ trên nút
+    required: true
+    default: Xem thêm
+  - type: url
+    key: url
+    label: Liên kết
+    required: true
+    default: '#'
+  - type: select
+    options:
+    - primary
+    - secondary
+    - ghost
+    key: variant
+    label: Kiểu
+    default: primary
+  - type: bool
+    key: new_tab
+    label: Mở tab mới
+    default: false
+  key: buttons
+  label: Nút
+  default: []
+- type: select
+  options:
+  - split
+  - centered
+  key: layout
+  label: Bố cục
+  default: split

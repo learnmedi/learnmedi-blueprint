@@ -1,0 +1,42 @@
+key: timeline
+group: presentation
+label: Dòng thời gian / danh sách công trình
+description: Các mốc thời gian hoặc danh sách bài báo, công trình (thời gian, tiêu đề, mô tả, nhãn trạng thái).
+fields:
+- type: list
+  max: 100
+  item:
+  - type: text
+    max: 60
+    key: date
+    label: Thời gian
+    default: ''
+  - type: text
+    max: 200
+    emphasis: true
+    key: title
+    label: Tiêu đề
+    required: true
+    default: Sự kiện
+  - type: markdown
+    max: 1500
+    key: body
+    label: Nội dung
+    default: ''
+  - type: text
+    max: 60
+    key: badge
+    label: 'Nhãn (vd: Đã xuất bản)'
+    default: ''
+  - type: url
+    key: link
+    label: Liên kết
+    default: ''
+  key: items
+  label: Mốc
+  required: true
+  default: []
+- type: bool
+  key: filterable
+  label: Cho lọc theo nhãn
+  default: false

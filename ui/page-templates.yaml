@@ -1,0 +1,52 @@
+- key: editorial-profile
+  label: Chân dung biên tập
+  description: Mở đầu toàn màn hình, sau đó giới thiệu bài viết và sản phẩm nổi bật.
+  blocks:
+    - type: hero
+      props: {title: "{{name}}", subtitle: "Nghiên cứu · Giáo dục · Sáng tạo", layout: centered}
+      style: {padding: none}
+    - type: media_text
+      props: {title: "Câu chuyện của tôi", body: "Giới thiệu công việc và lý do bạn theo đuổi nó."}
+      style: {padding: none}
+    - type: post_list
+      props: {title: "Bài viết mới", limit: 2}
+      style: {padding: none}
+    - type: product_list
+      props: {title: "Sản phẩm nổi bật", columns: 1}
+      style: {padding: none}
+    - type: cta
+      props: {title: "Cùng nhau làm việc", body: "Mời người đọc kết nối hoặc hợp tác."}
+      style: {padding: none}
+  sections:
+    - {start: 0, layout: stack, height: screen, style: {background: "#111218", width: wide, animation: fade-in}}
+    - {start: 1, layout: feature, style: {background: accent, width: wide, padding: xl, animation: fade-up}}
+    - {start: 4, layout: stack, style: {background: "#111218", width: wide, padding: xl, animation: slide-left}}
+- key: research-portfolio
+  label: Hồ sơ nghiên cứu
+  description: Luân phiên các dải tối và sáng để giới thiệu hướng nghiên cứu, bài viết và hợp tác.
+  blocks:
+    - type: hero
+      props: {title: "{{name}}", subtitle: "Giới thiệu hướng nghiên cứu của bạn", layout: split}
+      style: {padding: none}
+    - type: heading
+      props: {title: "Tôi đang nghiên cứu gì?", body: "Nêu câu hỏi chính và lý do câu hỏi đó quan trọng."}
+      style: {padding: none}
+    - type: features
+      props: {title: "Hướng nghiên cứu", columns: 2}
+      style: {padding: none}
+    - type: post_list
+      props: {title: "Bài viết và ghi chép", limit: 3}
+      style: {padding: none}
+    - type: contact
+      props: {title: "Trao đổi và hợp tác"}
+      style: {padding: none}
+  sections:
+    - {start: 0, layout: stack, height: screen, style: {background: "#111218", width: wide, animation: fade-in}}
+    - {start: 1, layout: split, style: {background: surface, width: wide, padding: xl}}
+    - {start: 3, layout: stack, style: {background: "#111218", width: wide, padding: xl}}
+    - {start: 4, layout: stack, style: {background: accent, width: wide, padding: xl}}
+- key: blank-page
+  label: Trang trắng
+  description: Bắt đầu với trang không có khối hay phần dựng sẵn.
+  blocks: []
+  sections: []

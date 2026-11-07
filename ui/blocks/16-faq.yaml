@@ -1,0 +1,24 @@
+key: faq
+group: presentation
+label: Hỏi đáp
+description: Câu hỏi thường gặp (mở/đóng).
+fields:
+- type: list
+  max: 40
+  item:
+  - type: text
+    max: 300
+    key: question
+    label: Câu hỏi
+    required: true
+    default: Câu hỏi?
+  - type: markdown
+    max: 3000
+    key: answer
+    label: Trả lời
+    required: true
+    default: ''
+  key: items
+  label: Câu hỏi
+  required: true
+  default: []

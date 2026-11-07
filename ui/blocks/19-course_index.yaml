@@ -1,0 +1,16 @@
+key: course_index
+group: core
+label: Khoá học
+description: Khối chính của tab Khoá học.
+fields:
+- type: select
+  options:
+  - grid
+  - list
+  key: layout
+  label: Kiểu
+  default: grid
+- type: bool
+  key: show_price
+  label: Hiện giá
+  default: true

@@ -1,0 +1,48 @@
+key: contact
+group: presentation
+label: Liên hệ
+description: 'Thông tin liên hệ: email, điện thoại, địa chỉ, các liên kết mạng xã hội.'
+fields:
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  default: Liên hệ
+- type: markdown
+  max: 1500
+  key: body
+  label: Mô tả
+  default: ''
+- type: text
+  max: 160
+  key: email
+  label: Email
+  default: ''
+- type: text
+  max: 40
+  key: phone
+  label: Điện thoại
+  default: ''
+- type: text
+  max: 300
+  key: address
+  label: Địa chỉ
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: text
+    max: 80
+    key: label
+    label: Tên
+    required: true
+    default: ''
+  - type: url
+    key: url
+    label: Liên kết
+    required: true
+    default: ''
+  key: links
+  label: Liên kết
+  default: []

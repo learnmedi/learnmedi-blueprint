@@ -1,0 +1,28 @@
+key: quote
+group: presentation
+label: Trích dẫn
+description: Hiển thị một hoặc nhiều câu trích dẫn kèm tên và vai trò người nói.
+fields:
+- type: list
+  max: 6
+  item:
+  - type: markdown
+    max: 800
+    key: text
+    label: Lời trích
+    required: true
+    default: ''
+  - type: text
+    max: 120
+    key: author
+    label: Người nói
+    default: ''
+  - type: text
+    max: 120
+    key: role
+    label: Vai trò
+    default: ''
+  key: items
+  label: Trích dẫn
+  required: true
+  default: []
