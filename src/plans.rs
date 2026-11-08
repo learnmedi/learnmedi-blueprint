@@ -63,7 +63,7 @@ pub const CATALOG: &[FeatureDef] = &[
     feature(BLOG, "Blog, lượt thích & bình luận", "Viết, xuất bản bài và kiểm duyệt bình luận.", "content", Tier::Standard),
     feature(NEWSLETTER, "Bản tin email", "Thu thập người đăng ký và gửi bản tin (trong hạn mức mỗi ngày).", "content", Tier::Standard),
     feature(COLLECTIONS, "Danh mục công trình", "Công bố, dự án, danh sách đọc và các danh mục khác.", "content", Tier::Standard),
-    feature(COMMUNITY, "Phục vụ cộng đồng", "Hồ sơ hoạt động có minh chứng và trang /community.", "content", Tier::Standard),
+    feature(COMMUNITY, "Phục vụ cộng đồng", "Trang /community kể lại những việc chủ site đã làm vì cộng đồng.", "content", Tier::Standard),
     feature(PRODUCTS, "Sản phẩm số & bán hàng", "Tài liệu, bản ghi, gói sản phẩm; thanh toán một lần và tải về có bảo vệ.", "content", Tier::Premium),
     feature(SELF_PACED, "Khoá tự học", "Khoá học và đề tự học, miễn phí hoặc trả phí.", "content", Tier::Premium),
     feature(SURVEYS, "Khảo sát nghiên cứu", "Khảo sát công khai có đồng thuận, ngày đóng và xuất CSV.", "content", Tier::Standard),
