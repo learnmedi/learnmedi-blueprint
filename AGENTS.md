@@ -7,6 +7,10 @@
    Storage** (`the site storage module`); Mongo keeps only `Asset` metadata
    (object key, type, size). The test `no_files_in_mongo_tests.rs` fails the
    build if this is broken. The bucket name comes from `.env` (`STORAGE_BUCKET`).
+   The same holds for git: photos, images, video, PDFs and other media are never
+   committed to a repo or embedded in code or scripts. Upload them to storage and
+   keep only the link (object key or URL). A script that needs local photos reads
+   them from a folder outside the repo (like the demo's `LM_REF_DIR`).
 2. **The AI edits the site only through tools → `ops::apply`.** It never writes
    code, HTML, CSS or files. Any new capability the AI needs = a new validated op
    in `crates/site/src/ops.rs` + a tool definition in `crates/site/src/ai/tools.rs`
