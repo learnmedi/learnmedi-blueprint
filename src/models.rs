@@ -94,6 +94,16 @@ pub struct SiteRecord {
     /// Max newsletter emails per day for this site; None = platform default.
     #[serde(default)]
     pub newsletter_daily_limit: Option<i64>,
+    /// Product tier; None = the plan board's default tier.
+    #[serde(default)]
+    pub tier: Option<crate::plans::Tier>,
+    /// Per-site grant (true) or deny (false) of a catalog feature.
+    #[serde(default)]
+    pub feature_overrides: std::collections::BTreeMap<String, bool>,
+    /// Effective feature keys, computed by the engine on internal reads and
+    /// never stored. None = an engine that does not send them (allow all).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub features: Option<Vec<String>>,
     /// Counters pushed by the sites service (for the platform admin).
     #[serde(default)]
     pub stats: SiteStats,
