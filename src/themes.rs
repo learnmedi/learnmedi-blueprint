@@ -322,18 +322,18 @@ pub fn infer_slots(blocks: &[Block]) -> Vec<String> {
 /// external links are dropped (internal ones stay), lists keep their length.
 fn strip_value(field: &Field, v: &Value) -> Value {
     match &field.kind {
-        Kind::Text { .. } | Kind::Markdown { .. } => {
+        Kind::Text { max, .. } | Kind::Markdown { max } => {
             if v.as_str().is_none_or(|s| s.trim().is_empty()) {
                 json!("")
-            } else if field.default.as_str().is_some_and(|d| !d.is_empty()) {
-                field.default.clone()
             } else {
-                json!(field.label)
+                let text = field.default.as_str().filter(|d| !d.is_empty()).unwrap_or(&field.label);
+                json!(text.chars().take(*max).collect::<String>())
             }
         }
         Kind::Url => match v.as_str() {
             Some(s) if s.starts_with('/') || s.starts_with('#') => json!(s),
-            _ => json!(""),
+            // An outside link is dropped; a required one falls back to its default ("#").
+            _ => json!(field.default.as_str().filter(|d| !d.is_empty()).unwrap_or(if field.required { "#" } else { "" })),
         },
         Kind::Image | Kind::Video => json!(""),
         Kind::List { item, .. } => json!(v.as_array().map(|items| items.iter().map(|it| {

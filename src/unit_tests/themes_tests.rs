@@ -88,6 +88,13 @@ fn a_saved_starter_drops_words_files_and_outside_links() {
     assert_eq!(s.props["layout"], "split");
     assert_eq!(s.props["image"], "");
     assert_eq!(s.props["buttons"][0]["url"], "/sach");
-    assert_eq!(s.props["buttons"][1]["url"], "");
+    assert_eq!(s.props["buttons"][1]["url"], "#", "an outside link falls back to the default");
     assert!(!s.props.to_string().contains("Yến"));
+}
+
+#[test]
+fn a_placeholder_fits_its_field() {
+    let b = live("rows", json!({"items": [{"index": "01", "title": "Một dự án"}]}));
+    let s = strip_block(&b, "work");
+    assert!(crate::blocks::validate_props("rows", &s.props).is_ok(), "{}", s.props);
 }
