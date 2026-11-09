@@ -27,11 +27,17 @@ fn named_colours_work() {
 }
 
 #[test]
-fn presets_exist() {
-    for p in PRESETS.iter() {
-        assert!(is_hex_color(&p.theme.clone().colors.primary));
-    }
+fn a_preset_comes_from_the_catalog_lookup() {
+    let ocean = Theme { font_body: "Inter".into(), ..Theme::default() };
     let mut t = Theme::default();
-    apply_patch(&mut t, &json!({"preset": "ocean"})).unwrap();
+    apply_patch_with(&mut t, &json!({"preset": "ocean"}), &|k| (k == "ocean").then(|| ocean.clone())).unwrap();
     assert_eq!(t.font_body, "Inter");
+    assert!(apply_patch(&mut t, &json!({"preset": "ocean"})).is_err(), "no catalog, no preset");
+}
+
+#[test]
+fn validate_accepts_the_default_and_rejects_bad_fields() {
+    assert!(validate(&Theme::default()).is_ok());
+    assert!(validate(&Theme { font_heading: "Comic Sans".into(), ..Theme::default() }).is_err());
+    assert!(validate(&Theme { base_font_size: 40, ..Theme::default() }).is_err());
 }

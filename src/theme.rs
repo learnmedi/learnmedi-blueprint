@@ -52,42 +52,39 @@ pub const BUTTON_STYLES: &[&str] = &["solid", "outline", "soft"];
 pub const ANIMATIONS: &[&str] = &["none", "fade-up", "fade-in", "zoom-in", "slide-left", "slide-right"];
 pub const COLOR_TOKENS: &[&str] = &["primary", "accent", "background", "surface", "text", "muted"];
 
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Preset {
-    pub key: String,
-    pub label: String,
-    pub description: String,
-    pub featured: bool,
-    pub theme: Theme,
-}
-
-pub static PRESETS: std::sync::LazyLock<Vec<Preset>> = std::sync::LazyLock::new(|| {
-    let presets: Vec<Preset> = serde_yaml_ng::from_str(include_str!("../ui/themes.yaml"))
-        .expect("valid bundled theme catalog");
-    let mut keys = std::collections::HashSet::new();
-    for preset in &presets {
-        assert!(keys.insert(&preset.key), "duplicate theme key {}", preset.key);
-    }
-    presets
-});
-
 impl Default for Theme {
+    /// The look of a site that never picked one. The catalog of looks lives in
+    /// the engine (`themes` collection); this is only the rule-level fallback.
     fn default() -> Self {
-        preset("swiftlet").expect("legacy default theme is included")
+        Theme {
+            colors: ThemeColors {
+                primary: "#14223f".into(),
+                accent: "#47664f".into(),
+                background: "#fbf8f2".into(),
+                surface: "#f4ede1".into(),
+                text: "#1a2236".into(),
+                muted: "#5f6678".into(),
+            },
+            font_heading: "Fraunces".into(),
+            font_body: "Be Vietnam Pro".into(),
+            radius: "lg".into(),
+            header_style: "simple".into(),
+            button_style: "solid".into(),
+            base_font_size: 17,
+            default_animation: "fade-up".into(),
+        }
     }
 }
 
-pub fn preset(key: &str) -> Option<Theme> {
-    PRESETS.iter().find(|p| p.key == key).map(|p| p.theme.clone())
-}
-
-pub fn presets_json() -> Value {
-    json!(PRESETS.iter().map(|p| json!({
-        "key": p.key, "label": p.label, "description": p.description, "featured": p.featured,
-        "palette": p.theme.colors, "font_heading": p.theme.font_heading, "font_body": p.theme.font_body,
-        "header_style": p.theme.header_style,
-    })).collect::<Vec<_>>())
+/// Checks every field of a complete look (from the catalog or an admin edit).
+pub fn validate(theme: &Theme) -> Result<(), String> {
+    let mut copy = Theme::default();
+    let patch = serde_json::to_value(theme).map_err(|e| e.to_string())?;
+    apply_patch(&mut copy, &patch)?;
+    if copy != *theme {
+        return Err("giao diện có giá trị ngoài phạm vi cho phép".into());
+    }
+    Ok(())
 }
 
 pub fn is_hex_color(s: &str) -> bool {
@@ -129,11 +126,16 @@ fn named_color(name: &str) -> Option<&'static str> {
 /// Apply a JSON patch (subset of fields) with validation. Returns a list of
 /// human-readable changes, or an error naming the bad field.
 pub fn apply_patch(theme: &mut Theme, patch: &Value) -> Result<Vec<String>, String> {
+    apply_patch_with(theme, patch, &|_| None)
+}
+
+/// Like `apply_patch`, with `preset` resolving a catalog key (the catalog lives in the engine).
+pub fn apply_patch_with(theme: &mut Theme, patch: &Value, preset: &dyn Fn(&str) -> Option<Theme>) -> Result<Vec<String>, String> {
     let obj = patch.as_object().ok_or("theme patch phải là object")?;
     let mut changes = Vec::new();
     if let Some(p) = obj.get("preset").and_then(|v| v.as_str()) {
-        *theme = preset(p).ok_or_else(|| format!("preset không tồn tại: {p}. Có: {}", PRESETS.iter().map(|p| p.key.as_str()).collect::<Vec<_>>().join(", ")))?;
-        changes.push(format!("áp dụng preset {p}"));
+        *theme = preset(p).ok_or_else(|| format!("giao diện không tồn tại: {p}. Dùng list_themes để xem các key."))?;
+        changes.push(format!("áp dụng giao diện {p}"));
     }
     for (key, val) in obj {
         match key.as_str() {
@@ -192,7 +194,6 @@ fn set_enum(slot: &mut String, val: &Value, allowed: &[&str], key: &str, changes
 /// Machine-readable description for the AI prompt / editor.
 pub fn schema_json() -> Value {
     json!({
-        "presets": presets_json(),
         "colors": COLOR_TOKENS,
         "fonts": FONTS,
         "radius": RADII,

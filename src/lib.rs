@@ -7,7 +7,7 @@ pub mod i18n;
 pub mod internal;
 pub mod models;
 pub mod plans;
-pub mod templates;
+pub mod themes;
 pub mod tabs;
 pub mod theme;
 pub mod util;

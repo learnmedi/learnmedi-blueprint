@@ -256,3 +256,16 @@ pub struct CreateShareTokenResp {
     pub token: String,
     pub expires_at: i64,
 }
+
+/// `GET /internal/themes`: the theme catalog a site may offer.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ThemesResp {
+    pub themes: Vec<crate::themes::ThemeEntry>,
+}
+
+/// `POST /internal/themes`: a demo site saved as a theme, on behalf of a platform admin.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SaveThemeReq {
+    pub entry: crate::themes::ThemeEntry,
+    pub actor_email: String,
+}
