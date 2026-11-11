@@ -98,3 +98,16 @@ fn a_placeholder_fits_its_field() {
     let s = strip_block(&b, "work");
     assert!(crate::blocks::validate_props("rows", &s.props).is_ok(), "{}", s.props);
 }
+
+#[test]
+fn audiences_are_optional_and_show_in_the_summary() {
+    let e = entry();
+    assert!(e.audiences.is_empty());
+    assert_eq!(summary(&e)["audiences"], json!([]));
+    let mut v = serde_json::to_value(&e).unwrap();
+    assert!(v.get("audiences").is_none(), "an empty list is not stored");
+    v["audiences"] = json!(["academic"]);
+    let tagged: ThemeEntry = serde_json::from_value(v).unwrap();
+    assert_eq!(tagged.audiences, [Audience::Academic]);
+    assert_eq!(summary(&tagged)["audiences"], json!([{"key": "academic", "label": "Học thuật"}]));
+}

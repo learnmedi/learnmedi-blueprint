@@ -92,6 +92,8 @@ pub const HEADER_STYLES: &[&str] = &[
     "band",      // thin coloured strip on top with small centred links, page as a sheet
     "columns",   // logo block left, links in grouped columns with a ✣ bullet
     "ledger",    // round badge left, links in two stacked columns of faint caps
+    "underline", // small serif name left, spaced grey caps links right, the current one dark and underlined
+    "ruled",     // script-size name centred, a row of caps links between two coloured rules
     // not a bar
     "stack",     // wordmark top left, links as a small vertical list top right
     "frame",     // spaced caps across the top, small labels in the bottom corners
@@ -129,6 +131,9 @@ pub const FX: &[(&str, &str, &str)] = &[
     ("wiggle", "rich", "cards and buttons wiggle on hover like toys"),
     ("sparkle", "rich", "little stars twinkle around emphasised words"),
     ("boop", "rich", "icons and arrows spring when the pointer touches them"),
+    ("tab-slide", "rich", "caption tabs on picture cards slide up and fill on hover"),
+    ("band-slide", "rich", "full-width colour bands slide in from the side as they come into view"),
+    ("tile-pop", "rich", "tiles of a grid pop in one by one with a small overshoot"),
     // motion "burst" only
     ("curtain", "burst", "an opening curtain with the site name"),
     ("letters", "burst", "letters of the big title drop in one by one"),

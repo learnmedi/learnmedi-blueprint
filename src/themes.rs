@@ -55,6 +55,24 @@ impl Category {
     }
 }
 
+/// Who a theme suits, next to its motion group. A theme can carry several, or none.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Audience {
+    /// Lecturers, researchers, professors.
+    Academic,
+}
+
+impl Audience {
+    pub const ALL: [Audience; 1] = [Audience::Academic];
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Audience::Academic => "Học thuật",
+        }
+    }
+}
+
 /// The places every theme is built from. Porting moves a site's content from a
 /// slot in one theme to the same slot in another.
 pub const SLOTS: &[(&str, &str)] = &[
@@ -125,6 +143,9 @@ pub struct ThemeEntry {
     pub description: String,
     #[serde(default)]
     pub category: Category,
+    /// Who it suits (the gallery filters on it); empty = everyone.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub audiences: Vec<Audience>,
     #[serde(default)]
     pub featured: bool,
     #[serde(default)]
@@ -273,6 +294,7 @@ pub fn summary(entry: &ThemeEntry) -> Value {
     json!({
         "key": entry.key, "label": entry.label, "description": entry.description,
         "category": entry.category, "category_label": entry.category.label(),
+        "audiences": entry.audiences.iter().map(|a| json!({"key": a, "label": a.label()})).collect::<Vec<_>>(),
         "featured": entry.featured, "order": entry.order,
         "palette": entry.look.colors, "font_heading": entry.look.font_heading, "font_body": entry.look.font_body,
         "header_style": entry.look.header_style,
@@ -284,6 +306,10 @@ pub fn summary(entry: &ThemeEntry) -> Value {
 
 pub fn categories_json() -> Value {
     json!(Category::ALL.iter().map(|c| json!({"key": c, "label": c.label()})).collect::<Vec<_>>())
+}
+
+pub fn audiences_json() -> Value {
+    json!(Audience::ALL.iter().map(|a| json!({"key": a, "label": a.label()})).collect::<Vec<_>>())
 }
 
 pub fn slots_json() -> Value {
