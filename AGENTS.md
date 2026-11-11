@@ -27,6 +27,13 @@
    (double opt-in or a Google sign-in with that exact address), always with a
    personal unsubscribe link, and count against the site's daily quota
    (`newsletter::reserve`). Real sends from the AI need `confirm=true`.
+7. **Themes come from real, human-designed sites.** A theme (home page and starter
+   pages) follows one reference site for at least 68%, or two reference sites
+   mixed for at least 90% together. Take layout and composition only, never their text, images or
+   logos, and name the source in a comment at the top of the theme YAML. The
+   reference list and how to measure it are in
+   `learnmedi_engine/docs/theme-references.md`. A theme made up without a
+   reference is not accepted.
 
 
 ## Repository scope

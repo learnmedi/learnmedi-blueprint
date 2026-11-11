@@ -1,0 +1,74 @@
+key: slideshow
+group: presentation
+label: Trình chiếu
+description: Nhiều trang chiếu lớn chạy lần lượt, có mũi tên trái phải và chấm chuyển trang. Mỗi trang có ảnh nền, tiêu đề, đoạn ngắn và một nút.
+fields:
+- type: list
+  max: 8
+  item:
+  - type: image
+    key: image
+    label: Ảnh nền
+    default: ''
+  - type: text
+    max: 200
+    key: image_alt
+    label: Mô tả ảnh
+    default: ''
+  - type: text
+    max: 80
+    key: eyebrow
+    label: Dòng nhỏ phía trên
+    default: ''
+  - type: text
+    max: 160
+    emphasis: true
+    key: title
+    label: Tiêu đề
+    required: true
+    default: Tiêu đề trang chiếu
+  - type: markdown
+    max: 600
+    key: body
+    label: Đoạn ngắn
+    default: ''
+  - type: text
+    max: 60
+    key: button_label
+    label: Chữ trên nút
+    default: ''
+  - type: url
+    key: button_url
+    label: Liên kết của nút
+    default: ''
+  key: slides
+  label: Các trang chiếu
+  required: true
+  default: []
+- type: select
+  options:
+  - screen
+  - tall
+  - medium
+  key: height
+  label: Chiều cao
+  default: tall
+- type: select
+  options:
+  - fade
+  - slide
+  key: effect
+  label: Hiệu ứng chuyển
+  default: fade
+- type: select
+  options:
+  - left
+  - center
+  - split
+  key: layout
+  label: Vị trí chữ (split = chữ trên nền giấy bên trái, ảnh bên phải)
+  default: left
+- type: bool
+  key: autoplay
+  label: Tự chạy
+  default: true

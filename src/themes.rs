@@ -12,25 +12,45 @@ use crate::sections::{self, Section};
 use crate::tabs::{COLLECTION_TEMPLATES, TabKind, validate_tab_blocks};
 use crate::theme::{self, Theme};
 
+/// Themes are grouped by how much they move, from the most to the least.
+/// Old stored values (core, showcase, cv, community) still read.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Category {
+    /// Every effect, and the unusual ones (motion "burst").
+    #[serde(alias = "showcase")]
+    Burst,
+    /// Full motion (motion "rich").
+    #[serde(alias = "community")]
+    Lively,
+    /// Things fade in as they come into view (motion "calm").
     #[default]
-    Core,
-    Showcase,
-    Cv,
-    Community,
+    #[serde(alias = "core")]
+    Gentle,
+    /// No motion (motion "none").
+    #[serde(alias = "cv")]
+    Still,
 }
 
 impl Category {
-    pub const ALL: [Category; 4] = [Category::Core, Category::Showcase, Category::Cv, Category::Community];
+    pub const ALL: [Category; 4] = [Category::Burst, Category::Lively, Category::Gentle, Category::Still];
 
     pub fn label(self) -> &'static str {
         match self {
-            Category::Core => "Cơ bản",
-            Category::Showcase => "Trưng bày",
-            Category::Cv => "Hồ sơ CV",
-            Category::Community => "Cộng đồng",
+            Category::Burst => "Bùng nổ",
+            Category::Lively => "Sống động",
+            Category::Gentle => "Nhẹ nhàng",
+            Category::Still => "Tĩnh lặng",
+        }
+    }
+
+    /// The motion level a theme of this group uses.
+    pub fn motion(self) -> &'static str {
+        match self {
+            Category::Burst => "burst",
+            Category::Lively => "rich",
+            Category::Gentle => "calm",
+            Category::Still => "none",
         }
     }
 }

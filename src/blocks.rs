@@ -61,6 +61,9 @@ pub struct BlockStyle {
     /// Optional HTML id so menus can link to `#anchor`.
     #[serde(default)]
     pub anchor: String,
+    /// "" or one of DECORS: a CSS-drawn background texture (no image needed).
+    #[serde(default)]
+    pub decor: String,
 }
 
 fn d_md() -> String {
@@ -85,6 +88,7 @@ impl Default for BlockStyle {
             width: d_normal(),
             animation: String::new(),
             anchor: String::new(),
+            decor: String::new(),
         }
     }
 }
@@ -92,6 +96,7 @@ impl Default for BlockStyle {
 pub const PADDINGS: &[&str] = &["none", "sm", "md", "lg", "xl"];
 pub const ALIGNS: &[&str] = &["left", "center", "right"];
 pub const WIDTHS: &[&str] = &["narrow", "normal", "wide", "full"];
+pub const DECORS: &[&str] = &["grain", "stars", "grid", "clouds", "rays", "lines", "circle", "arches", "dots", "paper", "mesh", "network"];
 
 // ───────────────────────────── Schema ───────────────────────────────────────
 
@@ -169,6 +174,7 @@ const BLOCK_FILES: &[(&str, &str)] = &[
     ("25-divider.yaml", include_str!("../ui/blocks/25-divider.yaml")),
     ("26-spacer.yaml", include_str!("../ui/blocks/26-spacer.yaml")),
     ("27-product_list.yaml", include_str!("../ui/blocks/27-product_list.yaml")),
+    ("28-slideshow.yaml", include_str!("../ui/blocks/28-slideshow.yaml")),
 ];
 
 pub static REGISTRY: std::sync::LazyLock<Vec<BlockType>> = std::sync::LazyLock::new(|| {
@@ -398,7 +404,10 @@ pub fn apply_style_patch(style: &mut BlockStyle, patch: &Value) -> Result<Vec<St
                 let a = crate::util::slugify(&s);
                 style.anchor = a;
             }
-            other => return Err(format!("style.{other}: không tồn tại. Có: background, text_color, background_image, overlay, padding, align, width, animation, anchor")),
+            "decor" => {
+                style.decor = if s.is_empty() { s } else { one_of(&s, DECORS, "decor")? };
+            }
+            other => return Err(format!("style.{other}: không tồn tại. Có: background, text_color, background_image, overlay, padding, align, width, animation, anchor, decor")),
         }
     }
     Ok(assets)
@@ -463,7 +472,7 @@ pub fn registry_json() -> Value {
             "key": b.key, "group": b.group, "label": b.label, "description": b.description, "fields": fields_json(&b.fields)
         })).collect::<Vec<_>>(),
         "style": {
-            "padding": PADDINGS, "align": ALIGNS, "width": WIDTHS, "animation": ANIMATIONS,
+            "padding": PADDINGS, "align": ALIGNS, "width": WIDTHS, "animation": ANIMATIONS, "decor": DECORS,
             "colors": crate::theme::COLOR_TOKENS,
         },
         "icons": ICONS,

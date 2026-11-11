@@ -22,7 +22,8 @@ pub struct Theme {
     pub font_body: String,
     /// none | sm | md | lg | pill
     pub radius: String,
-    /// simple | centered | bold
+    /// How the menu is laid out (see `HEADER_STYLES`): a top bar, a column on the
+    /// left or right, a corner button, a bar at the bottom, a floating pill…
     pub header_style: String,
     /// solid | outline | soft
     pub button_style: String,
@@ -30,6 +31,27 @@ pub struct Theme {
     pub base_font_size: i64,
     /// Default entrance animation for blocks that do not set one.
     pub default_animation: String,
+    /// none (no motion at all) | calm (entrance only) | rich (staggered reveals,
+    /// parallax, hover depth, count-up numbers, moving decor) | burst (rich plus a
+    /// custom cursor, opening curtain, decoding titles, spotlight pictures, giant
+    /// ghost words, scroll skew, glare tilt, colour wipes, cursor trail, film grain).
+    #[serde(default = "d_motion")]
+    pub motion: String,
+    /// light | regular | bold | black
+    #[serde(default = "d_weight")]
+    pub heading_weight: String,
+    /// The theme's own effects (keys of `FX`), rendered as `fx-<key>` classes on
+    /// <body>. Empty on a "rich"/"burst" look made before effects were split:
+    /// `effective_fx` then gives the old shared set.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub fx: Vec<String>,
+}
+
+fn d_motion() -> String {
+    "calm".into()
+}
+fn d_weight() -> String {
+    "regular".into()
 }
 
 pub const FONTS: &[&str] = &[
@@ -45,9 +67,117 @@ pub const FONTS: &[&str] = &[
     "Roboto Slab",
     "Noto Serif",
     "Source Sans 3",
+    "Space Grotesk",
+    "IBM Plex Mono",
+    "Baloo 2",
+    "Archivo",
+    "Noto Serif Display",
 ];
 pub const RADII: &[&str] = &["none", "sm", "md", "lg", "pill"];
-pub const HEADER_STYLES: &[&str] = &["simple", "centered", "bold", "sidebar", "toggle"];
+/// Menu layouts. Each one follows the menu of a real site (named in the theme YAML that uses it).
+pub const HEADER_STYLES: &[&str] = &[
+    // a bar across the top
+    "simple",    // name left, links right
+    "centered",  // name in the middle, links on both sides, small serif
+    "bold",      // bar in the primary colour
+    "overlay",   // transparent over the first section, solid after scrolling
+    "cluster",   // links right after the name, icons pushed right
+    "cta",       // caps links and a pill button as the last item
+    "split",     // caps links around a round mark in the middle, rule under, active item boxed
+    "tabs",      // links as boxed cells with dividers, top right
+    "tiles",     // links as tall tiles with a big first letter and a small line
+    "bigtype",   // huge bold links on the right, as big as the name
+    "bracket",   // faded words in the middle, active one dark, [ brackets ] around the last
+    "masthead",  // big title band, a full-width row of caps links under it
+    "band",      // thin coloured strip on top with small centred links, page as a sheet
+    "columns",   // logo block left, links in grouped columns with a ✣ bullet
+    "ledger",    // round badge left, links in two stacked columns of faint caps
+    // not a bar
+    "stack",     // wordmark top left, links as a small vertical list top right
+    "frame",     // spaced caps across the top, small labels in the bottom corners
+    "corners",   // name top left, scroll ruler top middle, links bottom right, line bottom left
+    "burger",    // only a button in the top-right corner; the menu fills the screen
+    "drawer",    // a bar that turns into a round floating button; the menu slides in from the right
+    "dock",      // the whole menu in a bar fixed at the bottom of the screen
+    "pill",      // a floating rounded bar detached from the top edge
+    "sidebar",   // fixed column on the left: name, line, links with a line marker
+    "rail-left", // narrow fixed mono index at the left edge
+    "rail-right",// vertical strip fixed on the right edge, links turned sideways
+    "toggle",    // only a menu button
+];
+/// Effects a theme can turn on (`Theme.fx`): (key, the lowest motion level that may use it, what it does).
+pub const FX: &[(&str, &str, &str)] = &[
+    // motion "rich" and up
+    ("words", "rich", "big headings rise word by word out of a mask"),
+    ("stagger", "rich", "items of grids and lists come in one after another"),
+    ("wipe-img", "rich", "pictures open from a clipped, zoomed frame"),
+    ("parallax", "rich", "background and hero pictures drift slower than the page"),
+    ("countup", "rich", "numbers count up when they come into view"),
+    ("magnetic", "rich", "buttons lean toward the pointer"),
+    ("ripple", "rich", "a ripple spreads from the click on buttons"),
+    ("shimmer", "rich", "emphasised words carry a moving colour gradient"),
+    ("rule-draw", "rich", "a short rule draws itself under section titles"),
+    ("float", "rich", "badges and icons bob slowly"),
+    ("tuck", "rich", "the menu hides while scrolling down and returns going up"),
+    ("kenburns", "rich", "slideshow photos zoom slowly"),
+    ("decor-move", "rich", "drawn decor (stars, clouds, mesh) moves"),
+    ("card-lift", "rich", "cards rise and their picture zooms on hover"),
+    ("btn-sheen", "rich", "a light sheen sweeps across buttons on hover"),
+    ("nav-underline", "rich", "a line draws under menu links on hover"),
+    ("progress", "rich", "a reading-progress line at the top"),
+    ("bounce", "rich", "cards and items spring in with an elastic bounce"),
+    ("wiggle", "rich", "cards and buttons wiggle on hover like toys"),
+    ("sparkle", "rich", "little stars twinkle around emphasised words"),
+    ("boop", "rich", "icons and arrows spring when the pointer touches them"),
+    // motion "burst" only
+    ("curtain", "burst", "an opening curtain with the site name"),
+    ("letters", "burst", "letters of the big title drop in one by one"),
+    ("decode", "burst", "small eyebrow lines decode from random signs"),
+    ("ghost", "burst", "giant outlined words slide behind sections"),
+    ("spotlight", "burst", "pictures are grey until the pointer brings their colour back"),
+    ("color-wipe", "burst", "a colour block wipes off each picture"),
+    ("tilt", "burst", "cards tilt in 3D toward the pointer with a glare"),
+    ("clip-sections", "burst", "coloured sections open out from a rounded inset"),
+    ("grain", "burst", "film grain over the page"),
+    ("skew", "burst", "pictures skew with the scroll speed"),
+    ("cursor", "burst", "a dot-and-ring cursor with a fading trail"),
+    ("iris", "burst", "the opening picture opens through a growing circle and closes again as you scroll"),
+    ("focus-pull", "burst", "pictures are out of focus and sharpen as they reach the middle of the screen"),
+    ("glitch", "burst", "pictures arrive in shifted horizontal slices with split colour"),
+    ("scramble", "burst", "menu and button words scramble into mono signs on hover"),
+    ("flowfield", "burst", "a field of particles flows behind the opening and bends around the pointer"),
+    ("paper-tear", "burst", "sections arrive with a torn paper edge"),
+    ("ink-underline", "burst", "links get a hand-drawn wavy underline on hover"),
+    ("magnet-cursor", "burst", "a big cursor disc that grabs buttons and says “Xem” over pictures"),
+    ("hover-marquee", "burst", "a running line of text crosses a card on hover"),
+    ("starfield", "burst", "a slow starfield behind the page that turns with the pointer"),
+    ("flashlight", "burst", "dark sections are lit only around the pointer"),
+    ("sticker", "burst", "pictures and cards land like stickers, then wobble on hover"),
+    ("confetti", "burst", "buttons throw paper confetti when clicked"),
+    ("doodle", "burst", "a hand-drawn loop circles emphasised words"),
+    ("blinds", "burst", "the opening picture opens like venetian blinds"),
+    ("typewriter", "burst", "large statements type themselves with a caret"),
+    ("constellation", "burst", "a net of points and lines around the opening picture follows the pointer"),
+    ("odometer", "burst", "numbers roll into place digit by digit"),
+    ("gold-shine", "burst", "a gold-foil sheen passes over titles and award cards"),
+    // opening animations (one per burst theme, see OPENERS)
+    ("op-collage", "burst", "opening: photos from the page fly in around the name, then the page lifts like a sheet"),
+    ("op-hex", "burst", "opening: a hexagon draws itself, the name and key numbers fly out, the hexagon closes onto the page"),
+    ("op-marquee", "burst", "opening: rows of the name race across the screen, then the panel slides up"),
+    ("op-stars", "burst", "opening: points of light gather into the name, then scatter"),
+    ("op-noise", "burst", "opening: a screen of flickering signs resolves into the name, then splits into slices"),
+    ("op-paper", "burst", "opening: coloured paper sheets with the name peel away one after another"),
+    ("op-leader", "burst", "opening: a film countdown 3-2-1 with a sweeping hand, a flash, then the name"),
+];
+/// Effects that are opening animations; a page runs at most one, and none when the site has its own intro.
+pub const OPENERS: &[&str] = &["curtain", "op-collage", "op-hex", "op-marquee", "op-stars", "op-noise", "op-paper", "op-leader"];
+pub const FX_MAX: usize = 7;
+/// The shared sets every rich / burst look used before effects were split; a stored look
+/// with no `fx` keeps them.
+const LEGACY_RICH_FX: &[&str] = &["words", "stagger", "wipe-img", "parallax", "countup", "magnetic", "ripple", "shimmer", "rule-draw", "float", "tuck", "kenburns", "decor-move", "card-lift", "btn-sheen", "nav-underline", "progress"];
+const LEGACY_BURST_FX: &[&str] = &["curtain", "letters", "decode", "ghost", "spotlight", "color-wipe", "tilt", "clip-sections", "grain", "skew", "cursor"];
+pub const MOTIONS: &[&str] = &["none", "calm", "rich", "burst"];
+pub const HEADING_WEIGHTS: &[&str] = &["light", "regular", "bold", "black"];
 pub const BUTTON_STYLES: &[&str] = &["solid", "outline", "soft"];
 pub const ANIMATIONS: &[&str] = &["none", "fade-up", "fade-in", "zoom-in", "slide-left", "slide-right"];
 pub const COLOR_TOKENS: &[&str] = &["primary", "accent", "background", "surface", "text", "muted"];
@@ -72,6 +202,9 @@ impl Default for Theme {
             button_style: "solid".into(),
             base_font_size: 17,
             default_animation: "fade-up".into(),
+            motion: d_motion(),
+            heading_weight: d_weight(),
+            fx: Vec::new(),
         }
     }
 }
@@ -85,6 +218,33 @@ pub fn validate(theme: &Theme) -> Result<(), String> {
         return Err("giao diện có giá trị ngoài phạm vi cho phép".into());
     }
     Ok(())
+}
+
+fn motion_rank(m: &str) -> u8 {
+    match m {
+        "burst" => 3,
+        "rich" => 2,
+        "calm" => 1,
+        _ => 0,
+    }
+}
+
+/// Whether a look at this motion level may use the effect.
+pub fn fx_allowed(fx: &str, motion: &str) -> bool {
+    FX.iter().any(|(k, min, _)| *k == fx && motion_rank(motion) >= motion_rank(min))
+}
+
+/// The effects a page really runs: the look's own, or the old shared set for a
+/// rich / burst look saved before effects were split.
+pub fn effective_fx(theme: &Theme) -> Vec<&str> {
+    if !theme.fx.is_empty() {
+        return theme.fx.iter().map(String::as_str).filter(|f| fx_allowed(f, &theme.motion)).collect();
+    }
+    match theme.motion.as_str() {
+        "burst" => LEGACY_RICH_FX.iter().chain(LEGACY_BURST_FX).copied().collect(),
+        "rich" => LEGACY_RICH_FX.to_vec(),
+        _ => Vec::new(),
+    }
 }
 
 pub fn is_hex_color(s: &str) -> bool {
@@ -170,6 +330,31 @@ pub fn apply_patch_with(theme: &mut Theme, patch: &Value, preset: &dyn Fn(&str) 
             "header_style" => set_enum(&mut theme.header_style, val, HEADER_STYLES, key, &mut changes)?,
             "button_style" => set_enum(&mut theme.button_style, val, BUTTON_STYLES, key, &mut changes)?,
             "default_animation" => set_enum(&mut theme.default_animation, val, ANIMATIONS, key, &mut changes)?,
+            "motion" => {
+                set_enum(&mut theme.motion, val, MOTIONS, key, &mut changes)?;
+                let motion = theme.motion.clone();
+                theme.fx.retain(|f| fx_allowed(f, &motion));
+            }
+            "fx" => {
+                let list = val.as_array().ok_or("fx phải là danh sách")?;
+                let mut fx: Vec<String> = Vec::new();
+                for v in list {
+                    let f = v.as_str().ok_or("fx: mỗi mục là một chuỗi")?;
+                    if !FX.iter().any(|(k, _, _)| *k == f) {
+                        return Err(format!("fx: '{f}' không tồn tại. Có: {}", FX.iter().map(|x| x.0).collect::<Vec<_>>().join(", ")));
+                    }
+                    if !fx.iter().any(|x| x == f) {
+                        fx.push(f.to_string());
+                    }
+                }
+                if fx.len() > FX_MAX {
+                    return Err(format!("fx: tối đa {FX_MAX} hiệu ứng"));
+                }
+                fx_check(&fx, obj.get("motion").and_then(|m| m.as_str()).unwrap_or(&theme.motion))?;
+                changes.push(format!("fx = {}", fx.join(", ")));
+                theme.fx = fx;
+            }
+            "heading_weight" => set_enum(&mut theme.heading_weight, val, HEADING_WEIGHTS, key, &mut changes)?,
             "base_font_size" => {
                 let n = val.as_i64().ok_or("base_font_size phải là số")?;
                 theme.base_font_size = n.clamp(14, 21);
@@ -179,6 +364,13 @@ pub fn apply_patch_with(theme: &mut Theme, patch: &Value, preset: &dyn Fn(&str) 
         }
     }
     Ok(changes)
+}
+
+fn fx_check(fx: &[String], motion: &str) -> Result<(), String> {
+    match fx.iter().find(|f| !fx_allowed(f, motion)) {
+        Some(f) => Err(format!("fx: '{f}' không dùng được với motion={motion}")),
+        None => Ok(()),
+    }
 }
 
 fn set_enum(slot: &mut String, val: &Value, allowed: &[&str], key: &str, changes: &mut Vec<String>) -> Result<(), String> {
@@ -200,6 +392,10 @@ pub fn schema_json() -> Value {
         "header_style": HEADER_STYLES,
         "button_style": BUTTON_STYLES,
         "animations": ANIMATIONS,
+        "motion": MOTIONS,
+        "heading_weight": HEADING_WEIGHTS,
+        "fx": FX.iter().map(|(k, min, what)| json!({"key": k, "min_motion": min, "what": what})).collect::<Vec<_>>(),
+        "fx_max": FX_MAX,
         "base_font_size": "14..21",
     })
 }

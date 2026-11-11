@@ -52,3 +52,10 @@ fields:
   label: Các hàng
   required: true
   default: []
+- type: select
+  options:
+  - list
+  - leaders
+  key: style
+  label: Kiểu (leaders = dòng chấm nối tên với nhãn, như mục lục sách)
+  default: list

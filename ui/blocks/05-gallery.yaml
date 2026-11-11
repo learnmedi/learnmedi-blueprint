@@ -36,6 +36,7 @@ fields:
   - grid
   - masonry
   - collage
+  - marquee
   key: style
   label: Kiểu
   default: grid

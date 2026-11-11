@@ -113,6 +113,34 @@ fields:
   - split
   - split-reverse
   - centered
+  - overlay
+  - stack
   key: layout
-  label: Bố cục
+  label: Bố cục (overlay = ảnh phủ kín, chữ nằm trên ảnh; stack = tên khổng lồ ở trên, ảnh tràn ngang bên dưới)
   default: split
+- type: select
+  options:
+  - auto
+  - arch
+  - circle
+  - bleed
+  - blob
+  - tilt
+  - plain
+  - ring
+  - grid
+  - glow
+  - duotone
+  - inset
+  - card
+  - hex
+  key: frame
+  label: Khung ảnh (arch vòm, circle tròn có vòng màu, bleed tràn mép, blob hình hữu cơ, tilt ảnh nghiêng dán băng keo, plain chữ nhật; với overlay - ring vòng mảnh, grid lưới, glow chữ phát sáng giữa, duotone hai màu, inset khung lùi vào, card chữ trong thẻ; hex ảnh trong khung lục giác có lưới điểm, cạnh tên chữ rất đậm)
+  default: auto
+- type: select
+  options:
+  - normal
+  - display
+  key: size
+  label: Cỡ tiêu đề (display = chữ rất lớn)
+  default: normal

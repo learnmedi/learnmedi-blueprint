@@ -75,6 +75,15 @@ fields:
   default: 3
 - type: select
   options:
+  - grid
+  - scroll
+  - stagger
+  - tilt
+  key: layout
+  label: Cách xếp (scroll = hàng trượt ngang có mũi tên; stagger = so le cao thấp; tilt = thẻ nghiêng chồng nhau)
+  default: grid
+- type: select
+  options:
   - portrait
   - square
   - landscape
