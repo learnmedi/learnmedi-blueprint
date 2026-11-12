@@ -1,34 +1,46 @@
-//! The owner's private personality and the red envelope (bao lì xì) of the day.
+//! The owner's private personality and the fortune sticks (xin xăm) of the day.
 //!
 //! The personality is a short self-bio in Vietnamese that only the owner (and
 //! the AI working for them) reads: it sets the tone of pages the AI writes and
-//! of the site's 120 envelope quotes. It is never rendered on the public site.
+//! the themes of the site's 120 fortune slips. It is never rendered on the public site.
 //!
 //! The worker precomputes one `AlmanacDay` per date (Vietnamese lunar date,
-//! UTC+7) and tags it with `DAY_TYPES`. Each quote is written for one day type.
-//! A visitor opens one envelope a day: a quote of the day's main type (or a
-//! `normal` one), picked from (site, day, visitor) so a reload shows the same.
-//! Quotes are neutral sayings: never in the owner's voice or under their name.
+//! UTC+7) and tags it with `DAY_TYPES`. Each slip (quẻ) is written for one day
+//! type and carries a rank (`RANKS`). A visitor draws one stick a day: a slip of
+//! the day's main type (or a `normal` one), picked from (site, day, visitor) so a
+//! reload shows the same. The slip's number is its place in the list (1–120).
+//! Slips foretell; they are never in the owner's voice or under their name.
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 pub const BIO_MAX_WORDS: usize = 150;
 pub const BIO_MAX_CHARS: usize = 1200;
-pub const QUOTE_MAX_CHARS: usize = 160;
+pub const QUOTE_MAX_CHARS: usize = 220;
 /// Quotes per language, exactly.
 pub const QUOTES_TOTAL: usize = 120;
 
 /// Day types, from the strongest rule to the weakest. A day carries one or
 /// more; its main type is the first of this list it has.
-/// (key, Vietnamese label, what quotes of this type must say, minimum count)
+/// (key, Vietnamese label, what slips of this type must foretell, minimum count)
 pub const DAY_TYPES: &[(&str, &str, &str, usize)] = &[
-    ("nguyet_ky", "Ngày Nguyệt Kỵ (mùng 5, 14, 23 âm lịch)", "Không nên đi xa, xuất hành hay làm việc lớn. Khuyên ở gần nhà, làm việc quen, cẩn thận. TUYỆT ĐỐI không gợi ý đi chơi, đi xa, ra ngoài, bắt đầu việc mới.", 10),
-    ("tam_nuong", "Ngày Tam Nương (mùng 3, 7, 13, 18, 22, 27 âm lịch)", "Không hợp khởi sự, cưới hỏi, khai trương. Khuyên kiên nhẫn, chuẩn bị, để việc lớn sang hôm khác. Không gợi ý bắt đầu việc mới.", 10),
-    ("hac_dao", "Ngày hắc đạo", "Ngày nên chậm lại: nghỉ ngơi, làm cho xong việc cũ, lắng nghe, cẩn trọng. Không gợi ý bắt đầu việc lớn.", 15),
-    ("hoang_dao", "Ngày hoàng đạo", "Ngày thuận: khích lệ bắt đầu điều mới, gặp gỡ, học thêm, làm điều tốt.", 15),
-    ("normal", "Ngày thường (dùng được mọi ngày)", "Một câu nhẹ nhàng hợp với tính cách chủ site, không nhắc ngày tốt xấu, không khuyên đi xa hay khởi sự.", 40),
+    ("nguyet_ky", "Ngày Nguyệt Kỵ (mùng 5, 14, 23 âm lịch)", "Quẻ báo đường xa có trắc trở, việc lớn dễ dở dang; điều lành đến từ chỗ quen, người gần. Hạng ha hoặc trung. TUYỆT ĐỐI không báo lợi cho đi xa, xuất hành, khởi sự.", 10),
+    ("tam_nuong", "Ngày Tam Nương (mùng 3, 7, 13, 18, 22, 27 âm lịch)", "Quẻ báo việc mới chưa đến thời, cưới hỏi, khai trương nên dời; ai chờ thêm sẽ được. Hạng ha hoặc trung. Không báo lợi cho khởi sự.", 10),
+    ("hac_dao", "Ngày hắc đạo", "Quẻ báo nước còn đục, nên lặng: việc cũ thành, việc mới chậm, lời nói dễ lỡ. Hạng trung hoặc ha. Không báo lợi cho việc lớn.", 15),
+    ("hoang_dao", "Ngày hoàng đạo", "Quẻ báo thời đến: có quý nhân, tin vui, việc học và việc mới hanh thông. Hạng thuong hoặc trung.", 15),
+    ("normal", "Ngày thường (dùng được mọi ngày)", "Quẻ về chuyện thường ngày (học trò, đồng nghiệp, trang sách, lời hứa, mùa màng), không nhắc ngày tốt xấu, không báo lợi cho đi xa hay khởi sự. Đủ ba hạng.", 40),
 ];
+
+/// Ranks of a slip, best first: (key, Vietnamese label, English label).
+pub const RANKS: &[(&str, &str, &str)] = &[
+    ("thuong", "Thượng", "Great fortune"),
+    ("trung", "Trung", "Fair fortune"),
+    ("ha", "Hạ", "Modest fortune"),
+];
+
+pub fn rank_label(key: &str, en: bool) -> Option<&'static str> {
+    RANKS.iter().find(|r| r.0 == key).map(|r| if en { r.2 } else { r.1 })
+}
 
 pub fn is_day_type(key: &str) -> bool {
     DAY_TYPES.iter().any(|t| t.0 == key)
@@ -45,6 +57,9 @@ pub struct Quote {
     /// One of `DAY_TYPES`.
     #[serde(rename = "type")]
     pub kind: String,
+    /// One of `RANKS`; empty on sets saved before fortune sticks.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub rank: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -58,7 +73,7 @@ pub struct Personality {
     /// `QUOTES_TOTAL` quotes per language code (`vi`, `en`…).
     #[serde(default)]
     pub quotes: BTreeMap<String, Vec<Quote>>,
-    /// Fingerprint of `bio` when the quotes were saved (stale when it differs).
+    /// Fingerprint of `bio` and `FORMAT` when the quotes were saved (stale when it differs).
     #[serde(default)]
     pub quotes_bio_hash: String,
 }
@@ -83,8 +98,11 @@ impl Personality {
     }
 }
 
+/// Bumped when slips change shape, so older sets read as stale and the owner is asked to rewrite them.
+const FORMAT: &str = "xam-1";
+
 pub fn bio_hash(bio: &str) -> String {
-    format!("{:016x}", fnv(&[bio.trim()]))
+    format!("{:016x}", fnv(&[bio.trim(), FORMAT]))
 }
 
 /// One precomputed date (computed by the worker, stored by the site).
@@ -180,16 +198,19 @@ pub fn validate_quotes(quotes: &[Quote], owner_names: &[&str]) -> Result<Vec<Quo
         }
         let w = words_lower(&text);
         if ["tôi", "i", "me", "my"].iter().any(|p| w.iter().any(|x| x == p)) {
-            return Err(format!("Câu {n} nói ở ngôi thứ nhất (\"tôi\"/\"I\"). Câu chúc là lời chung trong bao lì xì, không phải lời của chủ site."));
+            return Err(format!("Câu {n} nói ở ngôi thứ nhất (\"tôi\"/\"I\"). Quẻ xăm là lời của quẻ, không phải lời của chủ site."));
         }
         // The owner's name: all words of a name, in a row.
         if names.iter().any(|name| w.windows(name.len()).any(|win| win == name.as_slice())) {
-            return Err(format!("Câu {n} nhắc tên chủ site. Câu chúc không gắn với người nào."));
+            return Err(format!("Câu {n} nhắc tên chủ site. Quẻ xăm không gắn với người nào."));
+        }
+        if rank_label(&q.rank, false).is_none() {
+            return Err(format!("Câu {n}: rank '{}' không có; dùng {}.", q.rank, RANKS.iter().map(|r| r.0).collect::<Vec<_>>().join(", ")));
         }
         if out.iter().any(|o| o.text == text) {
             return Err(format!("Câu {n} bị trùng."));
         }
-        out.push(Quote { text, kind: q.kind.clone() });
+        out.push(Quote { text, kind: q.kind.clone(), rank: q.rank.clone() });
     }
     if out.len() != QUOTES_TOTAL {
         return Err(format!("Cần đúng {QUOTES_TOTAL} câu (đang có {}).", out.len()));
@@ -198,6 +219,11 @@ pub fn validate_quotes(quotes: &[Quote], owner_names: &[&str]) -> Result<Vec<Quo
         let c = out.iter().filter(|q| q.kind == *key).count();
         if c < *min {
             return Err(format!("Loại {key} ({label}) cần ít nhất {min} câu (đang có {c})."));
+        }
+    }
+    for (key, label, _) in RANKS {
+        if !out.iter().any(|q| q.rank == *key) {
+            return Err(format!("Cần ít nhất một quẻ hạng {key} ({label})."));
         }
     }
     Ok(out)
@@ -229,23 +255,38 @@ pub fn pick<'a>(quotes: &'a [Quote], day_types: &[String], site_id: &str, date: 
     Some(pool[(fnv(&[site_id, date, visitor]) % pool.len() as u64) as usize])
 }
 
-/// The brief another assistant (or the site's AI) follows to write the 120 quotes.
+/// The brief another assistant (or the site's AI) follows to write the 120 slips.
 pub fn brief(bio: &str, lang: &str) -> serde_json::Value {
     let types: Vec<serde_json::Value> = DAY_TYPES.iter().map(|(k, l, rule, min)| serde_json::json!({"type": k, "label": l, "rule": rule, "min": min})).collect();
+    let ranks: Vec<serde_json::Value> = RANKS.iter().map(|(k, l, _)| serde_json::json!({"rank": k, "label": l})).collect();
     serde_json::json!({
-        "task": format!("Viết đúng {QUOTES_TOTAL} câu chúc ngắn bằng ngôn ngữ '{lang}' cho bao lì xì mỗi ngày của site. Mỗi câu thuộc đúng một loại ngày (type) dưới đây, đủ số tối thiểu của từng loại."),
+        "task": format!("Viết đúng {QUOTES_TOTAL} quẻ xăm bằng ngôn ngữ '{lang}' cho ống xăm trên site. Mỗi ngày, khách rút một que và đọc quẻ của mình; số quẻ là thứ tự trong danh sách (1–{QUOTES_TOTAL}). Mỗi quẻ thuộc đúng một loại ngày (type) và một hạng (rank) dưới đây, đủ số tối thiểu của từng loại."),
+        "what_a_slip_is": "Quẻ xăm là lời đoán, không phải lời khuyên hay lời chúc. Mỗi quẻ có hai phần trong cùng một câu: (1) một hình ảnh như thơ xăm (vd. 'Trăng mười sáu khuyết một bên', 'Thuyền xuôi gặp gió đầu ghềnh'); (2) lời giải nói rõ điều sắp tới ở một mảng cụ thể: việc học, công việc, người cần gặp, tin tức, chuyện chờ đợi, lời hứa. Dùng thì tương lai ('sẽ', 'sắp', 'trong tuần'), nói như quẻ đang báo trước.",
+        "examples": [
+            {"text": "Mưa dầm thấm đất. Việc đang làm dở sẽ thành nếu đủ kiên nhẫn; tin chờ lâu sắp tới, chưa nên giục.", "type": "hac_dao", "rank": "trung"},
+            {"text": "Cửa đông mở, nắng sớm vào nhà. Sắp gặp người giúp mình trong việc học hoặc công việc; lời đề nghị đầu tiên nên nhận.", "type": "hoang_dao", "rank": "thuong"},
+            {"text": "Thuyền xuôi gặp gió đầu ghềnh. Đường xa hôm nay nhiều trắc trở; điều tốt nằm ở chỗ quen, người gần.", "type": "nguyet_ky", "rank": "ha"},
+        ],
+        "not_a_slip": [
+            "Lời khuyên chung chung ('Hãy luôn mỉm cười', 'Cứ cố gắng là được').",
+            "Lời chúc ('Chúc bạn một ngày vui').",
+            "Châm ngôn không đoán điều gì.",
+        ],
         "personality": bio,
         "day_types": types,
+        "ranks": ranks,
         "rules": [
-            "Tính cách chỉ quyết định giọng và chủ đề (vd. tử tế, phục vụ cộng đồng; vui vẻ, yêu việc dạy; kỹ lưỡng, có kế hoạch). Câu chúc là lời chung trong bao lì xì, KHÔNG phải lời của chủ site.",
+            "Tính cách chủ site chỉ quyết định giọng và chủ đề hình ảnh (vd. người dạy học → trang sách, phấn bảng, học trò; người làm cộng đồng → giếng làng, bếp chung). Quẻ là lời của ống xăm, KHÔNG phải lời của chủ site.",
             "Không dùng ngôi thứ nhất (tôi, I, my), không nhắc tên chủ site, không trích dẫn ai.",
-            format!("Mỗi câu tối đa {QUOTE_MAX_CHARS} ký tự, nhẹ nhàng, không link, không lời khuyên y tế, tài chính hay cờ bạc."),
-            "Không trùng câu.",
+            "Hạng ha báo điều chưa thuận nhưng nhẹ nhàng và luôn chỉ ra chỗ có lối; không đoán bệnh tật, tai nạn, chết chóc, chia ly.",
+            "Không đoán về tiền bạc, đầu tư, xổ số, cờ bạc hay sức khoẻ.",
+            format!("Mỗi quẻ tối đa {QUOTE_MAX_CHARS} ký tự, không link, không trùng."),
+            "Có đủ ba hạng; quẻ hoàng đạo phần lớn thuong, quẻ Nguyệt Kỵ và Tam Nương phần lớn ha.",
         ],
         "send_back": {
             "op": "set_fortune_quotes",
-            "args": {"lang": lang, "quotes": [{"text": "…", "type": "normal"}]},
-            "how": "POST /api/v1/ops với {\"op\": \"set_fortune_quotes\", \"args\": {…}} (cùng token). Gửi cả 120 câu một lần; sai một câu thì cả lần gửi bị từ chối và báo câu nào sai.",
+            "args": {"lang": lang, "quotes": [{"text": "…", "type": "normal", "rank": "trung"}]},
+            "how": "POST /api/v1/ops với {\"op\": \"set_fortune_quotes\", \"args\": {…}} (cùng token). Gửi cả 120 quẻ một lần; sai một quẻ thì cả lần gửi bị từ chối và báo quẻ nào sai.",
         },
     })
 }

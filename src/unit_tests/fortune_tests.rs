@@ -1,7 +1,8 @@
 use crate::fortune::*;
 
 fn q(text: &str, kind: &str) -> Quote {
-    Quote { text: text.into(), kind: kind.into() }
+    let rank = ["thuong", "trung", "ha"][text.len() % 3];
+    Quote { text: text.into(), kind: kind.into(), rank: rank.into() }
 }
 
 /// A valid full set: the minimum of each type, the rest `normal`.
@@ -29,6 +30,12 @@ fn a_full_set_passes_and_bad_ones_are_named() {
     let mut bad = full_set();
     bad[0] = q("Đi chơi đi", "lucky");
     assert!(validate_quotes(&bad, &[]).unwrap_err().starts_with("Câu 1"));
+    let mut unranked = full_set();
+    unranked[2].rank = String::new();
+    assert!(validate_quotes(&unranked, &[]).unwrap_err().contains("rank"));
+    let mut one_rank = full_set();
+    one_rank.iter_mut().for_each(|x| x.rank = "trung".into());
+    assert!(validate_quotes(&one_rank, &[]).unwrap_err().contains("hạng"));
     let mut link = full_set();
     link[3] = q("Xem https://x.vn", "normal");
     assert!(validate_quotes(&link, &[]).is_err());
@@ -87,4 +94,8 @@ fn days_bios_and_switches_are_checked() {
     assert!(p.envelope_on("vi") && !p.quotes_stale());
     p.bio = "đổi".into();
     assert!(p.quotes_stale());
+    // Sets saved before fortune sticks (old hash, no rank) read as stale.
+    p.quotes_bio_hash = format!("{:016x}", 0u64);
+    assert!(p.quotes_stale());
+    assert_eq!(serde_json::from_str::<Quote>(r#"{"text":"a","type":"normal"}"#).unwrap().rank, "");
 }
