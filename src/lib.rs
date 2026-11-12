@@ -3,6 +3,7 @@
 pub mod blocks;
 pub mod sections;
 pub mod error;
+pub mod fortune;
 pub mod i18n;
 pub mod internal;
 pub mod models;

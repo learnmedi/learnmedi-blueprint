@@ -304,6 +304,61 @@ pub fn summary(entry: &ThemeEntry) -> Value {
     })
 }
 
+/// The catalog entry whose look equals `look` (a site that never stored its theme key).
+pub fn key_of_look<'a>(look: &Theme, catalog: &'a [ThemeEntry]) -> Option<&'a str> {
+    catalog.iter().find(|e| e.look.colors == look.colors && e.look.font_heading == look.font_heading && e.look.header_style == look.header_style).map(|e| e.key.as_str())
+}
+
+fn hex_rgb(hex: &str) -> Option<(f64, f64, f64)> {
+    let h = hex.trim().trim_start_matches('#');
+    if h.len() != 6 { return None; }
+    let n = u32::from_str_radix(h, 16).ok()?;
+    Some((((n >> 16) & 255) as f64, ((n >> 8) & 255) as f64, (n & 255) as f64))
+}
+
+/// 0 (same colour) … 1 (opposite corners of the RGB cube).
+fn colour_distance(a: &str, b: &str) -> f64 {
+    match (hex_rgb(a), hex_rgb(b)) {
+        (Some(x), Some(y)) => (((x.0 - y.0).powi(2) + (x.1 - y.1).powi(2) + (x.2 - y.2).powi(2)).sqrt() / 441.7).min(1.0),
+        _ => 1.0,
+    }
+}
+
+/// How close `other` is to the site's current look; higher is closer. Starter
+/// pages the site already has count too: the switch leaves fewer empty slots.
+pub fn similarity(look: &Theme, current: Option<&ThemeEntry>, other: &ThemeEntry, site_slugs: &[String]) -> f64 {
+    let o = &other.look;
+    let mut s = 0.0;
+    if let Some(c) = current {
+        if c.category == other.category { s += 2.0; }
+        if !c.audiences.is_empty() && c.audiences.iter().any(|a| other.audiences.contains(a)) { s += 2.0; }
+    }
+    if look.motion == o.motion { s += 1.0; }
+    if look.header_style == o.header_style { s += 1.0; }
+    if look.radius == o.radius { s += 0.5; }
+    if look.button_style == o.button_style { s += 0.5; }
+    if look.font_heading == o.font_heading { s += 0.75; }
+    if look.font_body == o.font_body { s += 0.5; }
+    s += 2.0 * (1.0 - colour_distance(&look.colors.primary, &o.colors.primary));
+    s += 1.5 * (1.0 - colour_distance(&look.colors.background, &o.colors.background));
+    if !other.pages.is_empty() {
+        let shared = other.pages.iter().filter(|p| site_slugs.contains(&p.slug)).count();
+        s += 2.0 * shared as f64 / other.pages.len() as f64;
+    }
+    s
+}
+
+/// The `n` catalog themes closest to the site's look, best first, never the current one.
+pub fn similar<'a>(look: &Theme, current_key: &str, catalog: &'a [ThemeEntry], site_slugs: &[String], n: usize) -> Vec<&'a ThemeEntry> {
+    let current = catalog.iter().find(|e| e.key == current_key);
+    let mut scored: Vec<(f64, &ThemeEntry)> = catalog.iter()
+        .filter(|e| e.key != current_key && e.look != *look)
+        .map(|e| (similarity(look, current, e, site_slugs), e))
+        .collect();
+    scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal).then(a.1.order.cmp(&b.1.order)));
+    scored.into_iter().take(n).map(|(_, e)| e).collect()
+}
+
 pub fn categories_json() -> Value {
     json!(Category::ALL.iter().map(|c| json!({"key": c, "label": c.label()})).collect::<Vec<_>>())
 }

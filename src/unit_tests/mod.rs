@@ -6,3 +6,4 @@ mod theme_tests;
 mod util_tests;
 mod i18n_tests;
 mod themes_tests;
+mod fortune_tests;

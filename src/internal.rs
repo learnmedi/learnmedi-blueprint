@@ -269,3 +269,102 @@ pub struct SaveThemeReq {
     pub entry: crate::themes::ThemeEntry,
     pub actor_email: String,
 }
+
+// ───────────────────────────── Notifications ────────────────────────────────
+
+/// Notification kinds and the params each one needs. Text is built at display
+/// time from `kind` + `params`, so it can be shown in any language.
+pub const NOTIFY_KINDS: &[&str] = &["associate_added", "theme_trial_ready", "comment_new"];
+
+/// `POST /internal/v1/notifications`: tell the owner of `site_id` about something.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NotifyReq {
+    pub site_id: String,
+    pub kind: String,
+    #[serde(default)]
+    pub params: std::collections::BTreeMap<String, String>,
+    /// Absolute https URL or a path on the site (`/…`).
+    #[serde(default)]
+    pub link: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NotificationView {
+    pub id: String,
+    pub site_id: String,
+    #[serde(default)]
+    pub site_name: String,
+    pub kind: String,
+    #[serde(default)]
+    pub params: std::collections::BTreeMap<String, String>,
+    #[serde(default)]
+    pub link: String,
+    /// How many events were folded into this one ("3 sites added you").
+    #[serde(default = "one")]
+    pub count: i64,
+    pub ts: i64,
+    pub read: bool,
+}
+fn one() -> i64 { 1 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct NotificationsResp {
+    pub items: Vec<NotificationView>,
+    pub unread: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MarkReadReq {
+    /// Empty = all.
+    #[serde(default)]
+    pub ids: Vec<String>,
+}
+
+/// Validates a notification before it is stored.
+pub fn validate_notify(r: &NotifyReq) -> Result<(), String> {
+    if !NOTIFY_KINDS.contains(&r.kind.as_str()) {
+        return Err(format!("kind: {}", NOTIFY_KINDS.join(" | ")));
+    }
+    if r.params.len() > 8 || r.params.iter().any(|(k, v)| k.len() > 32 || v.chars().count() > 200) {
+        return Err("params: tối đa 8 mục, mỗi giá trị 200 ký tự".into());
+    }
+    let l = &r.link;
+    let ok = l.is_empty() || (l.starts_with('/') && !l.starts_with("//")) || l.starts_with("https://") || l.starts_with("http://");
+    if !ok || l.len() > 500 || l.contains(['"', '<', '>', '\\', ' ']) {
+        return Err("link phải là đường dẫn / hoặc http(s)://".into());
+    }
+    Ok(())
+}
+
+// ───────────────────────────── Associates ───────────────────────────────────
+
+pub const ASSOCIATES_MAX: usize = 10;
+
+/// A site another site lists on its Associates page.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AssociateView {
+    pub site_id: String,
+    pub name: String,
+    pub url: String,
+    #[serde(default)]
+    pub ts: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AssociatesResp {
+    /// Sites this site lists, oldest first.
+    pub items: Vec<AssociateView>,
+    /// Sites that list this site (for "add back").
+    #[serde(default)]
+    pub listed_by: Vec<AssociateView>,
+}
+
+/// `POST /internal/v1/sites/{id}/associates`
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AssociateReq {
+    /// `add` | `remove`
+    pub action: String,
+    /// The other site: its id, its address (`https://x.learnmedi.com`, a custom domain) or its slug.
+    pub target: String,
+    pub actor_user_id: String,
+}
