@@ -1,0 +1,26 @@
+key: commerce.products
+label: Sản phẩm số & bán hàng
+description: Tài liệu, bản ghi, gói sản phẩm; thanh toán một lần và tải về có bảo vệ.
+workspace: content
+default_tier: premium
+default_enabled: true
+locked: false
+surfaces:
+  page:
+    tab_kind: products
+    core_block: product_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: products
+    default_title: { vi: Sản phẩm, en: Shop }
+  blocks: [product_index, product_list]
+  widgets: []
+routes:
+  public: [/products, /api/products/*/get$, /api/products/*/checkout$]
+  staff: []
+reserved_slugs: [products]
+tools:
+  - name: list_products
+  - name: save_product
+  - name: delete_product
+prompt: |
+  - Sản phẩm: list_products, save_product, delete_product. Trang Sản phẩm là tab loại Sản phẩm (create_tab kind=products, đường dẫn /products); trang từng sản phẩm vẫn ở /products/<slug>.

@@ -1,0 +1,19 @@
+key: site.fortune
+label: Ống xăm mỗi ngày
+description: Nút xin xăm trên mọi trang công khai; quẻ viết theo tính cách của chủ site.
+workspace: settings
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  blocks: []
+  widgets: [fortune_button]
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools:
+  - name: get_fortune_brief
+  - name: set_fortune_quotes
+prompt: |
+  - Ống xăm mỗi ngày: get_fortune_brief rồi set_fortune_quotes, làm đúng brief. Khi "quotes_stale" là true (tiểu sử đổi, hoặc bộ cũ viết theo cách cũ), mời người dùng viết lại bộ quẻ.

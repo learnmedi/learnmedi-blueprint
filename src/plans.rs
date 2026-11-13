@@ -5,6 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use std::sync::LazyLock;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
@@ -38,13 +39,20 @@ pub const PRODUCTS: &str = "commerce.products";
 pub const SELF_PACED: &str = "content.self_paced";
 pub const SURVEYS: &str = "research.surveys";
 pub const TEACHING: &str = "teaching.classes";
+pub const ASSETS: &str = "site.assets";
+pub const PERSONALITY: &str = "site.personality";
+pub const FORTUNE: &str = "site.fortune";
+pub const ASSOCIATES: &str = "site.associates";
+pub const SCHOLAR: &str = "site.scholar";
 
+/// A plan feature as the admin board shows it. Built from `ui/features/*.yaml`
+/// (the files without `enabled_by`); see `features`.
 #[derive(Clone, Copy, Debug, Serialize)]
 pub struct FeatureDef {
     pub key: &'static str,
     pub label: &'static str,
     pub description: &'static str,
-    /// Staff workspace that owns the feature: `studio`, `content` or `teaching`.
+    /// Staff workspace that owns the feature: `studio`, `content`, `teaching`, `overview` or `settings`.
     pub workspace: &'static str,
     pub default_tier: Tier,
     pub default_enabled: bool,
@@ -52,26 +60,35 @@ pub struct FeatureDef {
     pub locked: bool,
 }
 
-const fn feature(key: &'static str, label: &'static str, description: &'static str, workspace: &'static str, default_tier: Tier) -> FeatureDef {
-    FeatureDef { key, label, description, workspace, default_tier, default_enabled: true, locked: false }
-}
-
-pub const CATALOG: &[FeatureDef] = &[
-    FeatureDef { locked: true, ..feature(WEBSITE, "Website & giao diện", "Trang, block, giao diện, mẫu trang, màn mở đầu và xuất bản.", "studio", Tier::Basic) },
-    feature(AI_ASSISTANT, "Trợ lý AI", "Chỉnh website và viết nội dung bằng AI, trong hạn mức AI credits của gói.", "studio", Tier::Basic),
-    feature(CUSTOM_DOMAIN, "Tên miền riêng", "Kết nối và xác minh tên miền của chủ site.", "studio", Tier::Basic),
-    feature(BLOG, "Blog, lượt thích & bình luận", "Viết, xuất bản bài và kiểm duyệt bình luận.", "content", Tier::Standard),
-    feature(NEWSLETTER, "Bản tin email", "Thu thập người đăng ký và gửi bản tin (trong hạn mức mỗi ngày).", "content", Tier::Standard),
-    feature(COLLECTIONS, "Danh mục công trình", "Công bố, dự án, danh sách đọc và các danh mục khác.", "content", Tier::Standard),
-    feature(COMMUNITY, "Phục vụ cộng đồng", "Trang /community kể lại những việc chủ site đã làm vì cộng đồng.", "content", Tier::Standard),
-    feature(PRODUCTS, "Sản phẩm số & bán hàng", "Tài liệu, bản ghi, gói sản phẩm; thanh toán một lần và tải về có bảo vệ.", "content", Tier::Premium),
-    feature(SELF_PACED, "Khoá tự học", "Khoá học và đề tự học, miễn phí hoặc trả phí.", "content", Tier::Premium),
-    feature(SURVEYS, "Khảo sát nghiên cứu", "Khảo sát công khai có đồng thuận, ngày đóng và xuất CSV.", "content", Tier::Standard),
-    FeatureDef { default_enabled: false, ..feature(TEACHING, "Lớp học & giảng dạy", "Lớp, danh sách học viên, bài tập, chấm điểm, ngân hàng câu hỏi và báo cáo.", "teaching", Tier::Premium) },
-];
+/// Every plan feature, in registry order.
+pub static CATALOG: LazyLock<Vec<FeatureDef>> = LazyLock::new(|| {
+    crate::features::FEATURES
+        .iter()
+        .filter(|f| !f.is_group())
+        .map(|f| FeatureDef {
+            key: &f.key,
+            label: &f.label,
+            description: &f.description,
+            workspace: &f.workspace,
+            default_tier: f.default_tier,
+            default_enabled: f.default_enabled,
+            locked: f.locked,
+        })
+        .collect()
+});
 
 pub fn feature_def(key: &str) -> Option<&'static FeatureDef> {
     CATALOG.iter().find(|f| f.key == key)
+}
+
+/// Locked features are on for every site, even when an older engine leaves them
+/// out of the effective list.
+pub fn is_locked(key: &str) -> bool {
+    feature_def(key).is_some_and(|f| f.locked)
+}
+
+fn yes() -> bool {
+    true
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -79,6 +96,10 @@ pub struct FeatureSetting {
     pub enabled: bool,
     /// Lowest tier that includes the feature; None = in no tier (site overrides only).
     pub tier: Option<Tier>,
+    /// The AI assistant may use the feature's tools and prompt. Stored boards
+    /// from before this switch mean "on".
+    #[serde(default = "yes")]
+    pub ai: bool,
 }
 
 /// Monthly AI credits for each tier; None = the platform default.
@@ -108,15 +129,21 @@ pub struct PlanConfig {
     pub ai_credits: TierCredits,
     /// Tier of a site that has none set.
     pub default_tier: Tier,
+    /// Block types the admin switched off (missing = on).
+    pub blocks: BTreeMap<String, bool>,
+    /// Widgets the admin switched off (missing = on).
+    pub widgets: BTreeMap<String, bool>,
 }
 
 impl Default for PlanConfig {
     fn default() -> Self {
         Self {
-            features: CATALOG.iter().map(|f| (f.key.to_string(), FeatureSetting { enabled: f.default_enabled, tier: Some(f.default_tier) })).collect(),
+            features: CATALOG.iter().map(|f| (f.key.to_string(), FeatureSetting { enabled: f.default_enabled, tier: Some(f.default_tier), ai: true })).collect(),
             ai_credits: TierCredits { basic: Some(1000), standard: None, premium: None },
             // Sites created before tiers keep everything they had.
             default_tier: Tier::Premium,
+            blocks: BTreeMap::new(),
+            widgets: BTreeMap::new(),
         }
     }
 }
@@ -124,15 +151,21 @@ impl Default for PlanConfig {
 impl PlanConfig {
     /// The saved setting, or the catalog default for a feature added later.
     pub fn setting(&self, def: &FeatureDef) -> FeatureSetting {
+        let saved = self.features.get(def.key).copied();
         if def.locked {
-            return FeatureSetting { enabled: true, tier: Some(Tier::Basic) };
+            // The website itself is what the assistant edits: its AI switch stays on.
+            let ai = def.key == WEBSITE || saved.is_none_or(|s| s.ai);
+            return FeatureSetting { enabled: true, tier: Some(Tier::Basic), ai };
         }
-        self.features.get(def.key).copied().unwrap_or(FeatureSetting { enabled: def.default_enabled, tier: Some(def.default_tier) })
+        saved.unwrap_or(FeatureSetting { enabled: def.default_enabled, tier: Some(def.default_tier), ai: true })
     }
 
     /// Keeps only catalog keys, fixes locked features and rejects negative credits.
+    /// Block and widget switches keep only known keys that are off.
     pub fn normalized(mut self) -> Result<Self, String> {
         self.features = CATALOG.iter().map(|f| (f.key.to_string(), self.setting(f))).collect();
+        self.blocks.retain(|k, on| !*on && crate::blocks::block_type(k).is_some());
+        self.widgets.retain(|k, on| !*on && crate::widgets::widget(k).is_some());
         for tier in Tier::ALL {
             if self.ai_credits.get(tier).is_some_and(|v| v < 0) {
                 return Err(format!("AI credits của gói {} phải ≥ 0.", tier.label()));
@@ -152,5 +185,28 @@ impl PlanConfig {
             })
             .map(|def| def.key.to_string())
             .collect()
+    }
+
+    /// The subset of `resolve` the AI assistant may use.
+    pub fn resolve_ai(&self, tier: Tier, overrides: &BTreeMap<String, bool>) -> Vec<String> {
+        self.resolve(tier, overrides).into_iter().filter(|k| feature_def(k).is_some_and(|d| self.setting(d).ai)).collect()
+    }
+
+    pub fn block_on(&self, key: &str) -> bool {
+        self.blocks.get(key).copied().unwrap_or(true)
+    }
+
+    pub fn widget_on(&self, key: &str) -> bool {
+        self.widgets.get(key).copied().unwrap_or(true)
+    }
+
+    /// Block types switched off for every site.
+    pub fn disabled_blocks(&self) -> Vec<String> {
+        self.blocks.iter().filter(|(_, on)| !**on).map(|(k, _)| k.clone()).collect()
+    }
+
+    /// Widgets switched off for every site.
+    pub fn disabled_widgets(&self) -> Vec<String> {
+        self.widgets.iter().filter(|(_, on)| !**on).map(|(k, _)| k.clone()).collect()
     }
 }

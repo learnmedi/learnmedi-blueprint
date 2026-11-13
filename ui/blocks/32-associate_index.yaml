@@ -1,0 +1,9 @@
+key: associate_index
+group: core
+label: Cộng sự
+description: "Khối chính của tab Cộng sự: các site cộng sự."
+fields:
+- type: bool
+  key: show_title
+  label: Hiện tiêu đề
+  default: true

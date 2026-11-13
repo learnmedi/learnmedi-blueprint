@@ -31,7 +31,7 @@ fn global_off_beats_site_override() {
     assert!(!cfg.resolve(Tier::Basic, &grant).contains(&TEACHING.to_string()));
     assert!(cfg.resolve(Tier::Basic, &grant).contains(&PRODUCTS.to_string()));
     assert!(!cfg.resolve(Tier::Basic, &BTreeMap::new()).contains(&PRODUCTS.to_string()));
-    cfg.features.insert(TEACHING.into(), FeatureSetting { enabled: true, tier: None });
+    cfg.features.insert(TEACHING.into(), FeatureSetting { enabled: true, tier: None, ai: true });
     assert!(cfg.resolve(Tier::Basic, &grant).contains(&TEACHING.to_string()));
     assert!(!cfg.resolve(Tier::Premium, &BTreeMap::new()).contains(&TEACHING.to_string()));
 }
@@ -46,8 +46,8 @@ fn site_deny_beats_tier() {
 #[test]
 fn website_cannot_be_switched_off() {
     let mut cfg = PlanConfig::default();
-    cfg.features.insert(WEBSITE.into(), FeatureSetting { enabled: false, tier: None });
-    cfg.features.insert("unknown".into(), FeatureSetting { enabled: true, tier: None });
+    cfg.features.insert(WEBSITE.into(), FeatureSetting { enabled: false, tier: None, ai: true });
+    cfg.features.insert("unknown".into(), FeatureSetting { enabled: true, tier: None, ai: true });
     let cfg = cfg.normalized().unwrap();
     assert!(!cfg.features.contains_key("unknown"));
     let deny = BTreeMap::from([(WEBSITE.to_string(), false)]);

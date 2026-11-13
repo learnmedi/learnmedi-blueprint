@@ -1,0 +1,9 @@
+key: community_index
+group: core
+label: Phục vụ cộng đồng
+description: "Khối chính của tab Phục vụ cộng đồng: các hoạt động đã công khai, lọc theo năm."
+fields:
+- type: bool
+  key: show_title
+  label: Hiện tiêu đề
+  default: true

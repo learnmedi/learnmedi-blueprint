@@ -1,0 +1,18 @@
+key: site.personality
+label: Tính cách
+description: Tiểu sử riêng của chủ site, dùng để chọn giọng văn khi viết trang và quẻ xăm.
+workspace: settings
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools:
+  - name: set_personality
+prompt: |
+  - Tính cách: tiểu sử trong "personality" của get_site_overview là của riêng chủ site, không đưa nguyên văn lên trang công khai; dùng nó để chọn giọng văn khi viết trang và chủ đề quẻ xăm. Người dùng muốn sửa → set_personality.

@@ -1,0 +1,26 @@
+key: site.associates
+label: Cộng sự
+description: Trang /associates liệt kê tối đa 10 site cộng sự.
+workspace: studio
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  page:
+    tab_kind: associates
+    core_block: associate_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: associates
+    default_title: { vi: Cộng sự, en: Associates }
+  blocks: [associate_index]
+  widgets: []
+routes:
+  public: [/associates]
+  staff: []
+reserved_slugs: [associates]
+tools:
+  - name: list_associates
+  - name: add_associate
+  - name: remove_associate
+prompt: |
+  - Cộng sự: add_associate / remove_associate / list_associates (tab loại Cộng sự, kind=associates, thường ở /associates; tối đa 10 site). Hiện trên menu hay chân trang: update_tab với show_in_nav / show_in_footer.

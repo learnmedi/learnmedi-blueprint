@@ -1,0 +1,30 @@
+key: content.newsletter
+label: Bản tin email
+description: Thu thập người đăng ký và gửi bản tin (trong hạn mức mỗi ngày).
+workspace: content
+default_tier: standard
+default_enabled: true
+locked: false
+surfaces:
+  blocks: [subscribe]
+  widgets: [newsletter_prompt]
+routes:
+  public: [/api/newsletter/subscribe$]
+  staff: []
+reserved_slugs: []
+tools:
+  - name: get_newsletter_stats
+  - name: list_subscribers
+  - name: get_newsletter
+  - name: create_newsletter
+  - name: update_newsletter
+  - name: delete_newsletter
+    dangerous: true
+  - name: send_newsletter_test
+  - name: send_newsletter
+    dangerous: true
+  - name: add_subscribers
+  - name: remove_subscribers
+    dangerous: true
+prompt: |
+  - Bản tin email: soạn bằng create_newsletter (có thể tóm tắt các bài viết mới — đọc list_posts/get_post, dẫn link /blog/slug), gợi ý gửi thử (send_newsletter_test) trước. Gửi thật (send_newsletter) CHỈ sau khi giáo viên xác nhận rõ, và nói trước số người nhận (get_newsletter_stats). Muốn có ô đăng ký trên trang thì thêm block "subscribe". Không tự thêm email của người khác nếu giáo viên không đưa danh sách.

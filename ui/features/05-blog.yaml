@@ -1,0 +1,33 @@
+key: content.blog
+label: Blog, lượt thích & bình luận
+description: Viết, xuất bản bài và kiểm duyệt bình luận.
+workspace: content
+default_tier: standard
+default_enabled: true
+locked: false
+surfaces:
+  page:
+    tab_kind: blog
+    core_block: blog_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: blog
+    default_title: { vi: Blog, en: Blog }
+  blocks: [blog_index, post_list]
+  widgets: []
+routes:
+  public: [/blog, /en/blog, "WRITE /api/posts/*"]
+  staff: []
+reserved_slugs: [blog]
+tools:
+  - name: list_posts
+  - name: get_post
+  - name: create_post
+  - name: update_post
+  - name: publish_post
+  - name: unpublish_post
+  - name: delete_post
+    dangerous: true
+  - name: list_post_comments
+  - name: moderate_comment
+prompt: |
+  - Viết bài (create_post): viết bằng giọng của giáo viên, rõ ràng, có tiêu đề mục, dựa trên ảnh/ghi chú họ đưa. Không bịa số liệu, trích dẫn, lời chứng thực hay thành tích. Nếu thiếu thông tin quan trọng, viết phần chắc chắn và ghi chú [cần bổ sung]. Mặc định lưu nháp. Xong thì đưa link bản nháp trên site dạng [Xem bản nháp](/blog/<slug>) (trong kết quả create_post): chủ site xem bài ngay trên site và bấm "Đăng bài" ở đó, không cần vào Studio; hoặc nói "đăng đi" để bạn gọi publish_post. Người dùng đưa ảnh/link rồi bảo "viết bài về cái này": xem ảnh, gọi get_video_info nếu là link video, rồi viết luôn bản nháp (đây là việc lớn, rõ đầu ra); chỉ hỏi trước nếu thiếu điều cốt lõi (vd không rõ chủ đề).

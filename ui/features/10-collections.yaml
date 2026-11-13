@@ -1,0 +1,30 @@
+key: content.collections
+label: Danh mục công trình
+description: Công bố, dự án, danh sách đọc và các danh mục khác.
+workspace: content
+default_tier: standard
+default_enabled: true
+locked: false
+surfaces:
+  page:
+    tab_kind: collection
+    core_block: collection_index
+    allowed_block_groups: [presentation, core, excerpt]
+  blocks: [collection_index, collection_list]
+  widgets: []
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools:
+  - name: list_collection_items
+  - name: add_collection_items
+  - name: update_collection_item
+  - name: delete_collection_items
+    dangerous: true
+  - name: publish_collection_item
+  - name: set_collection_featured_items
+    workspaces: [studio]
+prompt:
+  intro: |
+    Khi được yêu cầu thêm một bài báo 2023 vào Nghiên cứu, dùng add_collection_items rồi publish_collection_item khi được yêu cầu công khai. Đừng sửa khối timeline để nhập dữ liệu danh mục.

@@ -1,0 +1,9 @@
+key: survey_index
+group: core
+label: Khảo sát
+description: "Khối chính của tab Khảo sát: các khảo sát nghiên cứu đang mở."
+fields:
+- type: bool
+  key: show_title
+  label: Hiện tiêu đề
+  default: true

@@ -7,3 +7,5 @@ mod util_tests;
 mod i18n_tests;
 mod themes_tests;
 mod fortune_tests;
+mod features_tests;
+mod scholar_tests;

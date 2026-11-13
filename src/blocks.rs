@@ -175,6 +175,10 @@ const BLOCK_FILES: &[(&str, &str)] = &[
     ("26-spacer.yaml", include_str!("../ui/blocks/26-spacer.yaml")),
     ("27-product_list.yaml", include_str!("../ui/blocks/27-product_list.yaml")),
     ("28-slideshow.yaml", include_str!("../ui/blocks/28-slideshow.yaml")),
+    ("29-product_index.yaml", include_str!("../ui/blocks/29-product_index.yaml")),
+    ("30-community_index.yaml", include_str!("../ui/blocks/30-community_index.yaml")),
+    ("31-survey_index.yaml", include_str!("../ui/blocks/31-survey_index.yaml")),
+    ("32-associate_index.yaml", include_str!("../ui/blocks/32-associate_index.yaml")),
 ];
 
 pub static REGISTRY: std::sync::LazyLock<Vec<BlockType>> = std::sync::LazyLock::new(|| {
@@ -503,8 +507,14 @@ fn kind_short(k: &Kind) -> String {
 
 /// Compact one-line-per-type catalog for the AI system prompt.
 pub fn catalog_for_prompt() -> String {
+    catalog_for_prompt_without(&[])
+}
+
+/// The block catalog without the given block types (switched off, or their
+/// feature is not on for the AI).
+pub fn catalog_for_prompt_without(skip: &[&str]) -> String {
     let mut s = String::new();
-    for b in REGISTRY.iter() {
+    for b in REGISTRY.iter().filter(|b| !skip.contains(&b.key.as_str())) {
         s.push_str(&format!("- {} ({}): {}\n  props: ", b.key, b.label, b.description));
         s.push_str(
             &b.fields

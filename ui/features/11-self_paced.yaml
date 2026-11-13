@@ -1,0 +1,18 @@
+# Course and quiz tools live in 02-courses.yaml (shared with teaching.classes).
+key: content.self_paced
+label: Khoá tự học
+description: Khoá học và đề tự học, miễn phí hoặc trả phí.
+workspace: content
+default_tier: premium
+default_enabled: true
+locked: false
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools: []
+prompt: |
+  - Trong Content, dùng self_paced=true khi tạo khoá tự học. Tạo đề riêng gắn course_id (không truyền week_id), dùng câu chấm tự động, ngưỡng đạt lớn hơn 0, xuất bản đề rồi gắn assessment_quiz_id bằng update_course. Khoá đã xuất bản miễn phí luôn miễn phí.

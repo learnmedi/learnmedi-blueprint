@@ -12,6 +12,10 @@ pub enum TabKind {
     Courses,
     Collection,
     Link,
+    Products,
+    Community,
+    Surveys,
+    Associates,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -34,9 +38,18 @@ pub const TAB_KINDS: &[TabKindDef] = &[
     TabKindDef { key: TabKind::Courses, label: "Khoá học", core_block: Some("course_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["course_index"] },
     TabKindDef { key: TabKind::Collection, label: "Danh mục", core_block: Some("collection_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["collection_index"] },
     TabKindDef { key: TabKind::Link, label: "Liên kết", core_block: None, allowed_block_groups: &[], default_blocks: &[] },
+    TabKindDef { key: TabKind::Products, label: "Sản phẩm", core_block: Some("product_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["product_index"] },
+    TabKindDef { key: TabKind::Community, label: "Phục vụ cộng đồng", core_block: Some("community_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["community_index"] },
+    TabKindDef { key: TabKind::Surveys, label: "Khảo sát", core_block: Some("survey_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["survey_index"] },
+    TabKindDef { key: TabKind::Associates, label: "Cộng sự", core_block: Some("associate_index"), allowed_block_groups: &[Presentation, Core, Excerpt], default_blocks: &["associate_index"] },
 ];
 
 impl TabKind {
+    /// Kinds a site may have only one of (the page that owns a feature's data).
+    pub fn single(self) -> bool {
+        !matches!(self, TabKind::Free | TabKind::Collection | TabKind::Link)
+    }
+
     pub fn definition(self) -> &'static TabKindDef {
         TAB_KINDS.iter().find(|def| def.key == self).expect("tab kind defined")
     }

@@ -32,6 +32,10 @@ pub struct User {
     pub ts_created: i64,
     #[serde(default)]
     pub ts_last_login: i64,
+    /// The site `/dashboard?site=0` opens (a site id, never a position). None or
+    /// gone = the first site.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_site_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -104,6 +108,16 @@ pub struct SiteRecord {
     /// never stored. None = an engine that does not send them (allow all).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub features: Option<Vec<String>>,
+    /// Effective features the AI assistant may use (subset of `features`).
+    /// None = an engine that does not send them (same as `features`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ai_features: Option<Vec<String>>,
+    /// Block types the platform admin switched off. None = all on.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disabled_blocks: Option<Vec<String>>,
+    /// Widgets the platform admin switched off. None = all on.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disabled_widgets: Option<Vec<String>>,
     /// Counters pushed by the sites service (for the platform admin).
     #[serde(default)]
     pub stats: SiteStats,

@@ -1,0 +1,24 @@
+# Scholar profile: publications by DOI/ORCID, HĐGSNN points (private), CV export.
+key: site.scholar
+label: Hồ sơ khoa học
+description: Nhập công bố theo DOI/ORCID, chỉ số trích dẫn, điểm HĐGSNN tự đánh giá (riêng tư) và xuất lý lịch khoa học.
+workspace: overview
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: [/overview/cv]
+reserved_slugs: []
+tools:
+  - name: get_scholar_profile
+  - name: set_scholar_settings
+  - name: import_publications
+  - name: sync_orcid
+  - name: set_publication_scholar
+prompt: |
+  - Hồ sơ khoa học: get_scholar_profile trước. Người dùng đưa DOI (hoặc link doi.org) → import_publications (nháp; hỏi có công khai không). Có ORCID → set_scholar_settings orcid rồi sync_orcid; bài mới ở trạng thái chờ duyệt, đọc tên từng bài cho chủ site và chỉ set_publication_scholar reviewed=true khi họ xác nhận. Công bố là mục của tab Nghiên cứu: không chép tay vào khối cards hay timeline.
+  - Điểm HĐGSNN là tự đánh giá và riêng tư: hạng Q1–Q4 và điểm của tạp chí (theo danh mục HĐGS ngành) phải do chủ site đưa, không đoán; vai trò tác giả (sole/main/co/equal) quyết định cách chia điểm. Chỉ bật public_badge khi chủ site yêu cầu. Lý lịch khoa học: điền cv trong set_scholar_settings rồi đưa link /overview/cv (in PDF) và /overview/cv.doc (Word).

@@ -1,0 +1,28 @@
+key: content.community
+label: Phục vụ cộng đồng
+description: Trang /community kể lại những việc chủ site đã làm vì cộng đồng.
+workspace: content
+default_tier: standard
+default_enabled: true
+locked: false
+surfaces:
+  page:
+    tab_kind: community
+    core_block: community_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: community
+    default_title: { vi: Phục vụ cộng đồng, en: Community service }
+  blocks: [community_index]
+  widgets: []
+routes:
+  public: [/community, /en/community]
+  staff: []
+reserved_slugs: [community]
+tools:
+  - name: get_community_contributions
+  - name: set_community_settings
+  - name: save_community_contribution
+  - name: delete_community_contribution
+    dangerous: true
+prompt: |
+  - Phục vụ cộng đồng: đọc get_community_contributions trước. Một hoạt động có thể gắn nhiều bài/mục danh mục. Chỉ lưu kết quả, người thụ hưởng, chỉ số và tài liệu kèm theo có thật do người dùng cung cấp; tệp kèm theo không công khai. Chữ hiện công khai kể lại việc người dùng làm vì cộng đồng, giọng ấm và khiêm tốn: không nói tới minh chứng, xác minh, đối soát hay việc chứng minh thành tích. Khoá tự học miễn phí được tổng hợp tự động. Trang này là tab loại Phục vụ cộng đồng (create_tab kind=community, đường dẫn /community); hiện trên menu hay chân trang thì dùng update_tab với show_in_nav / show_in_footer.

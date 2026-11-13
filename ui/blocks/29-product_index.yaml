@@ -1,0 +1,9 @@
+key: product_index
+group: core
+label: Sản phẩm
+description: "Khối chính của tab Sản phẩm: mọi sản phẩm đã xuất bản."
+fields:
+- type: bool
+  key: show_title
+  label: Hiện tiêu đề
+  default: true

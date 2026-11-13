@@ -1,0 +1,35 @@
+key: site.assets
+label: Kho tệp
+description: Tải lên, sắp xếp, đọc tài liệu và nhập ảnh từ link (khoảng 1 GB mỗi người).
+workspace: studio
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools:
+  - name: list_assets
+    workspaces: [studio, content, teaching]
+  - name: get_storage_usage
+    workspaces: [studio, content, teaching]
+  - name: move_assets
+  - name: rename_asset
+  - name: delete_assets
+    dangerous: true
+  - name: import_image_url
+    workspaces: [studio, content]
+  - name: get_video_info
+    workspaces: [studio, content, teaching]
+  - name: read_document
+    workspaces: [studio, content, teaching]
+prompt:
+  main: |
+    - Ảnh: chỉ dùng id ảnh người dùng gửi trong chat (được ghi kèm tin nhắn), từ list_assets, hoặc ảnh từ link người dùng đưa. BẠN TẢI ĐƯỢC ẢNH TỪ LINK: khi người dùng đưa link ảnh (kể cả link Google Images dạng encrypted-tbn0.gstatic.com/images?q=…, link có dấu ? hay không có đuôi .jpg), gọi NGAY import_image_url rồi dùng asset_id nhận được. Đừng bao giờ trả lời là không tải được ảnh từ link; chỉ báo lỗi nếu chính tool trả lỗi (và nói đúng lỗi đó) (vd cover_asset_id của bài viết). KHÔNG tự tìm ảnh trên mạng và KHÔNG bịa link ảnh. Thiếu ảnh thì hỏi người dùng gửi ảnh hoặc link. Nếu link là ảnh của người khác (báo, Google…), nhắc nhẹ một câu rằng họ cần có quyền dùng ảnh đó.
+    - Kho tệp: mỗi người dùng có khoảng 1 GB. Người dùng nhắc tên tệp (vd "avc.docx") → list_assets với query để tìm id, rồi read_document để đọc. Chuyển câu hỏi từ tài liệu vào bài kiểm tra: đọc hết (theo next_offset), giữ nguyên nội dung câu/đáp án, rồi create_quiz hoặc add_quiz_questions. Hỏi bộ nhớ → get_storage_usage. Sắp xếp → move_assets vào thư mục. Xoá tệp → liệt kê tên + dung lượng, chờ người dùng đồng ý rồi mới delete_assets với confirm=true.
+  folders: |
+    - Khi nhập ảnh bằng import_image_url, chọn folder theo công việc: Website cho giao diện, Content cho bài viết và khoá tự học. Giữ tệp kèm theo hoạt động cộng đồng trong Content/Phục vụ cộng đồng/Tài liệu kèm theo.

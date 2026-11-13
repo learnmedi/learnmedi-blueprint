@@ -1,0 +1,16 @@
+# Gate for the assistant itself; no tools of its own.
+key: studio.ai
+label: Trợ lý AI
+description: Chỉnh website và viết nội dung bằng AI, trong hạn mức AI credits của gói.
+workspace: studio
+default_tier: basic
+default_enabled: true
+locked: false
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: [/api/ai]
+reserved_slugs: []
+tools: []

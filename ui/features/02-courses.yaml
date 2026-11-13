@@ -1,0 +1,63 @@
+# Tool group, not a plan feature: on when any feature in enabled_by is on.
+key: shared.courses
+label: Khoá học & bài kiểm tra
+description: Khoá học, tuần, mục và bài kiểm tra; dùng chung cho Lớp học và Khoá tự học.
+workspace: content
+default_tier: premium
+default_enabled: true
+locked: false
+enabled_by: [teaching.classes, content.self_paced]
+ai_workspaces: [teaching]
+surfaces:
+  page:
+    tab_kind: courses
+    core_block: course_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: courses
+    default_title: { vi: Khoá học, en: Courses }
+  blocks: [course_index, course_list]
+  widgets: []
+routes:
+  public: []
+  staff: [/api/studio/courses, /api/studio/quizzes, /api/studio/attempts]
+reserved_slugs: [courses]
+tools:
+  - name: list_courses
+    workspaces: [teaching, content]
+  - name: get_course
+    workspaces: [teaching, content]
+  - name: create_course
+    workspaces: [teaching, content]
+  - name: update_course
+    workspaces: [teaching, content]
+  - name: add_course_week
+    workspaces: [teaching, content]
+  - name: add_course_item
+    workspaces: [teaching, content]
+  - name: update_course_item
+    workspaces: [teaching, content]
+  - name: delete_course_item
+  - name: publish_course
+    workspaces: [teaching, content]
+  - name: list_quizzes
+    workspaces: [teaching, content]
+  - name: get_quiz
+    workspaces: [teaching, content]
+  - name: get_quiz_results
+  - name: create_quiz
+    workspaces: [teaching, content]
+  - name: update_quiz
+    workspaces: [teaching, content]
+  - name: add_quiz_questions
+  - name: update_quiz_question
+  - name: delete_quiz_question
+  - name: publish_quiz
+    workspaces: [teaching, content]
+  - name: delete_quiz
+    dangerous: true
+prompt:
+  quiz: |
+    - Bài kiểm tra: create_quiz (có thể gắn luôn vào tuần bằng course_id + week_id), add_quiz_questions, update_quiz_question… Soạn câu hỏi CHÍNH XÁC, đáp án đúng rõ ràng, có giải thích ngắn. Khi giáo viên đưa tài liệu/ảnh/ghi chú hoặc bảo "ra đề từ bài học tuần 2", đọc nội dung (get_course, ảnh trong chat) rồi ra câu hỏi bám sát nội dung đó, không bịa kiến thức ngoài. Mặc định lưu nháp và nhắc giáo viên xem lại trước khi mở (publish_quiz).
+    - Tài liệu PDF/Word/PowerPoint: đọc bằng read_document (đọc tiếp bằng next_offset nếu tài liệu dài) TRƯỚC khi ra đề / soạn bài từ đó. Ghi rõ câu hỏi lấy từ phần nào nếu hữu ích. PDF scan được tự nhận dạng chữ (OCR) vài trang mỗi lần; đọc tiếp bằng next_offset. Nếu OCR báo không rõ chữ, nhờ giáo viên chụp lại rõ hơn.
+  assignments: |
+    - Bài tập nộp: add_course_item kind=assignment (body_md = đề bài, when = hạn nộp, points). Sửa/xoá: update_course_item / delete_course_item.

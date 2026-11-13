@@ -1,0 +1,25 @@
+key: research.surveys
+label: Khảo sát nghiên cứu
+description: Khảo sát công khai có đồng thuận, ngày đóng và xuất CSV.
+workspace: content
+default_tier: standard
+default_enabled: true
+locked: false
+surfaces:
+  page:
+    tab_kind: surveys
+    core_block: survey_index
+    allowed_block_groups: [presentation, core, excerpt]
+    default_slug: surveys
+    default_title: { vi: Khảo sát, en: Surveys }
+  blocks: [survey_index]
+  widgets: []
+routes:
+  public: [/research/surveys]
+  staff: []
+reserved_slugs: [surveys]
+tools:
+  - name: list_research_surveys
+  - name: save_research_survey
+prompt: |
+  - Khảo sát nghiên cứu: list_research_surveys rồi save_research_survey. Tab loại Khảo sát (create_tab kind=surveys) liệt kê các khảo sát đang mở; mỗi khảo sát vẫn ở /research/surveys/<slug>.

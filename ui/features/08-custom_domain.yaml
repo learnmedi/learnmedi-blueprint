@@ -1,0 +1,15 @@
+key: studio.custom_domain
+label: Tên miền riêng
+description: Kết nối và xác minh tên miền của chủ site.
+workspace: studio
+default_tier: basic
+default_enabled: true
+locked: false
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: [/api/studio/domains$]
+reserved_slugs: []
+tools: []

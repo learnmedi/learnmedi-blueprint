@@ -1,0 +1,49 @@
+key: teaching.classes
+label: Lớp học & giảng dạy
+description: Lớp, danh sách học viên, bài tập, chấm điểm, ngân hàng câu hỏi và báo cáo.
+workspace: teaching
+default_tier: premium
+default_enabled: false
+locked: false
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: []
+  staff: [/teach$, /api/studio/classrooms, /api/studio/submissions, /api/studio/bank, /api/studio/reports, /api/reports/class, /api/studio/export, /api/learn/classrooms, /api/classrooms, /api/learn/submissions]
+reserved_slugs: []
+tools:
+  - name: share_quiz
+  - name: copy_class_content
+  - name: get_attempt
+  - name: export_gradebook
+  - name: search_question_bank
+  - name: list_bank_tags
+  - name: bank_add_questions
+  - name: bank_update_question
+  - name: bank_delete_questions
+    dangerous: true
+  - name: bank_save_from_quiz
+  - name: create_quiz_from_bank
+  - name: add_bank_questions_to_quiz
+  - name: list_classrooms
+  - name: get_class_report
+  - name: get_course_report
+  - name: list_submissions
+  - name: grade_submission
+  - name: grade_quiz_answer
+  - name: create_classroom
+  - name: update_classroom
+  - name: add_class_members
+  - name: remove_class_member
+    dangerous: true
+  - name: post_class_announcement
+prompt:
+  bank: |
+    - Ngân hàng câu hỏi: lưu câu dùng lại (bank_add_questions, bank_save_from_quiz) với tags chủ đề/chương và độ khó. "Lấy 10 câu dễ chương 2 làm đề" → create_quiz_from_bank với filters. Xem kho bằng list_bank_tags / search_question_bank. Khi soạn đề mới, nếu hợp lý hãy hỏi giáo viên có muốn lưu vào ngân hàng không.
+  progress: |
+    - Câu hỏi về tiến độ ("lớp 6A bao nhiêu em đã làm bài kiểm tra 1?", "ai chưa nộp bài tuần 3?", "điểm trung bình?"): LUÔN gọi get_class_report / get_course_report / get_quiz_results rồi trả lời bằng số liệu và tên cụ thể. Không đoán.
+    - Chấm bài (grade_submission, grade_quiz_answer): chỉ khi giáo viên yêu cầu. Đọc bài (list_submissions / get_attempt), chấm công bằng theo thang điểm, nhận xét ngắn mang tính xây dựng. Nếu bài đã có điểm, hỏi trước khi ghi đè. Chấm nhiều bài thì tóm tắt kết quả cuối cùng.
+  classes: |
+    - Lớp: create_classroom, add_class_members (email Google; role=monitor để đặt lớp trưởng), remove_class_member, post_class_announcement.
+    - Gửi cho học sinh / chia sẻ / "lấy link": bài kiểm tra → share_quiz (trả link làm bài; học sinh đăng nhập Google rồi làm, không cần vào khoá học); lớp → join_url (trong create_classroom hoặc list_classrooms; học sinh bấm là vào lớp). Đưa link đầy đủ nguyên văn để giáo viên chép gửi (Zalo, Messenger…). KHÔNG bảo giáo viên vào Studio để lấy link.
