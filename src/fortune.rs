@@ -8,8 +8,8 @@
 //! UTC+7) and tags it with `DAY_TYPES`. Each slip (quẻ) is written for one day
 //! type and carries a rank (`RANKS`). A visitor draws one stick a day: a slip of
 //! the day's main type (or a `normal` one), picked from (site, day, visitor) so a
-//! reload shows the same. The slip's number is its place in the list (1–120).
-//! Slips foretell; they are never in the owner's voice or under their name.
+//! reload shows the same. Visitors see the slip's text only, never a rank or a
+//! number. Slips foretell; they are never in the owner's voice or under their name.
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -24,11 +24,11 @@ pub const QUOTES_TOTAL: usize = 120;
 /// more; its main type is the first of this list it has.
 /// (key, Vietnamese label, what slips of this type must foretell, minimum count)
 pub const DAY_TYPES: &[(&str, &str, &str, usize)] = &[
-    ("nguyet_ky", "Ngày Nguyệt Kỵ (mùng 5, 14, 23 âm lịch)", "Quẻ báo đường xa có trắc trở, việc lớn dễ dở dang; điều lành đến từ chỗ quen, người gần. Hạng ha hoặc trung. TUYỆT ĐỐI không báo lợi cho đi xa, xuất hành, khởi sự.", 10),
-    ("tam_nuong", "Ngày Tam Nương (mùng 3, 7, 13, 18, 22, 27 âm lịch)", "Quẻ báo việc mới chưa đến thời, cưới hỏi, khai trương nên dời; ai chờ thêm sẽ được. Hạng ha hoặc trung. Không báo lợi cho khởi sự.", 10),
-    ("hac_dao", "Ngày hắc đạo", "Quẻ báo nước còn đục, nên lặng: việc cũ thành, việc mới chậm, lời nói dễ lỡ. Hạng trung hoặc ha. Không báo lợi cho việc lớn.", 15),
-    ("hoang_dao", "Ngày hoàng đạo", "Quẻ báo thời đến: có quý nhân, tin vui, việc học và việc mới hanh thông. Hạng thuong hoặc trung.", 15),
-    ("normal", "Ngày thường (dùng được mọi ngày)", "Quẻ về chuyện thường ngày (học trò, đồng nghiệp, trang sách, lời hứa, mùa màng), không nhắc ngày tốt xấu, không báo lợi cho đi xa hay khởi sự. Đủ ba hạng.", 40),
+    ("nguyet_ky", "Ngày Nguyệt Kỵ (mùng 5, 14, 23 âm lịch)", "Đường xa chưa thuận, việc gần có lối. Hạng ha hoặc trung. Không báo lợi cho đi xa, khởi sự.", 10),
+    ("tam_nuong", "Ngày Tam Nương (mùng 3, 7, 13, 18, 22, 27 âm lịch)", "Việc mới chưa tới lúc, chờ thêm sẽ được. Hạng ha hoặc trung. Không báo lợi cho khởi sự.", 10),
+    ("hac_dao", "Ngày hắc đạo", "Nên chậm lại, việc cũ thành, việc mới còn chậm. Hạng trung hoặc ha.", 15),
+    ("hoang_dao", "Ngày hoàng đạo", "Vận đang lên, tin mong sắp tới, có người nâng đỡ. Hạng thuong hoặc trung.", 15),
+    ("normal", "Ngày thường", "Chờ đợi, lời hẹn, chuyện cũ trở lại, điều còn giấu. Không nhắc ngày tốt xấu, không báo lợi cho đi xa hay khởi sự. Đủ ba hạng.", 40),
 ];
 
 /// Ranks of a slip, best first: (key, Vietnamese label, English label).
@@ -99,7 +99,7 @@ impl Personality {
 }
 
 /// Bumped when slips change shape, so older sets read as stale and the owner is asked to rewrite them.
-const FORMAT: &str = "xam-1";
+const FORMAT: &str = "xam-2";
 
 pub fn bio_hash(bio: &str) -> String {
     format!("{:016x}", fnv(&[bio.trim(), FORMAT]))
@@ -196,6 +196,12 @@ pub fn validate_quotes(quotes: &[Quote], owner_names: &[&str]) -> Result<Vec<Quo
         if low.contains("http") || low.contains("www.") || low.contains("://") {
             return Err(format!("Câu {n} không được chứa đường link."));
         }
+        if text.contains(';') {
+            return Err(format!("Câu {n} có dấu chấm phẩy. Viết thành một hoặc hai câu trọn vẹn, không ghép hai vế."));
+        }
+        if is_labelled(&low) {
+            return Err(format!("Câu {n} có số quẻ hoặc nhãn trong text. \"text\" chỉ là lời quẻ; muốn đánh số thì dùng field \"n\" riêng."));
+        }
         let w = words_lower(&text);
         if ["tôi", "i", "me", "my"].iter().any(|p| w.iter().any(|x| x == p)) {
             return Err(format!("Câu {n} nói ở ngôi thứ nhất (\"tôi\"/\"I\"). Quẻ xăm là lời của quẻ, không phải lời của chủ site."));
@@ -229,6 +235,14 @@ pub fn validate_quotes(quotes: &[Quote], owner_names: &[&str]) -> Result<Vec<Quo
     Ok(out)
 }
 
+/// A label the site shows itself, written into the text: "Quẻ số 12", "Quẻ 12", "Quẻ Thượng:", "Stick no. 3"…
+fn is_labelled(low: &str) -> bool {
+    let w: Vec<&str> = low.split(|c: char| !c.is_alphanumeric()).filter(|x| !x.is_empty()).collect();
+    let num = |x: &str| x.chars().all(|c| c.is_ascii_digit());
+    w.windows(2).any(|p| (p[0] == "quẻ" || p[0] == "xăm" || p[0] == "stick" || p[0] == "slip") && (p[1] == "số" || p[1] == "no" || num(p[1])))
+        || matches!(w.as_slice(), ["quẻ", "thượng" | "trung" | "hạ", ..])
+}
+
 /// FNV-1a: stable across builds and machines (std's hasher is not).
 fn fnv(parts: &[&str]) -> u64 {
     let mut h: u64 = 0xcbf2_9ce4_8422_2325;
@@ -260,33 +274,36 @@ pub fn brief(bio: &str, lang: &str) -> serde_json::Value {
     let types: Vec<serde_json::Value> = DAY_TYPES.iter().map(|(k, l, rule, min)| serde_json::json!({"type": k, "label": l, "rule": rule, "min": min})).collect();
     let ranks: Vec<serde_json::Value> = RANKS.iter().map(|(k, l, _)| serde_json::json!({"rank": k, "label": l})).collect();
     serde_json::json!({
-        "task": format!("Viết đúng {QUOTES_TOTAL} quẻ xăm bằng ngôn ngữ '{lang}' cho ống xăm trên site. Mỗi ngày, khách rút một que và đọc quẻ của mình; số quẻ là thứ tự trong danh sách (1–{QUOTES_TOTAL}). Mỗi quẻ thuộc đúng một loại ngày (type) và một hạng (rank) dưới đây, đủ số tối thiểu của từng loại."),
-        "what_a_slip_is": "Quẻ xăm là lời đoán, không phải lời khuyên hay lời chúc. Mỗi quẻ có hai phần trong cùng một câu: (1) một hình ảnh như thơ xăm (vd. 'Trăng mười sáu khuyết một bên', 'Thuyền xuôi gặp gió đầu ghềnh'); (2) lời giải nói rõ điều sắp tới ở một mảng cụ thể: việc học, công việc, người cần gặp, tin tức, chuyện chờ đợi, lời hứa. Dùng thì tương lai ('sẽ', 'sắp', 'trong tuần'), nói như quẻ đang báo trước.",
-        "examples": [
-            {"text": "Mưa dầm thấm đất. Việc đang làm dở sẽ thành nếu đủ kiên nhẫn; tin chờ lâu sắp tới, chưa nên giục.", "type": "hac_dao", "rank": "trung"},
-            {"text": "Cửa đông mở, nắng sớm vào nhà. Sắp gặp người giúp mình trong việc học hoặc công việc; lời đề nghị đầu tiên nên nhận.", "type": "hoang_dao", "rank": "thuong"},
-            {"text": "Thuyền xuôi gặp gió đầu ghềnh. Đường xa hôm nay nhiều trắc trở; điều tốt nằm ở chỗ quen, người gần.", "type": "nguyet_ky", "rank": "ha"},
+        "task": format!("Viết đúng {QUOTES_TOTAL} quẻ xăm bằng ngôn ngữ '{lang}'. Mỗi quẻ: {{\"text\", \"type\", \"rank\"}}, thêm \"n\" nếu muốn đánh số."),
+        "how_to_write": [
+            "Lời quẻ gợi mở, có nét bí ẩn, để người rút tự nhận ra chuyện của mình. Báo chờ đợi, chuyển vận, thuận nghịch, không kể sẵn hoàn cảnh (ai, ở đâu, làm gì).",
+            "1–2 câu tiếng Việt tự nhiên, 60–160 ký tự. Câu đầu báo điều sắp tới, câu sau mở ra lối hoặc lý do.",
+            "\"text\" chỉ có lời quẻ: không số, không hạng, không nhãn, không dấu chấm phẩy.",
+            "Không lời chúc, không lời dạy, không văn báo cáo, không hình ảnh tự chế, không ngôi thứ nhất, không tên chủ site. Không đoán bệnh tật, tai nạn, chia ly, tiền bạc.",
         ],
-        "not_a_slip": [
-            "Lời khuyên chung chung ('Hãy luôn mỉm cười', 'Cứ cố gắng là được').",
-            "Lời chúc ('Chúc bạn một ngày vui').",
-            "Châm ngôn không đoán điều gì.",
+        "examples": [
+            {"text": "Chuyện tưởng đã khép sắp có lời nhắc lại. Điều bạn chờ chưa tới, nhưng lối mở sẽ đến từ chuyện đã qua.", "type": "normal", "rank": "trung"},
+            {"text": "Tin mong sẽ đến chậm hơn lòng người đợi. Khi điều còn giấu được nói ra, bạn sẽ hiểu vì sao chưa thể sớm hơn.", "type": "hac_dao", "rank": "trung"},
+            {"text": "Việc mới sắp gặp một lần ngăn trở. Chưa phải hết đường, chỉ là lúc này chưa đến lượt cửa mở.", "type": "tam_nuong", "rank": "ha"},
+            {"text": "Lời hẹn tưởng đã quên sắp được giữ. Điều từng mong mà chưa dám tin sẽ có một dấu hiệu rõ hơn.", "type": "hoang_dao", "rank": "thuong"},
+            {"text": "Đường xa chưa thuận, việc gần sắp có tin. Chỗ tưởng không còn gì để đợi lại là nơi có lời đáp.", "type": "nguyet_ky", "rank": "ha"},
+        ],
+        "bad_examples": [
+            {"text": "Nửa vầng trăng qua thước cửa; báo cáo sắp được duyệt phần kết quả, phần diễn giải sẽ còn một lượt góp ý.", "why": "Hình ảnh tự chế, chấm phẩy, văn báo cáo."},
+            {"text": "Bạn sắp đến buổi học mà thiếu một món đồ cần dùng. Người ngồi cạnh sẽ có thứ cho mượn để bạn theo kịp.", "why": "Kể sẵn tình huống cụ thể, không còn là quẻ."},
         ],
         "personality": bio,
         "day_types": types,
         "ranks": ranks,
         "rules": [
-            "Tính cách chủ site chỉ quyết định giọng và chủ đề hình ảnh (vd. người dạy học → trang sách, phấn bảng, học trò; người làm cộng đồng → giếng làng, bếp chung). Quẻ là lời của ống xăm, KHÔNG phải lời của chủ site.",
-            "Không dùng ngôi thứ nhất (tôi, I, my), không nhắc tên chủ site, không trích dẫn ai.",
-            "Hạng ha báo điều chưa thuận nhưng nhẹ nhàng và luôn chỉ ra chỗ có lối; không đoán bệnh tật, tai nạn, chết chóc, chia ly.",
-            "Không đoán về tiền bạc, đầu tư, xổ số, cờ bạc hay sức khoẻ.",
-            format!("Mỗi quẻ tối đa {QUOTE_MAX_CHARS} ký tự, không link, không trùng."),
-            "Có đủ ba hạng; quẻ hoàng đạo phần lớn thuong, quẻ Nguyệt Kỵ và Tam Nương phần lớn ha.",
+            "Đủ số tối thiểu mỗi type và đủ ba hạng. Hoàng đạo phần lớn thuong, Nguyệt Kỵ và Tam Nương phần lớn ha.",
+            "Tính cách chủ site chỉ ảnh hưởng nhẹ tới giọng, không đưa chuyện riêng của chủ site vào quẻ.",
+            "120 quẻ khác nhau thật, không lặp khuôn câu.",
         ],
         "send_back": {
             "op": "set_fortune_quotes",
-            "args": {"lang": lang, "quotes": [{"text": "…", "type": "normal", "rank": "trung"}]},
-            "how": "POST /api/v1/ops với {\"op\": \"set_fortune_quotes\", \"args\": {…}} (cùng token). Gửi cả 120 quẻ một lần; sai một quẻ thì cả lần gửi bị từ chối và báo quẻ nào sai.",
+            "args": {"lang": lang, "quotes": [{"n": 1, "text": "…", "type": "normal", "rank": "trung"}]},
+            "how": "POST /api/v1/ops với {\"op\": \"set_fortune_quotes\", \"args\": {…}}, cả 120 quẻ một lần. Bị từ chối thì sửa đúng quẻ được báo rồi gửi lại.",
         },
     })
 }

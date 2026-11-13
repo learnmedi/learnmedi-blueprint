@@ -42,6 +42,23 @@ fn a_full_set_passes_and_bad_ones_are_named() {
 }
 
 #[test]
+fn text_is_only_the_reading() {
+    for bad in ["Quẻ số 12: Trời yên biển lặng.", "Quẻ 12. Trời yên biển lặng.", "Quẻ Thượng. Trời yên biển lặng.", "Stick no. 3: calm seas.", "Trời yên biển lặng; tin vui sắp tới."] {
+        let mut set = full_set();
+        set[0].text = bad.into();
+        assert!(validate_quotes(&set, &[]).unwrap_err().starts_with("Câu 1"), "{bad}");
+    }
+    let mut ok = full_set();
+    ok[0].text = "Mưa dầm thấm lâu. Chuyện học hành ít hôm nữa sẽ thấy rõ kết quả, quẻ này khuyên cứ làm tiếp.".into();
+    assert!(validate_quotes(&ok, &[]).is_ok());
+    let with_n: Quote = serde_json::from_str(r#"{"n":12,"text":"a","type":"normal","rank":"ha"}"#).unwrap();
+    assert_eq!(with_n.text, "a");
+    let b = brief("", "vi");
+    assert!(b.get("what_a_slip_is").is_none() && b["bad_examples"][0]["why"].is_string());
+    assert!(DAY_TYPES.iter().all(|t| !t.2.contains(';')));
+}
+
+#[test]
 fn quotes_never_speak_as_the_owner() {
     let mut first = full_set();
     first[5] = q("Hôm nay tôi chúc bạn vui", "normal");
