@@ -58,11 +58,11 @@ example:
   id: status
   kind: chart
   chart: donut
-  title: Mức đáp ứng
+  title: Mức sẵn sàng
   items:
   - label: Chưa có
-    value: 4
+    value: 2
     tone: bad
   - label: Một phần
-    value: 5
+    value: 3
     tone: warn

@@ -54,9 +54,11 @@ fields:
 example:
   id: road
   kind: timeline
-  title: Lộ trình đến 30/11
-  countdown_to: '2026-11-30'
-  countdown_label: đến hạn báo cáo Thủ tướng
+  title: Lộ trình
+  countdown_to: '2030-12-31'
+  countdown_label: đến hạn
   items:
-  - date: 14/11
-    title: Họp Bộ trưởng
+  - date: 01/03
+    title: Khởi động
+  - date: 15/04
+    title: Bản thử

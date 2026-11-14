@@ -24,4 +24,4 @@ example:
   id: other
   kind: note
   title: Ý kiến khác
-  prompt: Bộ trưởng có chỉ đạo thêm?
+  prompt: Còn điều gì cần lưu ý?

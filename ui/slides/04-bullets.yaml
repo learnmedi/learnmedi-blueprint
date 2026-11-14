@@ -55,7 +55,7 @@ fields:
 example:
   id: goals
   kind: bullets
-  title: Mục tiêu cuộc họp
+  title: Mục tiêu buổi họp
   items:
-  - text: Chốt 8 điểm D1–D8
-  - text: Thống nhất phân công liên bộ
+  - text: Thống nhất phạm vi giai đoạn 1
+  - text: Chốt người phụ trách từng việc

@@ -41,9 +41,12 @@ fields:
 example:
   id: agenda
   kind: agenda
-  title: Chương trình 75 phút
-  start: '14:00'
+  title: Chương trình 45 phút
+  start: 09:00
   items:
-  - title: Mục tiêu
-    minutes: 5
-    outcome: Thống nhất phạm vi
+  - title: Bối cảnh
+    minutes: 10
+    outcome: Nắm hiện trạng
+  - title: Quyết định
+    minutes: 25
+    outcome: Chốt phương án

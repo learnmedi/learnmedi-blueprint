@@ -53,10 +53,10 @@ fields:
 example:
   id: numbers
   kind: stats
-  title: Bối cảnh
+  title: Bức tranh hiện tại
   items:
-  - value: '12'
-    label: yêu cầu trong TB 579
-  - value: '4'
-    label: chưa có trong dự thảo
-    tone: bad
+  - value: '120'
+    label: đầu sách đã số hoá
+  - value: 40%
+    label: học viên đã dùng thử
+    tone: good

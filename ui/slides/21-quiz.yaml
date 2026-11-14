@@ -51,8 +51,8 @@ example:
   id: check
   kind: quiz
   questions:
-  - q: TB 579 ban hành ngày nào?
+  - q: Thư viện số phục vụ ai trước?
     options:
-    - text: 09/11/2026
-    - text: 13/8/2026
+    - text: Học viên
+    - text: Khách tham quan
     answer: 0

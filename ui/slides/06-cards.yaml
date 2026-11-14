@@ -71,11 +71,11 @@ fields:
 example:
   id: context
   kind: cards
-  title: TB 579 có ba phần
+  title: Ba hướng làm
   items:
-  - kicker: I
-    title: Chuỗi đề án
-    body: Tích hợp, không trùng lặp
-  - kicker: II
-    title: Chiến lược PTNNL
+  - kicker: A
+    title: Tự xây
+    body: Chủ động, tốn thời gian
+  - kicker: B
+    title: Thuê nền tảng
     highlight: true

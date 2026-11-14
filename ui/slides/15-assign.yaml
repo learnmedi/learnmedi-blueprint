@@ -51,14 +51,14 @@ fields:
   default: []
   required: true
 example:
-  id: partners
+  id: owners
   kind: assign
-  title: Phối hợp liên bộ
+  title: Phân công
   rows:
-  - item: Bộ Nội vụ
-    detail: Dữ liệu lao động
+  - item: Nhóm nội dung
+    detail: Số hoá tài liệu
   columns:
-  - label: Cấp làm việc
-    options: Bộ trưởng, Thứ trưởng, Vụ
-  - label: Đầu mối
+  - label: Mức ưu tiên
+    options: Cao, Vừa, Thấp
+  - label: Người phụ trách
     options: ''

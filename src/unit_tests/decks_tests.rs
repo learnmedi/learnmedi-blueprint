@@ -5,12 +5,12 @@ use std::collections::BTreeMap;
 
 fn deck() -> Deck {
     parse(r#"
-meta: {title: Họp, start_time: "14:00", duration_min: 15}
+meta: {title: Hội thảo, start_time: "09:00", duration_min: 15}
 segments: [{id: s1, name: Mở đầu, min: 15}]
 data:
-  compare: [{id: c1, topic: Quan điểm, status: Chưa có, dec: d1}]
+  compare: [{id: c1, topic: Kinh phí, status: Chưa có, dec: d1}]
 slides:
-  - {kind: hero, title: "Tiếp thu TB 579", stats: [{value: "16", label: ngày}]}
+  - {kind: hero, title: "Kế hoạch thư viện số", stats: [{value: "3", label: mục tiêu}]}
   - {id: overview, kind: matrix, dataset: compare, group_key: status, label_key: topic, table_slide: tbl}
   - {id: tbl, kind: table, dataset: compare, columns: [{key: topic, label: Nội dung}, {key: dec, label: QĐ, format: goto}]}
   - {id: d1, kind: decision, seg: s1, code: D1, refs: c1, refs_dataset: compare, options: [{key: A, text: Giữ}, {key: B, text: Bỏ}], hint: "B"}
@@ -31,7 +31,7 @@ fn every_kind_example_validates() {
 fn a_deck_validates_fills_ids_and_lints_clean() {
     let (d, assets) = validate_deck(&deck()).unwrap();
     assert!(assets.is_empty());
-    assert_eq!(d.slides[0].id, "tiep_thu_tb_579");
+    assert_eq!(d.slides[0].id, "ke_hoach_thu_vien_so");
     assert_eq!(d.slides[4].id, "ket_luan");
     assert_eq!(d.slides[3].props["options"][0]["note"], "", "defaults are filled");
     let l = lint(&d);

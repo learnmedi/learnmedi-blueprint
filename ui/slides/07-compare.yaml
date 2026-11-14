@@ -50,8 +50,8 @@ example:
   id: gap
   kind: compare
   title: Kinh phí
-  left_title: TB 579 yêu cầu
-  left: Nhu cầu, cơ cấu nguồn, phân kỳ
-  right_title: Dự thảo hiện có
-  right: Một đoạn nguyên tắc
-  right_tone: bad
+  left_title: Cần có
+  left: Dự toán theo năm
+  right_title: Đang có
+  right: Một ước tính sơ bộ
+  right_tone: warn

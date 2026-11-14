@@ -15,8 +15,8 @@ fields:
   label: Mô tả
   default: ''
 example:
-  id: part3
+  id: part2
   kind: section
-  number: '03'
-  title: Xin ý kiến 8 điểm
-  subtitle: 40 phút
+  number: '02'
+  title: Các việc cần quyết định
+  subtitle: Khoảng 5 phút mỗi việc

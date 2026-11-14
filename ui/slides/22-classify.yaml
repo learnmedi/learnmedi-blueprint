@@ -53,5 +53,5 @@ example:
   - label: Đạt
   - label: Chưa đạt
   items:
-  - text: Mốc thời gian
+  - text: Có dự toán
     answer: 1

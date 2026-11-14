@@ -46,11 +46,11 @@ fields:
 example:
   id: cover
   kind: hero
-  eyebrow: Làm việc với Bộ trưởng · 14/11/2026
-  title: Tiếp thu Thông báo 579
-  subtitle: Chiến lược phát triển nguồn nhân lực
+  eyebrow: Hội thảo nội bộ · Học kỳ I
+  title: Kế hoạch thư viện số
+  subtitle: Mục tiêu, nguồn lực và các việc cần chốt
   stats:
-  - value: '16'
-    label: ngày đến hạn
-  - value: '8'
-    label: điểm cần quyết định
+  - value: '3'
+    label: mục tiêu chính
+  - value: '5'
+    label: việc cần quyết định

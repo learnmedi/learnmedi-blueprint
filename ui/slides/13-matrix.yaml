@@ -82,8 +82,8 @@ fields:
 example:
   id: overview
   kind: matrix
-  title: 12 yêu cầu so với dự thảo
-  dataset: compare
+  title: Yêu cầu theo trạng thái
+  dataset: reqs
   group_key: status
   label_key: topic
-  order: Chưa có, Một phần, Cần quyết định
+  order: Chưa có, Một phần, Đã có

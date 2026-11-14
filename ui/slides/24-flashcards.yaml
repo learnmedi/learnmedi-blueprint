@@ -27,5 +27,5 @@ example:
   id: terms
   kind: flashcards
   cards:
-  - front: NEET
-    back: Thanh niên không đi học, không đi làm
+  - front: OCR
+    back: Nhận dạng chữ trong ảnh

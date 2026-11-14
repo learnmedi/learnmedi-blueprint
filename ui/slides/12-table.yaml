@@ -111,26 +111,26 @@ fields:
   label: Màu trạng thái
   default: []
 example:
-  id: compare_table
+  id: req_table
   kind: table
-  title: Đối chiếu chi tiết
-  dataset: compare
+  title: Danh sách yêu cầu
+  dataset: reqs
   filter_key: status
   columns:
   - key: topic
     label: Nội dung
   - key: status
-    label: Mức đáp ứng
+    label: Trạng thái
     format: status
   - key: dec
     label: Quyết định
     format: goto
     width: s
   detail:
-  - key: req
-    label: TB 579 yêu cầu
+  - key: need
+    label: Yêu cầu
   - key: now
-    label: Dự thảo hiện có
+    label: Hiện có
   status_tones:
   - value: Chưa có
     tone: bad

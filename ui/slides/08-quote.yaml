@@ -35,6 +35,6 @@ fields:
 example:
   id: q1
   kind: quote
-  quote: Chiến lược là công cụ phục vụ trực tiếp đổi mới mô hình phát triển.
-  cite: TB 579/TB-VPCP
-  ref: Mục II.1
+  quote: Mỗi học viên phải mượn được tài liệu trong một phút.
+  cite: Mục tiêu dự án
+  ref: Mục 1

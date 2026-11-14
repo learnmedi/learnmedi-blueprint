@@ -101,12 +101,12 @@ fields:
 example:
   id: d1
   kind: decision
-  code: D1
-  title: 'Bộ chỉ tiêu: giữ bao nhiêu?'
-  question: Phụ lục I đang có 21 chỉ tiêu.
+  code: Q1
+  title: Tự xây hay thuê nền tảng?
+  question: Cần chọn cách làm cho giai đoạn 1.
   options:
   - key: A
-    text: Giữ 21 chỉ tiêu
+    text: Tự xây
   - key: B
-    text: Rút còn khoảng 10
-  hint: B sát kết luận hơn
+    text: Thuê nền tảng
+  hint: B nhanh hơn
