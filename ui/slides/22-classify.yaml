@@ -1,0 +1,57 @@
+key: classify
+label: Phân loại
+group: learn
+interactive: true
+description: Xếp từng mục vào đúng nhóm (bấm nhóm), hiện giải thích.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 5
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Nhóm
+    default: ''
+    required: true
+  key: buckets
+  label: Các nhóm
+  default: []
+  required: true
+- type: list
+  max: 14
+  item:
+  - type: text
+    max: 200
+    key: text
+    label: Mục
+    default: ''
+    required: true
+  - type: number
+    min: 0.0
+    max: 4.0
+    key: answer
+    label: Nhóm đúng (0 = nhóm đầu)
+    default: 0
+  - type: text
+    max: 300
+    key: why
+    label: Giải thích
+    default: ''
+  key: items
+  label: Các mục
+  default: []
+  required: true
+example:
+  id: sort
+  kind: classify
+  buckets:
+  - label: Đạt
+  - label: Chưa đạt
+  items:
+  - text: Mốc thời gian
+    answer: 1

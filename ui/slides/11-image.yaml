@@ -1,0 +1,33 @@
+key: image
+label: Ảnh
+group: present
+interactive: false
+description: Một ảnh lớn với chú thích.
+fields:
+- type: image
+  key: image
+  label: Ảnh
+  default: ''
+  required: true
+- type: text
+  max: 200
+  key: alt
+  label: Mô tả ảnh
+  default: ''
+- type: markdown
+  max: 400
+  key: caption
+  label: Chú thích
+  default: ''
+- type: select
+  options:
+  - contain
+  - cover
+  key: fit
+  label: Cách đặt
+  default: contain
+example:
+  id: photo
+  kind: image
+  image: https://example.com/a.jpg
+  caption: Chú thích

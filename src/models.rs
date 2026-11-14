@@ -112,6 +112,16 @@ pub struct SiteRecord {
     /// None = an engine that does not send them (same as `features`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ai_features: Option<Vec<String>>,
+    /// Effective features outside assistants (share-link tokens) may use.
+    /// None = an engine that does not send them (same as `features`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub share_features: Option<Vec<String>>,
+    /// Tools the admin took away from the AI sidebar. None = none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ai_blocked_tools: Option<Vec<String>>,
+    /// Tools the admin took away from outside assistants. None = none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub share_blocked_tools: Option<Vec<String>>,
     /// Block types the platform admin switched off. None = all on.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub disabled_blocks: Option<Vec<String>>,

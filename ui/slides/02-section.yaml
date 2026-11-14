@@ -1,0 +1,22 @@
+key: section
+label: Mở đầu phần
+group: present
+interactive: false
+description: 'Slide chuyển phần: số thứ tự lớn, tên phần (title), mô tả ngắn.'
+fields:
+- type: text
+  max: 10
+  key: number
+  label: Số thứ tự
+  default: ''
+- type: markdown
+  max: 400
+  key: subtitle
+  label: Mô tả
+  default: ''
+example:
+  id: part3
+  kind: section
+  number: '03'
+  title: Xin ý kiến 8 điểm
+  subtitle: 40 phút

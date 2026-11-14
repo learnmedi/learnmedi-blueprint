@@ -1,0 +1,31 @@
+key: rank
+label: Xếp hạng
+group: decide
+interactive: true
+description: Kéo thả (hoặc bấm ↑↓) để xếp thứ tự ưu tiên.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 10
+  item:
+  - type: text
+    max: 160
+    key: text
+    label: Mục
+    default: ''
+    required: true
+  key: items
+  label: Các mục
+  default: []
+  required: true
+example:
+  id: priorities
+  kind: rank
+  title: Thứ tự ưu tiên
+  items:
+  - text: Kinh phí
+  - text: Chỉ tiêu

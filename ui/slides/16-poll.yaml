@@ -1,0 +1,41 @@
+key: poll
+label: Biểu quyết
+group: decide
+interactive: true
+description: Câu hỏi biểu quyết; người trình bày bấm cộng phiếu cho từng lựa chọn (hoặc người xem tự chọn trên máy), cột kết quả tăng dần.
+fields:
+- type: markdown
+  max: 600
+  key: question
+  label: Câu hỏi
+  default: ''
+  required: true
+- type: list
+  max: 8
+  item:
+  - type: text
+    max: 160
+    key: text
+    label: Lựa chọn
+    default: ''
+    required: true
+  - type: text
+    max: 160
+    key: note
+    label: Ghi chú hiện sau khi chọn
+    default: ''
+  key: options
+  label: Lựa chọn
+  default: []
+  required: true
+- type: bool
+  key: multi
+  label: Chọn nhiều
+  default: false
+example:
+  id: warmup
+  kind: poll
+  question: Phương án nào khả thi nhất?
+  options:
+  - text: A
+  - text: B

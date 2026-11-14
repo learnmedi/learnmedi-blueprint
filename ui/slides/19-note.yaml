@@ -1,0 +1,27 @@
+key: note
+label: Ô ghi chú
+group: decide
+interactive: true
+description: Ô ghi nhanh trong buổi (ý kiến, kết luận); gom vào summary.
+fields:
+- type: markdown
+  max: 600
+  key: prompt
+  label: Câu hỏi gợi ý
+  default: ''
+- type: text
+  max: 200
+  key: placeholder
+  label: Chữ mờ trong ô
+  default: ''
+- type: number
+  min: 2.0
+  max: 20.0
+  key: lines
+  label: Số dòng
+  default: 6
+example:
+  id: other
+  kind: note
+  title: Ý kiến khác
+  prompt: Bộ trưởng có chỉ đạo thêm?

@@ -1,0 +1,57 @@
+key: compare
+label: So sánh hai cột
+group: present
+interactive: false
+description: Hai cột cạnh nhau (yêu cầu / hiện trạng, trước / sau) và một dòng kết luận.
+fields:
+- type: text
+  max: 120
+  key: left_title
+  label: Tiêu đề trái
+  default: ''
+- type: markdown
+  max: 1500
+  key: left
+  label: Nội dung trái
+  default: ''
+- type: select
+  options: &id001
+  - default
+  - primary
+  - accent
+  - good
+  - warn
+  - bad
+  - muted
+  key: left_tone
+  label: Sắc thái trái
+  default: default
+- type: text
+  max: 120
+  key: right_title
+  label: Tiêu đề phải
+  default: ''
+- type: markdown
+  max: 1500
+  key: right
+  label: Nội dung phải
+  default: ''
+- type: select
+  options: *id001
+  key: right_tone
+  label: Sắc thái phải
+  default: default
+- type: markdown
+  max: 600
+  key: verdict
+  label: Kết luận
+  default: ''
+example:
+  id: gap
+  kind: compare
+  title: Kinh phí
+  left_title: TB 579 yêu cầu
+  left: Nhu cầu, cơ cấu nguồn, phân kỳ
+  right_title: Dự thảo hiện có
+  right: Một đoạn nguyên tắc
+  right_tone: bad

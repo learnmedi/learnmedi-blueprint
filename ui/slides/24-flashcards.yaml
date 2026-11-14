@@ -1,0 +1,31 @@
+key: flashcards
+label: Thẻ lật
+group: learn
+interactive: true
+description: Thẻ hai mặt, bấm để lật.
+fields:
+- type: list
+  max: 30
+  item:
+  - type: markdown
+    max: 400
+    key: front
+    label: Mặt trước
+    default: ''
+    required: true
+  - type: markdown
+    max: 800
+    key: back
+    label: Mặt sau
+    default: ''
+    required: true
+  key: cards
+  label: Các thẻ
+  default: []
+  required: true
+example:
+  id: terms
+  kind: flashcards
+  cards:
+  - front: NEET
+    back: Thanh niên không đi học, không đi làm

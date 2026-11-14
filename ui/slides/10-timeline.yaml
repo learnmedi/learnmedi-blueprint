@@ -1,0 +1,62 @@
+key: timeline
+label: Lộ trình
+group: present
+interactive: true
+description: Các mốc theo thời gian, đếm ngược tới hạn; người trình bày ghi người phụ trách từng mốc ngay trên slide.
+fields:
+- type: list
+  max: 14
+  item:
+  - type: text
+    max: 30
+    key: date
+    label: Ngày
+    default: ''
+    required: true
+  - type: text
+    max: 160
+    key: title
+    label: Việc
+    default: ''
+    required: true
+  - type: markdown
+    max: 400
+    key: body
+    label: Chi tiết
+    default: ''
+  - type: text
+    max: 80
+    key: owner
+    label: Người phụ trách
+    default: ''
+  - type: bool
+    key: done
+    label: Đã xong
+    default: false
+  key: items
+  label: Các mốc
+  default: []
+  required: true
+- type: text
+  max: 10
+  key: countdown_to
+  label: Đếm ngược tới (YYYY-MM-DD)
+  default: ''
+- type: text
+  max: 80
+  key: countdown_label
+  label: Nhãn đếm ngược
+  default: ''
+- type: bool
+  key: editable_owner
+  label: Cho ghi người phụ trách
+  default: true
+example:
+  id: road
+  kind: timeline
+  title: Lộ trình đến 30/11
+  countdown_to: '2026-11-30'
+  countdown_label: đến hạn báo cáo Thủ tướng
+  items:
+  - date: 14/11
+    title: Họp Bộ trưởng

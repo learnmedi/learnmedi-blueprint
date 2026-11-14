@@ -1,0 +1,31 @@
+key: summary
+label: Tổng hợp kết luận
+group: decide
+interactive: true
+description: Tự gom mọi lựa chọn, ghi chú, phân công trong buổi thành biên bản; sao chép, in PDF hoặc tải Markdown.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: select
+  options:
+  - all
+  - decisions
+  key: include
+  label: Gom
+  default: all
+- type: text
+  max: 200
+  key: signers
+  label: Dòng ký (cách nhau |)
+  default: ''
+- type: bool
+  key: export
+  label: Nút sao chép / in / tải
+  default: true
+example:
+  id: minutes
+  kind: summary
+  title: Kết luận của Bộ trưởng

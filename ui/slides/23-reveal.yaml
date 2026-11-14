@@ -1,0 +1,36 @@
+key: reveal
+label: Hỏi rồi mở đáp án
+group: learn
+interactive: true
+description: Câu hỏi tình huống; bấm để mở gợi ý trả lời.
+fields:
+- type: markdown
+  max: 1200
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 8
+  item:
+  - type: markdown
+    max: 600
+    key: q
+    label: Câu hỏi
+    default: ''
+    required: true
+  - type: markdown
+    max: 1200
+    key: a
+    label: Gợi ý trả lời
+    default: ''
+    required: true
+  key: items
+  label: Câu hỏi
+  default: []
+  required: true
+example:
+  id: case
+  kind: reveal
+  items:
+  - q: Vì sao?
+    a: Vì…

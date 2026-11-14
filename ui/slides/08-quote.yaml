@@ -1,0 +1,40 @@
+key: quote
+label: Trích dẫn
+group: present
+interactive: false
+description: Trích nguyên văn một văn bản, có nguồn.
+fields:
+- type: markdown
+  max: 1200
+  key: quote
+  label: Trích dẫn
+  default: ''
+  required: true
+- type: text
+  max: 200
+  key: cite
+  label: Người/văn bản
+  default: ''
+- type: text
+  max: 200
+  key: ref
+  label: Vị trí (mục, trang)
+  default: ''
+- type: select
+  options:
+  - default
+  - primary
+  - accent
+  - good
+  - warn
+  - bad
+  - muted
+  key: tone
+  label: Sắc thái (màu nhấn)
+  default: default
+example:
+  id: q1
+  kind: quote
+  quote: Chiến lược là công cụ phục vụ trực tiếp đổi mới mô hình phát triển.
+  cite: TB 579/TB-VPCP
+  ref: Mục II.1

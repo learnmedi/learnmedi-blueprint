@@ -10,7 +10,7 @@ fn every_file_parses_and_keys_are_unique() {
     let set: BTreeSet<_> = keys.iter().collect();
     assert_eq!(set.len(), keys.len(), "duplicate feature key");
     for f in FEATURES.iter() {
-        assert!(["studio", "content", "teaching", "overview", "settings"].contains(&f.workspace.as_str()), "{}: workspace", f.key);
+        assert!(["studio", "content", "teaching", "overview", "settings", "learn"].contains(&f.workspace.as_str()), "{}: workspace", f.key);
         for k in &f.enabled_by {
             assert!(plans::feature_def(k).is_some(), "{} enabled_by unknown {k}", f.key);
         }
@@ -86,7 +86,7 @@ fn dangerous_list_is_unchanged() {
     let mut want = vec![
         "delete_post", "delete_page", "delete_tab", "delete_assets", "delete_quiz", "delete_collection_items",
         "delete_community_contribution", "bank_delete_questions", "remove_class_member", "remove_subscribers",
-        "delete_newsletter", "send_newsletter",
+        "delete_newsletter", "send_newsletter", "delete_deck",
     ];
     want.sort();
     assert_eq!(got, want);
@@ -192,8 +192,8 @@ fn ai_switch_is_kept_and_defaults_on() {
     assert!(old.ai);
     let mut cfg = PlanConfig::default();
     cfg.features.get_mut(plans::BLOG).unwrap().ai = false;
-    cfg.features.insert(plans::WEBSITE.into(), plans::FeatureSetting { enabled: false, tier: None, ai: false });
-    cfg.features.insert(plans::FORTUNE.into(), plans::FeatureSetting { enabled: false, tier: None, ai: false });
+    cfg.features.insert(plans::WEBSITE.into(), plans::FeatureSetting::new(false, None, false));
+    cfg.features.insert(plans::FORTUNE.into(), plans::FeatureSetting::new(false, None, false));
     let cfg = cfg.normalized().unwrap();
     let all = cfg.resolve(Tier::Premium, &BTreeMap::new());
     let ai = cfg.resolve_ai(Tier::Premium, &BTreeMap::new());

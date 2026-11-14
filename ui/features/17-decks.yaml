@@ -1,0 +1,47 @@
+# Interactive decks: slides kept as one YAML file per version in the site's storage,
+# shown by the deck player (/d/{slug}, live sessions /live/{code}). Slide kinds: ui/slides/*.yaml.
+key: site.decks
+label: Trình chiếu tương tác
+description: Bộ slide tương tác (biểu quyết, xin quyết định, bảng lọc, quiz, tổng hợp kết luận), trình chiếu trực tiếp có link cho người xem, sửa bằng AI qua link chia sẻ.
+workspace: learn
+default_tier: premium
+default_enabled: true
+locked: false
+# The sidebar assistant stays off for decks until its token budget is sorted out;
+# outside assistants (share link → ChatGPT, Claude…) may build decks.
+default_ai: false
+default_share: true
+ai_workspaces: [content]
+surfaces:
+  blocks: []
+  widgets: []
+routes:
+  public: [/d/*, /live/*]
+  staff: [/learn/presentation, /api/decks, /__preview/deck]
+reserved_slugs: [d, live]
+tools:
+  - name: list_decks
+  - name: get_deck
+  - name: lint_deck
+  - name: list_slide_kinds
+  - name: get_slide_kind_schema
+  - name: get_deck_theme_schema
+  - name: get_deck_results
+  - name: create_deck
+  - name: set_deck
+  - name: update_deck_meta
+  - name: set_deck_theme
+  - name: set_deck_data
+  - name: add_slide
+  - name: update_slide
+  - name: move_slide
+  - name: duplicate_slide
+  - name: delete_slide
+  - name: publish_deck
+  - name: unpublish_deck
+  - name: reset_deck_results
+  - name: delete_deck
+    dangerous: true
+prompt: |
+  - Trình chiếu tương tác (deck): một deck là một file YAML gồm meta, theme, segments (các phần của buổi trình bày, có số phút), data (bảng dữ liệu dùng chung, mỗi bảng là danh sách dòng) và slides. Mỗi slide có id, kind và các trường của kind đó (list_slide_kinds, get_slide_kind_schema). Đọc deck bằng get_deck trước khi sửa. Sửa nhỏ bằng update_slide / set_deck_data; dựng hoặc chuyển cả bộ (ví dụ từ PowerPoint) bằng set_deck. Sau mỗi lần sửa gọi lint_deck và sửa hết lỗi, xem các cảnh báo về chữ quá dài.
+  - Không viết HTML, CSS hay màu tự do: giao diện chọn qua set_deck_theme (preset, màu hex có kiểm tra độ tương phản, font trong danh sách, mức hiệu ứng). Mỗi slide một ý, tối đa khoảng 60 chữ trên màn hình; phần giải thích để trong notes (người trình bày mới thấy). Dữ liệu dùng ở nhiều slide (bảng đối chiếu, danh sách quyết định) để trong data và cho slide table / matrix trỏ vào.

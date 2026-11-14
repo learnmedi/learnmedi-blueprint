@@ -1,0 +1,112 @@
+key: decision
+label: Xin quyết định
+group: decide
+interactive: true
+description: 'Một điểm cần chốt: câu hỏi, các phương án (bấm để chọn), gợi ý của nhóm (chỉ người trình bày thấy), danh sách việc kèm theo, bảng phân vai tuỳ chọn (matrix_head + matrix_rows, assign_options
+  để gán đơn vị cho từng dòng) và ô ghi kết luận. Kết quả gom vào slide summary.'
+fields:
+- type: text
+  max: 10
+  key: code
+  label: Mã (D1…)
+  default: ''
+- type: markdown
+  max: 1200
+  key: question
+  label: Câu hỏi / bối cảnh
+  default: ''
+- type: text
+  max: 200
+  key: refs
+  label: Liên quan (id dòng data, cách nhau dấu phẩy)
+  default: ''
+- type: text
+  max: 40
+  key: refs_dataset
+  label: Bảng chứa các id liên quan
+  default: ''
+- type: list
+  max: 5
+  item:
+  - type: text
+    max: 4
+    key: key
+    label: Ký hiệu
+    default: A
+    required: true
+  - type: markdown
+    max: 600
+    key: text
+    label: Phương án
+    default: ''
+    required: true
+  - type: markdown
+    max: 400
+    key: note
+    label: Ghi chú / đánh đổi
+    default: ''
+  key: options
+  label: Phương án
+  default: []
+  required: true
+- type: markdown
+  max: 800
+  key: hint
+  label: Gợi ý của nhóm (chỉ người trình bày thấy)
+  default: ''
+- type: text
+  max: 120
+  key: extra_title
+  label: Tiêu đề danh sách kèm theo
+  default: ''
+- type: list
+  max: 10
+  item:
+  - type: markdown
+    max: 300
+    key: text
+    label: Mục
+    default: ''
+    required: true
+  key: extra
+  label: Danh sách kèm theo
+  default: []
+- type: text
+  max: 300
+  key: matrix_head
+  label: Tiêu đề bảng (cách nhau |)
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: text
+    max: 600
+    key: cells
+    label: Các ô (cách nhau |)
+    default: ''
+    required: true
+  key: matrix_rows
+  label: Dòng bảng
+  default: []
+- type: text
+  max: 400
+  key: assign_options
+  label: Lựa chọn gán cho từng dòng bảng (cách nhau dấu phẩy)
+  default: ''
+- type: text
+  max: 60
+  key: assign_label
+  label: Tiêu đề cột gán
+  default: Chọn
+example:
+  id: d1
+  kind: decision
+  code: D1
+  title: 'Bộ chỉ tiêu: giữ bao nhiêu?'
+  question: Phụ lục I đang có 21 chỉ tiêu.
+  options:
+  - key: A
+    text: Giữ 21 chỉ tiêu
+  - key: B
+    text: Rút còn khoảng 10
+  hint: B sát kết luận hơn

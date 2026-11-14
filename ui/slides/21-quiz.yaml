@@ -1,0 +1,58 @@
+key: quiz
+label: Trắc nghiệm
+group: learn
+interactive: true
+description: Câu hỏi trắc nghiệm một đáp án, có giải thích, đếm giờ tuỳ chọn.
+fields:
+- type: list
+  max: 20
+  item:
+  - type: markdown
+    max: 600
+    key: q
+    label: Câu hỏi
+    default: ''
+    required: true
+  - type: list
+    max: 6
+    item:
+    - type: text
+      max: 200
+      key: text
+      label: Lựa chọn
+      default: ''
+      required: true
+    key: options
+    label: Lựa chọn
+    default: []
+    required: true
+  - type: number
+    min: 0.0
+    max: 5.0
+    key: answer
+    label: Đáp án đúng (0 = lựa chọn đầu)
+    default: 0
+  - type: markdown
+    max: 600
+    key: explain
+    label: Giải thích
+    default: ''
+  key: questions
+  label: Câu hỏi
+  default: []
+  required: true
+- type: number
+  min: 0.0
+  max: 300.0
+  key: timer
+  label: Giây mỗi câu (0 = không đếm)
+  default: 0
+example:
+  id: check
+  kind: quiz
+  questions:
+  - q: TB 579 ban hành ngày nào?
+    options:
+    - text: 09/11/2026
+    - text: 13/8/2026
+    answer: 0

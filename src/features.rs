@@ -109,7 +109,7 @@ pub struct FeatureSpec {
     pub key: String,
     pub label: String,
     pub description: String,
-    /// Staff workspace that owns the feature: studio | content | teaching | overview | settings.
+    /// Staff workspace that owns the feature: studio | content | teaching | overview | settings | learn.
     pub workspace: String,
     pub default_tier: Tier,
     #[serde(default = "yes")]
@@ -117,6 +117,12 @@ pub struct FeatureSpec {
     /// Always on in every tier (the admin cannot switch it off or move it).
     #[serde(default)]
     pub locked: bool,
+    /// Default of the admin's "AI sidebar" switch for this feature.
+    #[serde(default = "yes")]
+    pub default_ai: bool,
+    /// Default of the admin's "outside AI" (share link / ChatGPT) switch.
+    #[serde(default = "yes")]
+    pub default_share: bool,
     /// Non-empty = a tool group, on when any of these features is on.
     #[serde(default)]
     pub enabled_by: Vec<String>,
@@ -172,6 +178,7 @@ const FILES: &[(&str, &str)] = &[
     ("14-fortune.yaml", include_str!("../ui/features/14-fortune.yaml")),
     ("15-associates.yaml", include_str!("../ui/features/15-associates.yaml")),
     ("16-scholar.yaml", include_str!("../ui/features/16-scholar.yaml")),
+    ("17-decks.yaml", include_str!("../ui/features/17-decks.yaml")),
 ];
 
 /// Every feature in file order (routes are matched in this order).

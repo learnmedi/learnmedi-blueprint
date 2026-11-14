@@ -1,0 +1,62 @@
+key: stats
+label: Con số
+group: present
+interactive: false
+description: Lưới thẻ số liệu, số đếm chạy khi slide hiện.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 6
+  item:
+  - type: text
+    max: 24
+    key: value
+    label: Giá trị (vd 16, 2,5–3%, 21)
+    default: '0'
+    required: true
+  - type: text
+    max: 120
+    key: label
+    label: Nhãn
+    default: ''
+  - type: text
+    max: 160
+    key: note
+    label: Ghi chú nhỏ
+    default: ''
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  key: items
+  label: Các số
+  default: []
+  required: true
+- type: number
+  min: 1.0
+  max: 6.0
+  key: columns
+  label: Số cột
+  default: 3
+example:
+  id: numbers
+  kind: stats
+  title: Bối cảnh
+  items:
+  - value: '12'
+    label: yêu cầu trong TB 579
+  - value: '4'
+    label: chưa có trong dự thảo
+    tone: bad

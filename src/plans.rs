@@ -44,6 +44,7 @@ pub const PERSONALITY: &str = "site.personality";
 pub const FORTUNE: &str = "site.fortune";
 pub const ASSOCIATES: &str = "site.associates";
 pub const SCHOLAR: &str = "site.scholar";
+pub const DECKS: &str = "site.decks";
 
 /// A plan feature as the admin board shows it. Built from `ui/features/*.yaml`
 /// (the files without `enabled_by`); see `features`.
@@ -58,6 +59,10 @@ pub struct FeatureDef {
     pub default_enabled: bool,
     /// Always on in every tier (the admin cannot switch it off or move it).
     pub locked: bool,
+    /// Default of the "AI sidebar" switch (`FeatureSetting::ai`).
+    pub default_ai: bool,
+    /// Default of the "outside AI" switch (`FeatureSetting::share`).
+    pub default_share: bool,
 }
 
 /// Every plan feature, in registry order.
@@ -73,6 +78,8 @@ pub static CATALOG: LazyLock<Vec<FeatureDef>> = LazyLock::new(|| {
             default_tier: f.default_tier,
             default_enabled: f.default_enabled,
             locked: f.locked,
+            default_ai: f.default_ai,
+            default_share: f.default_share,
         })
         .collect()
 });
@@ -100,6 +107,26 @@ pub struct FeatureSetting {
     /// from before this switch mean "on".
     #[serde(default = "yes")]
     pub ai: bool,
+    /// Outside assistants (share-link tokens: ChatGPT, Claude…) may use the
+    /// feature's ops and reads. Stored boards from before this switch mean "on".
+    #[serde(default = "yes")]
+    pub share: bool,
+}
+
+impl FeatureSetting {
+    pub fn new(enabled: bool, tier: Option<Tier>, ai: bool) -> Self {
+        FeatureSetting { enabled, tier, ai, share: true }
+    }
+}
+
+/// Per-tool switches for the two AI channels (missing = both on). Lets the admin
+/// keep a feature on for an assistant but take one tool away (e.g. deleting).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ToolSwitch {
+    #[serde(default = "yes")]
+    pub ai: bool,
+    #[serde(default = "yes")]
+    pub share: bool,
 }
 
 /// Monthly AI credits for each tier; None = the platform default.
@@ -133,17 +160,20 @@ pub struct PlanConfig {
     pub blocks: BTreeMap<String, bool>,
     /// Widgets the admin switched off (missing = on).
     pub widgets: BTreeMap<String, bool>,
+    /// Tools taken away from the AI sidebar and/or outside assistants (missing = on).
+    pub tools: BTreeMap<String, ToolSwitch>,
 }
 
 impl Default for PlanConfig {
     fn default() -> Self {
         Self {
-            features: CATALOG.iter().map(|f| (f.key.to_string(), FeatureSetting { enabled: f.default_enabled, tier: Some(f.default_tier), ai: true })).collect(),
+            features: CATALOG.iter().map(|f| (f.key.to_string(), FeatureSetting { enabled: f.default_enabled, tier: Some(f.default_tier), ai: f.default_ai, share: f.default_share })).collect(),
             ai_credits: TierCredits { basic: Some(1000), standard: None, premium: None },
             // Sites created before tiers keep everything they had.
             default_tier: Tier::Premium,
             blocks: BTreeMap::new(),
             widgets: BTreeMap::new(),
+            tools: BTreeMap::new(),
         }
     }
 }
@@ -155,9 +185,10 @@ impl PlanConfig {
         if def.locked {
             // The website itself is what the assistant edits: its AI switch stays on.
             let ai = def.key == WEBSITE || saved.is_none_or(|s| s.ai);
-            return FeatureSetting { enabled: true, tier: Some(Tier::Basic), ai };
+            let share = def.key == WEBSITE || saved.is_none_or(|s| s.share);
+            return FeatureSetting { enabled: true, tier: Some(Tier::Basic), ai, share };
         }
-        saved.unwrap_or(FeatureSetting { enabled: def.default_enabled, tier: Some(def.default_tier), ai: true })
+        saved.unwrap_or(FeatureSetting { enabled: def.default_enabled, tier: Some(def.default_tier), ai: def.default_ai, share: def.default_share })
     }
 
     /// Keeps only catalog keys, fixes locked features and rejects negative credits.
@@ -166,6 +197,8 @@ impl PlanConfig {
         self.features = CATALOG.iter().map(|f| (f.key.to_string(), self.setting(f))).collect();
         self.blocks.retain(|k, on| !*on && crate::blocks::block_type(k).is_some());
         self.widgets.retain(|k, on| !*on && crate::widgets::widget(k).is_some());
+        let known = crate::features::tool_names();
+        self.tools.retain(|k, s| !(s.ai && s.share) && known.contains(&k.as_str()));
         for tier in Tier::ALL {
             if self.ai_credits.get(tier).is_some_and(|v| v < 0) {
                 return Err(format!("AI credits của gói {} phải ≥ 0.", tier.label()));
@@ -190,6 +223,21 @@ impl PlanConfig {
     /// The subset of `resolve` the AI assistant may use.
     pub fn resolve_ai(&self, tier: Tier, overrides: &BTreeMap<String, bool>) -> Vec<String> {
         self.resolve(tier, overrides).into_iter().filter(|k| feature_def(k).is_some_and(|d| self.setting(d).ai)).collect()
+    }
+
+    /// The subset of `resolve` outside assistants (share-link tokens) may use.
+    pub fn resolve_share(&self, tier: Tier, overrides: &BTreeMap<String, bool>) -> Vec<String> {
+        self.resolve(tier, overrides).into_iter().filter(|k| feature_def(k).is_some_and(|d| self.setting(d).share)).collect()
+    }
+
+    /// Tools the admin took away from the AI sidebar.
+    pub fn ai_blocked_tools(&self) -> Vec<String> {
+        self.tools.iter().filter(|(_, s)| !s.ai).map(|(k, _)| k.clone()).collect()
+    }
+
+    /// Tools the admin took away from outside assistants.
+    pub fn share_blocked_tools(&self) -> Vec<String> {
+        self.tools.iter().filter(|(_, s)| !s.share).map(|(k, _)| k.clone()).collect()
     }
 
     pub fn block_on(&self, key: &str) -> bool {

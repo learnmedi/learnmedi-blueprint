@@ -150,3 +150,24 @@ Still open: page-view counts on the overview (GA4 only for now), per-block AI sw
 
 **In this repo:** add `ui/features/*.yaml` and the Rust that loads and validates it (like `ui/blocks`); extend `FeatureDef` and `FeatureSetting` (`ai: bool`, default true; switches for each Page kind, Block and Widget); add tab kinds Products, Community, Surveys, Associates with their core blocks; move the prompt text here; add `User.default_site_id: Option<String>`. Tests: every tool belongs to exactly one feature; every declared block, widget and tab kind exists.
 
+### Interactive decks (`site.decks`, built 2026-11-14)
+- Format: one YAML document per deck (`lmdeck v1`: `meta`, `theme`, `segments`, `data`, `slides`), validated by
+  `learnmedi_blueprint::decks`. Slide kinds live in `learnmedi_blueprint/ui/slides/*.yaml` (same field schema as
+  blocks, plus an `example`); a new kind = a YAML file there + its renderer in `learnmedi_site/crates/site/static/deck/player.js`.
+  No HTML, CSS or free colours anywhere: theme = preset + checked hex colours + listed fonts + motion level.
+- Storage: every version is a file `{prefix}/{site}/deck/{deck}/r{rev}.lmdeck.yaml` in the site's storage (never
+  rewritten); Mongo `decks` keeps only the pointer, title, slug, published version and saved results. Undo restores the pointer.
+- Ops (`decks::apply`): create_deck, set_deck, update_deck_meta, set_deck_theme, set_deck_data, add/update/move/duplicate/delete_slide,
+  publish/unpublish_deck, reset_deck_results, delete_deck (dangerous). Reads: list_decks, get_deck, lint_deck, list_slide_kinds,
+  get_slide_kind_schema, get_deck_theme_schema, get_deck_results. Every write returns `lint`.
+- Workspace `/learn/presentation` (staff page `static/staff/presentation.html` + `presentation.js`). Player routes: presenter
+  `/learn/presentation/{id}/present` (notes, clock per segment, hints, audience window, live session, QR card), draft
+  `/__preview/deck/{id}`, published `/d/{slug}`, live audience `/live/{code}` (follows the presenter or browses freely; never
+  sees notes, hints or hidden slides). Live sessions end on "Kết thúc", after 30 minutes without a heartbeat or after 12 hours;
+  the presenter chooses whether the final state stays viewable (0 / 24 h / 7 days). Offline copy: `/api/decks/{id}/offline.html`.
+- One-deck share link (`POST /api/decks/{id}/share-link`): 6 hours, reaches only `api_v1::DECK_SCOPE_READS/OPS` for that deck;
+  its `/agent` page is `deck_guide.rs` (design brief: ask before guessing, pick kinds by intent, lint, preview).
+- AI channel switches: every feature has "AI trợ lý" (sidebar, `FeatureSetting.ai`) and "AI ngoài" (share links / API,
+  `FeatureSetting.share`), and the admin can take single tools away per channel (`PlanConfig.tools`). The site record carries
+  `share_features`, `ai_blocked_tools`, `share_blocked_tools`; `features::tool_for_ai` / `tool_for_share` enforce them.
+  Decks ship with the sidebar AI off and outside AI on.

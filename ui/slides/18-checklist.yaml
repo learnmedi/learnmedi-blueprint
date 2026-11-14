@@ -1,0 +1,34 @@
+key: checklist
+label: Danh sách kiểm
+group: decide
+interactive: true
+description: Danh sách đánh dấu đã xong.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 15
+  item:
+  - type: text
+    max: 200
+    key: text
+    label: Mục
+    default: ''
+    required: true
+  - type: bool
+    key: done
+    label: Đã xong
+    default: false
+  key: items
+  label: Các mục
+  default: []
+  required: true
+example:
+  id: todo
+  kind: checklist
+  title: Việc phải làm
+  items:
+  - text: Bổ sung căn cứ

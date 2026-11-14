@@ -1,0 +1,68 @@
+key: chart
+label: Biểu đồ
+group: present
+interactive: false
+description: Biểu đồ cột (bar), cột ngang (hbar), đường (line) hoặc vòng (donut), vẽ dần khi hiện.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: select
+  options:
+  - bar
+  - hbar
+  - line
+  - donut
+  key: chart
+  label: Loại
+  default: bar
+- type: text
+  max: 20
+  key: unit
+  label: Đơn vị
+  default: ''
+- type: list
+  max: 16
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Nhãn
+    default: ''
+    required: true
+  - type: number
+    min: -1000000000000.0
+    max: 1000000000000.0
+    key: value
+    label: Giá trị
+    default: 0
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  key: items
+  label: Dữ liệu
+  default: []
+  required: true
+example:
+  id: status
+  kind: chart
+  chart: donut
+  title: Mức đáp ứng
+  items:
+  - label: Chưa có
+    value: 4
+    tone: bad
+  - label: Một phần
+    value: 5
+    tone: warn

@@ -1,0 +1,89 @@
+key: matrix
+label: Ma trận trạng thái
+group: explore
+interactive: true
+description: Gom các dòng của data[dataset] theo group_key thành cột màu; bấm một ô mở chi tiết, bấm tiêu đề cột để mở bảng (table_slide) đã lọc.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: text
+  max: 40
+  key: dataset
+  label: Tên bảng trong data
+  default: ''
+  required: true
+- type: text
+  max: 40
+  key: group_key
+  label: Gom theo cột
+  default: ''
+  required: true
+- type: text
+  max: 40
+  key: label_key
+  label: Cột làm nhãn ô
+  default: ''
+  required: true
+- type: text
+  max: 300
+  key: order
+  label: Thứ tự nhóm (cách nhau dấu phẩy)
+  default: ''
+- type: text
+  max: 40
+  key: table_slide
+  label: Slide bảng để mở khi bấm nhóm (id)
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: text
+    max: 40
+    key: key
+    label: Cột dữ liệu
+    default: ''
+    required: true
+  - type: text
+    max: 80
+    key: label
+    label: Nhãn
+    default: ''
+    required: true
+  key: detail
+  label: Ngăn chi tiết
+  default: []
+- type: list
+  max: 10
+  item:
+  - type: text
+    max: 60
+    key: value
+    label: Giá trị
+    default: ''
+    required: true
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  key: status_tones
+  label: Màu nhóm
+  default: []
+example:
+  id: overview
+  kind: matrix
+  title: 12 yêu cầu so với dự thảo
+  dataset: compare
+  group_key: status
+  label_key: topic
+  order: Chưa có, Một phần, Cần quyết định

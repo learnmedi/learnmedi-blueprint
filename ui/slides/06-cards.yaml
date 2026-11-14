@@ -1,0 +1,81 @@
+key: cards
+label: Thẻ
+group: present
+interactive: false
+description: Lưới thẻ (tiêu đề, nội dung, nhãn); thẻ highlight nổi bật; expandable = bấm để mở rộng nội dung; goto = bấm để nhảy slide.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: text
+    max: 80
+    key: kicker
+    label: Dòng nhỏ
+    default: ''
+  - type: text
+    max: 160
+    key: title
+    label: Tiêu đề
+    default: ''
+    required: true
+  - type: markdown
+    max: 800
+    key: body
+    label: Nội dung
+    default: ''
+  - type: text
+    max: 40
+    key: tag
+    label: Nhãn góc
+    default: ''
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  - type: bool
+    key: highlight
+    label: Nổi bật
+    default: false
+  - type: text
+    max: 40
+    key: goto
+    label: Bấm để nhảy tới slide (id)
+    default: ''
+  key: items
+  label: Các thẻ
+  default: []
+  required: true
+- type: number
+  min: 1.0
+  max: 4.0
+  key: columns
+  label: Số cột
+  default: 3
+- type: bool
+  key: expandable
+  label: Bấm thẻ để mở rộng
+  default: false
+example:
+  id: context
+  kind: cards
+  title: TB 579 có ba phần
+  items:
+  - kicker: I
+    title: Chuỗi đề án
+    body: Tích hợp, không trùng lặp
+  - kicker: II
+    title: Chiến lược PTNNL
+    highlight: true

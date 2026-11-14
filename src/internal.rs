@@ -249,6 +249,12 @@ pub struct VerifyTokenResp {
 pub struct CreateShareTokenReq {
     pub site_id: String,
     pub user_id: String,
+    /// Lifetime in minutes (the engine caps it); None = the default 45.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub minutes: Option<i64>,
+    /// What the site limits the token to ("" = layout and content; "deck:<id>" = one deck).
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub scope: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

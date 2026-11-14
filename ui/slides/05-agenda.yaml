@@ -1,0 +1,49 @@
+key: agenda
+label: Chương trình
+group: present
+interactive: false
+description: Chương trình theo phần, có giờ bắt đầu, số phút, kết quả cần có; người trình bày thấy đồng hồ từng phần.
+fields:
+- type: text
+  max: 5
+  key: start
+  label: Giờ bắt đầu (HH:MM)
+  default: ''
+- type: list
+  max: 10
+  item:
+  - type: text
+    max: 160
+    key: title
+    label: Tên phần
+    default: ''
+    required: true
+  - type: number
+    min: 0.0
+    max: 600.0
+    key: minutes
+    label: Số phút
+    default: 10
+  - type: text
+    max: 200
+    key: outcome
+    label: Kết quả cần có
+    default: ''
+  - type: text
+    max: 40
+    key: goto
+    label: Bấm để nhảy tới slide (id)
+    default: ''
+  key: items
+  label: Các phần
+  default: []
+  required: true
+example:
+  id: agenda
+  kind: agenda
+  title: Chương trình 75 phút
+  start: '14:00'
+  items:
+  - title: Mục tiêu
+    minutes: 5
+    outcome: Thống nhất phạm vi

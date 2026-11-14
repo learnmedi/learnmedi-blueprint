@@ -1,0 +1,56 @@
+key: hero
+label: Trang bìa
+group: present
+interactive: false
+description: 'Bìa hoặc mở đầu: tiêu đề lớn (title), phụ đề, dòng thông tin và tới 4 con số chạy.'
+fields:
+- type: markdown
+  max: 600
+  key: subtitle
+  label: Phụ đề
+  default: ''
+- type: text
+  max: 200
+  key: meta
+  label: Dòng thông tin (ngày, đơn vị…)
+  default: ''
+- type: list
+  max: 4
+  item:
+  - type: text
+    max: 24
+    key: value
+    label: Giá trị
+    default: '0'
+    required: true
+  - type: text
+    max: 120
+    key: label
+    label: Nhãn
+    default: ''
+  key: stats
+  label: Con số nổi bật (số đếm chạy)
+  default: []
+- type: select
+  options:
+  - left
+  - center
+  - split
+  key: layout
+  label: Bố cục
+  default: left
+- type: image
+  key: image
+  label: Ảnh (bố cục split)
+  default: ''
+example:
+  id: cover
+  kind: hero
+  eyebrow: Làm việc với Bộ trưởng · 14/11/2026
+  title: Tiếp thu Thông báo 579
+  subtitle: Chiến lược phát triển nguồn nhân lực
+  stats:
+  - value: '16'
+    label: ngày đến hạn
+  - value: '8'
+    label: điểm cần quyết định

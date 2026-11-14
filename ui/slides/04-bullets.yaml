@@ -1,0 +1,61 @@
+key: bullets
+label: Danh sách ý
+group: present
+interactive: false
+description: Các ý hiện lần lượt (reveal) hoặc cùng lúc; kiểu danh sách, đánh số, thẻ hoặc hai cột.
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 12
+  item:
+  - type: markdown
+    max: 400
+    key: text
+    label: Ý
+    default: ''
+    required: true
+  - type: markdown
+    max: 400
+    key: sub
+    label: Diễn giải
+    default: ''
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  key: items
+  label: Các ý
+  default: []
+  required: true
+- type: bool
+  key: reveal
+  label: Hiện từng ý khi bấm
+  default: true
+- type: select
+  options:
+  - list
+  - numbered
+  - cards
+  - two_col
+  key: layout
+  label: Bố cục
+  default: list
+example:
+  id: goals
+  kind: bullets
+  title: Mục tiêu cuộc họp
+  items:
+  - text: Chốt 8 điểm D1–D8
+  - text: Thống nhất phân công liên bộ

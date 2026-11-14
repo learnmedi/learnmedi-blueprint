@@ -332,7 +332,7 @@ fn validate_field(fd: &Field, v: Option<&Value>, path: &str, assets: &mut Vec<St
     Ok(out)
 }
 
-fn validate_object(fields: &[Field], obj: &Map<String, Value>, path: &str, assets: &mut Vec<String>) -> Result<Value, String> {
+pub(crate) fn validate_object(fields: &[Field], obj: &Map<String, Value>, path: &str, assets: &mut Vec<String>) -> Result<Value, String> {
     for k in obj.keys() {
         if !fields.iter().any(|f| &f.key == k) {
             let allowed: Vec<_> = fields.iter().map(|f| f.key.as_str()).collect();
@@ -453,7 +453,7 @@ fn kind_json(k: &Kind) -> Value {
     }
 }
 
-fn fields_json(fields: &[Field]) -> Value {
+pub(crate) fn fields_json(fields: &[Field]) -> Value {
     Value::Array(
         fields
             .iter()
@@ -485,7 +485,7 @@ pub fn registry_json() -> Value {
     })
 }
 
-fn kind_short(k: &Kind) -> String {
+pub(crate) fn kind_short(k: &Kind) -> String {
     match k {
         Kind::Text { title: true, .. } => "text(*nhấn*)".into(),
         Kind::Text { .. } => "text".into(),

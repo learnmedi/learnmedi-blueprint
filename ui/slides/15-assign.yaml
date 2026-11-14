@@ -1,0 +1,64 @@
+key: assign
+label: Phân công
+group: decide
+interactive: true
+description: 'Bảng gán: mỗi dòng một hạng mục, mỗi cột là một lựa chọn (danh sách thả xuống) hoặc ô gõ tự do; ghi ngay trong buổi và gom vào summary.'
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: list
+  max: 16
+  item:
+  - type: text
+    max: 200
+    key: item
+    label: Hạng mục
+    default: ''
+    required: true
+  - type: text
+    max: 300
+    key: detail
+    label: Chi tiết
+    default: ''
+  - type: text
+    max: 120
+    key: preset
+    label: Giá trị gợi ý (cột 1)
+    default: ''
+  key: rows
+  label: Hạng mục
+  default: []
+  required: true
+- type: list
+  max: 4
+  item:
+  - type: text
+    max: 60
+    key: label
+    label: Tiêu đề
+    default: ''
+    required: true
+  - type: text
+    max: 400
+    key: options
+    label: Lựa chọn (cách nhau dấu phẩy; trống = gõ tự do)
+    default: ''
+  key: columns
+  label: Cột gán
+  default: []
+  required: true
+example:
+  id: partners
+  kind: assign
+  title: Phối hợp liên bộ
+  rows:
+  - item: Bộ Nội vụ
+    detail: Dữ liệu lao động
+  columns:
+  - label: Cấp làm việc
+    options: Bộ trưởng, Thứ trưởng, Vụ
+  - label: Đầu mối
+    options: ''

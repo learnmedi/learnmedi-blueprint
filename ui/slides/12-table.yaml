@@ -1,0 +1,138 @@
+key: table
+label: Bảng dữ liệu
+group: explore
+interactive: true
+description: 'Bảng đọc từ data[dataset]: lọc theo filter_key, tìm kiếm, phân trang; bấm một dòng mở ngăn chi tiết (detail). format status = huy hiệu màu theo status_tones; goto = nút nhảy tới slide có id
+  bằng giá trị ô.'
+fields:
+- type: markdown
+  max: 600
+  key: intro
+  label: Dẫn nhập
+  default: ''
+- type: text
+  max: 40
+  key: dataset
+  label: Tên bảng trong data
+  default: ''
+  required: true
+- type: list
+  max: 10
+  item:
+  - type: text
+    max: 40
+    key: key
+    label: Cột dữ liệu (key)
+    default: ''
+    required: true
+  - type: text
+    max: 80
+    key: label
+    label: Tiêu đề cột
+    default: ''
+    required: true
+  - type: select
+    options:
+    - m
+    - s
+    - l
+    key: width
+    label: Độ rộng
+    default: m
+  - type: select
+    options:
+    - text
+    - status
+    - tag
+    - markdown
+    - goto
+    key: format
+    label: Cách hiện
+    default: text
+  key: columns
+  label: Các cột
+  default: []
+  required: true
+- type: text
+  max: 40
+  key: filter_key
+  label: Lọc theo cột
+  default: ''
+- type: bool
+  key: search
+  label: Ô tìm kiếm
+  default: false
+- type: number
+  min: 3.0
+  max: 40.0
+  key: page_size
+  label: Số dòng mỗi trang
+  default: 8
+- type: list
+  max: 12
+  item:
+  - type: text
+    max: 40
+    key: key
+    label: Cột dữ liệu
+    default: ''
+    required: true
+  - type: text
+    max: 80
+    key: label
+    label: Nhãn
+    default: ''
+    required: true
+  key: detail
+  label: Ngăn chi tiết
+  default: []
+- type: list
+  max: 10
+  item:
+  - type: text
+    max: 60
+    key: value
+    label: Giá trị
+    default: ''
+    required: true
+  - type: select
+    options:
+    - default
+    - primary
+    - accent
+    - good
+    - warn
+    - bad
+    - muted
+    key: tone
+    label: Sắc thái (màu nhấn)
+    default: default
+  key: status_tones
+  label: Màu trạng thái
+  default: []
+example:
+  id: compare_table
+  kind: table
+  title: Đối chiếu chi tiết
+  dataset: compare
+  filter_key: status
+  columns:
+  - key: topic
+    label: Nội dung
+  - key: status
+    label: Mức đáp ứng
+    format: status
+  - key: dec
+    label: Quyết định
+    format: goto
+    width: s
+  detail:
+  - key: req
+    label: TB 579 yêu cầu
+  - key: now
+    label: Dự thảo hiện có
+  status_tones:
+  - value: Chưa có
+    tone: bad
+  - value: Một phần
+    tone: warn
