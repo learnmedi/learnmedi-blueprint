@@ -10,7 +10,7 @@ fn every_file_parses_and_keys_are_unique() {
     let set: BTreeSet<_> = keys.iter().collect();
     assert_eq!(set.len(), keys.len(), "duplicate feature key");
     for f in FEATURES.iter() {
-        assert!(["studio", "content", "teaching", "overview", "settings", "learn"].contains(&f.workspace.as_str()), "{}: workspace", f.key);
+        assert!(["studio", "content", "teaching", "overview", "settings", "office"].contains(&f.workspace.as_str()), "{}: workspace", f.key);
         for k in &f.enabled_by {
             assert!(plans::feature_def(k).is_some(), "{} enabled_by unknown {k}", f.key);
         }

@@ -109,7 +109,7 @@ pub struct FeatureSpec {
     pub key: String,
     pub label: String,
     pub description: String,
-    /// Staff workspace that owns the feature: studio | content | teaching | overview | settings | learn.
+    /// Staff workspace that owns the feature: studio | content | teaching | overview | settings | office.
     pub workspace: String,
     pub default_tier: Tier,
     #[serde(default = "yes")]

@@ -160,8 +160,8 @@ Still open: page-view counts on the overview (GA4 only for now), per-block AI sw
 - Ops (`decks::apply`): create_deck, set_deck, update_deck_meta, set_deck_theme, set_deck_data, add/update/move/duplicate/delete_slide,
   publish/unpublish_deck, reset_deck_results, delete_deck (dangerous). Reads: list_decks, get_deck, lint_deck, list_slide_kinds,
   get_slide_kind_schema, get_deck_theme_schema, get_deck_results. Every write returns `lint`.
-- Workspace `/learn/presentation` (staff page `static/staff/presentation.html` + `presentation.js`). Player routes: presenter
-  `/learn/presentation/{id}/present` (notes, clock per segment, hints, audience window, live session, QR card), draft
+- Workspace `/office` "Văn phòng" (staff page `static/staff/office.html` + `office.js`: visual editor, autosave, 5-step undo in the tab, sessions box, deck settings). Player routes: presenter
+  `/office/presentation/{id}/present` (notes, clock per segment, hints, audience window, live session, QR card), draft
   `/__preview/deck/{id}`, published `/d/{slug}`, live audience `/live/{code}` (follows the presenter or browses freely; never
   sees notes, hints or hidden slides). Live sessions end on "Kết thúc", after 30 minutes without a heartbeat or after 12 hours;
   the presenter chooses whether the final state stays viewable (0 / 24 h / 7 days). Offline copy: `/api/decks/{id}/offline.html`.

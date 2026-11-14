@@ -1,0 +1,623 @@
+# Learnmedi interactive deck (lmdeck v1). Slide kinds: GET /api/v1/decks/kinds
+lmdeck: 1
+meta:
+  title: Tiếp thu Thông báo 579/TB-VPCP
+  subtitle: Chiến lược phát triển nguồn nhân lực đến năm 2030, tầm nhìn đến năm 2050
+  date: 14/11/2026
+  author: Nhóm soạn thảo
+  lang: vi
+  duration_min: 75
+  start_time: ''
+  footer: TB 579/TB-VPCP (09/11/2026) · Dự thảo QĐ bản 13/8/2026
+theme:
+  preset: executive
+  primary: ''
+  accent: ''
+  background: ''
+  surface: ''
+  ink: ''
+  muted: ''
+  good: ''
+  warn: ''
+  bad: ''
+  heading_font: ''
+  body_font: ''
+  size: m
+  motion: subtle
+  logo: ''
+  page_numbers: true
+segments:
+- id: s1
+  name: Mục tiêu cuộc họp
+  min: 5
+  outcome: Thống nhất phạm vi và đầu ra cần có hôm nay
+- id: s2
+  name: 'Báo cáo nhanh: đối chiếu TB 579 với dự thảo'
+  min: 10
+  outcome: Bộ trưởng nắm 12 điểm và mức độ đáp ứng hiện tại
+- id: s3
+  name: Xin ý kiến 8 điểm cần quyết định
+  min: 40
+  outcome: Chốt phương án cho từng điểm D1–D8
+- id: s4
+  name: Phối hợp liên bộ
+  min: 10
+  outcome: Ai làm việc với Bộ Nội vụ, Bộ Tài chính, Bộ Tư pháp; ở cấp nào
+- id: s5
+  name: Lộ trình đến 30/11 và phân công
+  min: 10
+  outcome: Mốc nội bộ và người chịu trách nhiệm
+data:
+  compare:
+  - id: c1
+    topic: Quan điểm
+    req: Chiến lược là công cụ phục vụ trực tiếp đổi mới mô hình phát triển, theo NQ Đại hội và NQ 19-NQ/TW (28/7/2026)
+    now: 5 quan điểm chung; chưa dẫn NQ 19-NQ/TW, chưa gắn với mô hình phát triển mới
+    status: Chưa có
+    fix: Viết lại quan điểm 1–2; bổ sung NQ 19-NQ/TW, NQ Đại hội vào căn cứ
+    dec: d3
+    tb: “Chiến lược phát triển nguồn nhân lực phải là công cụ quan trọng phục vụ trực tiếp việc đổi mới mô hình phát triển đất nước theo Nghị quyết Đại hội Đảng toàn quốc, Nghị quyết số 19-NQ/TW…” (mục 2, ý 1)
+  - id: c2
+    topic: Ngành ưu tiên
+    req: Rà soát nghị quyết, chiến lược, quy hoạch ngành; xác định ngành, lĩnh vực ưu tiên theo từng giai đoạn
+    now: Chưa có danh mục ngành, lĩnh vực ưu tiên
+    status: Chưa có
+    fix: Lập danh mục lĩnh vực chiến lược, ghi rõ nguồn nghị quyết hoặc quy hoạch
+    dec: d1
+    tb: “Xác định rõ các mục tiêu, định hướng, ngành, lĩnh vực ưu tiên phát triển của đất nước trong từng giai đoạn…” (mục 2, ý 1)
+  - id: c3
+    topic: Nhu cầu theo lĩnh vực
+    req: Không cần chỉ tiêu cho mọi ngành; với lĩnh vực chiến lược phải có dự báo nhu cầu, nguồn lực, chỉ tiêu và nhiệm vụ theo giai đoạn
+    now: 21 chỉ tiêu chung (Phụ lục I); không có dự báo theo lĩnh vực
+    status: Một phần
+    fix: Rút gọn chỉ tiêu chung; thêm phần nhu cầu nhân lực theo lĩnh vực chiến lược
+    dec: d1
+    tb: “Không nhất thiết phải đề ra các mục tiêu, chỉ tiêu về nhân lực cho tất cả các ngành, lĩnh vực nhưng phải làm rõ nhu cầu… đối với những ngành, lĩnh vực có ý nghĩa chiến lược” (mục 2, ý 2)
+  - id: c4
+    topic: Mốc thời gian
+    req: Rà soát nghị quyết của Đảng để chọn và thống nhất mốc thời gian
+    now: Chỉ có mốc 2030 và tầm nhìn 2050
+    status: Cần quyết định
+    fix: Chọn mốc (có thêm 2035 hoặc 2045 không) và cách gọi tên giai đoạn
+    dec: d2
+    tb: “Rà soát các nghị quyết của Đảng để lựa chọn, thống nhất mốc thời gian cụ thể” (mục 2, ý 3, điểm 1)
+  - id: c5
+    topic: Chỉ tiêu R&D, STEM, AI, an ninh mạng
+    req: Rà soát cho khớp NQ 217/NQ-CP (06/8/2026)
+    now: Có STEM 35% và nhân lực trình độ cao 2,5–3%; không có R&D, AI, an ninh mạng
+    status: Một phần
+    fix: Đối chiếu NQ 217; bổ sung hoặc dẫn chiếu các chỉ tiêu còn thiếu
+    dec: d1
+    tb: “Rà soát các chỉ tiêu về nhân lực nghiên cứu, phát triển công nghệ, STEM, trí tuệ nhân tạo và an ninh mạng… phù hợp với Nghị quyết số 217/NQ-CP” (mục 2, ý 3, điểm 2)
+  - id: c6
+    topic: Lĩnh vực chưa có mục tiêu
+    req: Lĩnh vực trọng tâm chưa có mục tiêu nhân lực thì nghiên cứu, đề xuất theo nhu cầu thực tế
+    now: Chưa rà soát
+    status: Chưa có
+    fix: Rà soát chéo danh mục lĩnh vực (c2) với các chỉ tiêu đang có
+    dec: d1
+    tb: “Đối với các lĩnh vực phát triển trọng tâm nhưng chưa có mục tiêu nhân lực tương ứng, cần nghiên cứu, đề xuất…” (mục 2, ý 3, điểm 3)
+  - id: c7
+    topic: Kỹ năng sử dụng AI
+    req: Đưa kỹ năng sử dụng AI thành kỹ năng nền tảng của người học, người lao động
+    now: AI có trong đổi mới chương trình (nhóm IV, mục 1b); chưa là kỹ năng nền tảng, chưa có chỉ tiêu
+    status: Một phần
+    fix: 'Chọn mức thể hiện: định hướng, nhiệm vụ Phụ lục II hay chỉ tiêu'
+    dec: d4
+    tb: “Nghiên cứu đưa kỹ năng sử dụng trí tuệ nhân tạo trở thành một trong những kỹ năng nền tảng của người học, người lao động” (mục 2, ý 3, điểm 4)
+  - id: c8
+    topic: Kinh phí
+    req: Nhu cầu kinh phí, cơ cấu nguồn (đầu tư/thường xuyên, TW/ĐP, GD/KHCN, xã hội hóa), phân kỳ theo khả năng cân đối ngân sách
+    now: Một đoạn nguyên tắc chung (mục V)
+    status: Chưa có
+    fix: Xây dựng phần kinh phí; làm việc với Bộ Tài chính
+    dec: d5
+    tb: “Xác định rõ nhu cầu kinh phí, cơ cấu nguồn vốn… phân kỳ từng giai đoạn phù hợp với khả năng cân đối của ngân sách nhà nước” (mục 2, ý 4)
+  - id: c9
+    topic: Phụ lục nhiệm vụ
+    req: Thời hạn theo tháng/năm; chủ trì, phối hợp, sản phẩm rõ; chỉ giữ nhiệm vụ rõ sản phẩm
+    now: 16 nhiệm vụ, thời hạn theo khoảng năm (2026–2030); nhiệm vụ 14–16 chưa nêu tên cơ quan chủ trì
+    status: Một phần
+    fix: Rút gọn; ghi mốc tháng/năm, sản phẩm và tên bộ chủ trì
+    dec: d7
+    tb: “Thời hạn hoàn thành (theo tháng, năm); cơ quan chủ trì, cơ quan phối hợp; sản phẩm đầu ra; … chỉ đưa vào phụ lục những nhiệm vụ rõ sản phẩm” (mục 2, ý 5)
+  - id: c10
+    topic: Dữ liệu và dự báo
+    req: Thống nhất phân công Bộ GD&ĐT, Bộ Nội vụ, Bộ Tài chính về dữ liệu và hệ thống dự báo
+    now: '4 đầu mối: GD&ĐT (nền tảng dữ liệu), Công an (tài khoản học tập), Tài chính (dự báo), Nội vụ (dữ liệu lao động)'
+    status: Cần quyết định
+    fix: Chốt quan điểm của Bộ trước khi làm việc với hai bộ
+    dec: d6
+    tb: “Thống nhất phân công giữa Bộ Giáo dục và Đào tạo, Bộ Nội vụ và Bộ Tài chính trong quản lý, kết nối dữ liệu và xây dựng, vận hành hệ thống dự báo nguồn nhân lực” (mục 2, ý 5)
+  - id: c11
+    topic: Khung chính sách chung (mục I)
+    req: Khung chính sách chung, quy định mở cho các ngành; tránh ban hành chính sách riêng, trùng lặp
+    now: Có điều phối và thử nghiệm chính sách; chưa định vị Chiến lược là khung chung
+    status: Một phần
+    fix: Xác định Chiến lược có chứa khung chính sách chung hay không
+    dec: d8
+    tb: “Hình thành khung chính sách chung áp dụng cho các ngành, lĩnh vực, quy định theo hướng mở… tránh ban hành chính sách riêng, trùng lặp” (mục 1b)
+  - id: c12
+    topic: Tích hợp, không trùng lặp (mục I)
+    req: Tích hợp nhiệm vụ tương đồng; không trùng mục tiêu, sản phẩm, kinh phí giữa các đề án
+    now: Đề xuất lập mới Ban Chỉ đạo quốc gia về PTNNL; chưa đối chiếu với các đề án khác
+    status: Cần quyết định
+    fix: Cân nhắc Ban Chỉ đạo; lập bảng ranh giới với các đề án trong chuỗi
+    dec: d8
+    tb: “Thống nhất nguyên tắc sắp xếp, tích hợp những nhiệm vụ có nội dung tương đồng… bảo đảm không trùng lặp mục tiêu, sản phẩm và kinh phí” (mục 1a)
+slides:
+- id: cover
+  kind: hero
+  eyebrow: Làm việc với Bộ trưởng Bộ Giáo dục và Đào tạo · 14/11/2026
+  title: Tiếp thu Thông báo 579/TB-VPCP
+  notes: |
+    Mở đầu 30 giây: hôm nay nhóm cần Bộ trưởng chốt 8 điểm để kịp trình Thủ tướng trước 30/11.
+    Ba con số: 16 ngày, 12 yêu cầu, 8 điểm cần quyết định.
+  subtitle: Chiến lược phát triển nguồn nhân lực đến năm 2030, tầm nhìn đến năm 2050
+  meta: Nhóm soạn thảo · Hạn báo cáo Thủ tướng trước 30/11/2026
+  stats:
+  - value: '16'
+    label: ngày đến hạn báo cáo Thủ tướng
+  - value: '12'
+    label: yêu cầu của TB 579 liên quan trực tiếp
+  - value: '8'
+    label: điểm cần Bộ trưởng quyết định
+  layout: left
+  image: ''
+- id: goals
+  kind: bullets
+  seg: s1
+  eyebrow: 1 · Mục tiêu cuộc họp
+  title: Hôm nay cần Bộ trưởng chốt 8 điểm để kịp trình trước 30/11
+  notes: Đầu ra của buổi họp là 3 thứ này. Slide cuối sẽ tự tổng hợp thành biên bản kết luận để Bộ trưởng xem lại ngay cuối buổi.
+  intro: ''
+  items:
+  - text: '**Phương án đã chốt cho D1–D8**: bộ chỉ tiêu, mốc thời gian, quan điểm, AI, kinh phí, dữ liệu, phụ lục, quan hệ với các đề án'
+    sub: ''
+    tone: default
+  - text: '**Đầu mối làm việc với các bộ**: Nội vụ, Tài chính, Tư pháp, KH&CN; ở cấp nào'
+    sub: ''
+    tone: default
+  - text: '**Lộ trình nội bộ đến ngày trình**: mốc và người chịu trách nhiệm'
+    sub: ''
+    tone: default
+  reveal: true
+  layout: numbered
+- id: agenda
+  kind: agenda
+  seg: s1
+  eyebrow: Chương trình đề xuất · 75 phút
+  title: Năm phần, dồn thời gian cho phần xin quyết định
+  notes: Bấm vào từng phần để nhảy tới. Phần 3 chiếm hơn nửa thời gian, khoảng 5 phút mỗi điểm.
+  start: ''
+  items:
+  - title: Mục tiêu cuộc họp
+    minutes: 5
+    outcome: Thống nhất phạm vi và đầu ra cần có hôm nay
+    goto: goals
+  - title: 'Báo cáo nhanh: đối chiếu TB 579 với dự thảo'
+    minutes: 10
+    outcome: Bộ trưởng nắm 12 điểm và mức độ đáp ứng hiện tại
+    goto: context
+  - title: Xin ý kiến 8 điểm cần quyết định
+    minutes: 40
+    outcome: Chốt phương án cho từng điểm D1–D8
+    goto: decide
+  - title: Phối hợp liên bộ
+    minutes: 10
+    outcome: Ai làm việc với các bộ; ở cấp nào
+    goto: partners
+  - title: Lộ trình đến 30/11 và phân công
+    minutes: 10
+    outcome: Mốc nội bộ và người chịu trách nhiệm
+    goto: roadmap
+- id: context
+  kind: cards
+  seg: s2
+  eyebrow: 2 · Bối cảnh
+  title: TB 579 có ba phần; phần II là việc của nhóm
+  notes: Phần II là phần nhóm chịu trách nhiệm. Phần I và III ảnh hưởng tới D8 (quan hệ với các đề án khác).
+  intro: ''
+  items:
+  - kicker: I · Chuỗi đề án
+    title: Tích hợp, không trùng lặp
+    body: Khung chính sách chung. Nhiệm vụ có hạn trong 2026 trình trước **15/12**.
+    tag: Liên quan gián tiếp
+    tone: muted
+    highlight: false
+    goto: ''
+  - kicker: II · Chiến lược PTNNL
+    title: Hoàn thiện dự thảo và hồ sơ
+    body: Đồng ý sự cần thiết. Báo cáo Thủ tướng trước **30/11/2026**.
+    tag: Việc của nhóm
+    tone: accent
+    highlight: true
+    goto: overview
+  - kicker: III · Nhân tài KH cơ bản
+    title: Chương trình quốc gia 2026–2035
+    body: Trình trước 30/11. Cần ranh giới rõ với Chiến lược để không trùng.
+    tag: Cần phân định
+    tone: warn
+    highlight: false
+    goto: ''
+  columns: 3
+  expandable: false
+- id: core_quote
+  kind: quote
+  seg: s2
+  eyebrow: Yêu cầu gốc của Phó Thủ tướng
+  notes: Đây là câu định hướng cho toàn bộ việc sửa. D3 (quan điểm) xoay quanh câu này.
+  quote: Chiến lược phát triển nguồn nhân lực phải là **công cụ quan trọng phục vụ trực tiếp việc đổi mới mô hình phát triển đất nước**…
+  cite: Thông báo 579/TB-VPCP, 09/11/2026
+  ref: Mục 2, ý 1
+  tone: accent
+- id: overview
+  kind: matrix
+  seg: s2
+  eyebrow: 2 · Đối chiếu tổng quan
+  title: 12 yêu cầu của TB 579 so với dự thảo 13/8
+  notes: |
+    4 điểm chưa có, 5 điểm có một phần, 3 điểm cần Bộ trưởng quyết định.
+    Bấm vào một ô để mở chi tiết và nguyên văn TB 579; bấm tiêu đề cột để mở bảng đã lọc.
+  intro: ''
+  dataset: compare
+  group_key: status
+  label_key: topic
+  order: Chưa có, Một phần, Cần quyết định
+  table_slide: compare_table
+  detail:
+  - key: req
+    label: TB 579 yêu cầu
+  - key: now
+    label: Dự thảo hiện có
+  - key: fix
+    label: Việc cần làm
+  - key: tb
+    label: Nguyên văn TB 579
+  status_tones:
+  - value: Chưa có
+    tone: bad
+  - value: Một phần
+    tone: warn
+  - value: Cần quyết định
+    tone: accent
+- id: compare_table
+  kind: table
+  seg: s2
+  eyebrow: 2 · Bảng đối chiếu chi tiết
+  title: Mỗi yêu cầu gắn với một điểm cần quyết định
+  notes: Bấm một dòng để mở chi tiết; bấm nút D… để nhảy tới slide xin quyết định.
+  intro: ''
+  dataset: compare
+  columns:
+  - key: topic
+    label: Nội dung
+    width: m
+    format: text
+  - key: now
+    label: Dự thảo hiện có
+    width: l
+    format: text
+  - key: status
+    label: Mức đáp ứng
+    width: s
+    format: status
+  - key: dec
+    label: Điểm
+    width: s
+    format: goto
+  filter_key: status
+  search: false
+  page_size: 6
+  detail:
+  - key: req
+    label: TB 579 yêu cầu
+  - key: now
+    label: Dự thảo hiện có
+  - key: fix
+    label: Việc cần làm
+  - key: tb
+    label: Nguyên văn TB 579
+  status_tones:
+  - value: Chưa có
+    tone: bad
+  - value: Một phần
+    tone: warn
+  - value: Cần quyết định
+    tone: accent
+- id: decide
+  kind: section
+  seg: s3
+  title: 8 điểm cần Bộ trưởng quyết định
+  number: '03'
+  subtitle: Mỗi điểm có câu hỏi, các phương án, gợi ý sơ bộ của nhóm và ô ghi kết luận. Khoảng 5 phút mỗi điểm.
+- id: d1
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 1/8 · Ngành ưu tiên, nhu cầu theo lĩnh vực, chỉ tiêu
+  title: 'Bộ chỉ tiêu: giữ bao nhiêu, bổ sung gì?'
+  notes: Nếu chọn C, cần Bộ KH&CN hỗ trợ dự báo theo lĩnh vực; gắn với làm việc liên bộ (phần 4).
+  code: D1
+  question: Phụ lục I đang có **21 chỉ tiêu**. TB 579 cho phép không đặt chỉ tiêu cho mọi ngành, nhưng phải làm rõ nhu cầu ở lĩnh vực chiến lược.
+  refs: c2, c3, c5, c6
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Giữ 21 chỉ tiêu, bổ sung R&D, AI, an ninh mạng
+    note: ''
+  - key: B
+    text: Rút còn khoảng 10 chỉ tiêu (theo góp ý trong bản track changes)
+    note: ''
+  - key: C
+    text: Khoảng 10 chỉ tiêu chung, kèm phụ lục nhu cầu nhân lực theo lĩnh vực chiến lược
+    note: ''
+  hint: C sát kết luận nhất, nhưng tốn công dự báo nhất.
+  extra_title: Chỉ tiêu đang mơ hồ, cần sửa dù chọn phương án nào
+  extra:
+  - text: Tổng tỷ suất sinh “tăng trung bình 2% mỗi năm”
+  - text: 'Tỷ lệ nữ học STEM “tăng tối thiểu 50%”: so với mốc nào?'
+  - text: 'Nhân lực trình độ cao “2,5–3%”: của tổng số nào?'
+  - text: Dùng “lĩnh vực đột phá” hay “công nghệ chiến lược” (đang treo trong comment)
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d2
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 2/8 · Mốc thời gian
+  title: Mốc thời gian và tên giai đoạn
+  code: D2
+  question: TB 579 yêu cầu chọn mốc theo nghị quyết của Đảng. Tên Chiến lược trong TB 579 là “giai đoạn 2026–2030”, dự thảo dùng “đến năm 2030”.
+  refs: c4
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Giữ mốc 2030 và tầm nhìn 2050
+    note: ''
+  - key: B
+    text: Thêm mốc 2035
+    note: ''
+  - key: C
+    text: Thêm mốc 2035 và 2045
+    note: ''
+  hint: Cần đối chiếu nghị quyết trước khi chốt.
+  extra_title: Cũng cần chốt
+  extra:
+  - text: 'Tên gọi: “đến năm 2030” hay “giai đoạn 2026–2030”'
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d3
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 3/8 · Quan điểm
+  title: Quan điểm và căn cứ
+  code: D3
+  question: Chiến lược phải là công cụ phục vụ đổi mới mô hình phát triển. Dự thảo **chưa dẫn NQ 19-NQ/TW**.
+  refs: c1
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Bổ sung căn cứ, chỉnh câu chữ 5 quan điểm hiện có
+    note: ''
+  - key: B
+    text: Viết lại quan điểm 1–2 xoay quanh mô hình phát triển mới
+    note: ''
+  hint: B, nếu Bộ trưởng muốn thông điệp rõ hơn.
+  extra_title: Văn bản cần đưa vào căn cứ
+  extra:
+  - text: Nghị quyết Đại hội Đảng toàn quốc
+  - text: NQ 19-NQ/TW ngày 28/7/2026 về đổi mới mô hình phát triển
+  - text: NQ 217/NQ-CP ngày 06/8/2026 (cho phần chỉ tiêu)
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d4
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 4/8 · Kỹ năng sử dụng AI
+  title: Kỹ năng sử dụng AI là kỹ năng nền tảng
+  code: D4
+  question: Ý mới của Phó Thủ tướng. Dự thảo mới nhắc AI trong đổi mới chương trình.
+  refs: c7
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Ghi ở phần định hướng, quan điểm
+    note: ''
+  - key: B
+    text: Thêm nhiệm vụ riêng ở Phụ lục II, có sản phẩm và mốc
+    note: ''
+  - key: C
+    text: Thêm chỉ tiêu (ví dụ tỷ lệ người học, người lao động đạt chuẩn kỹ năng AI)
+    note: ''
+  hint: C chỉ nên chọn khi đã có cách đo.
+  extra_title: ''
+  extra: []
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d5
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 5/8 · Kinh phí
+  title: 'Kinh phí: phần thiếu nhiều nhất'
+  code: D5
+  question: Dự thảo mới có một đoạn nguyên tắc. TB 579 yêu cầu **nhu cầu, cơ cấu nguồn và phân kỳ**.
+  refs: c8
+  refs_dataset: compare
+  options:
+  - key: A
+    text: 'Đầy đủ: tổng nhu cầu, cơ cấu nguồn, phân kỳ 2026–2030'
+    note: ''
+  - key: B
+    text: Nguyên tắc và phân kỳ; dẫn chiếu kinh phí của các đề án thành phần
+    note: ''
+  hint: A cần số liệu của Bộ Tài chính trước khoảng 21/11.
+  extra_title: Xin Bộ trưởng
+  extra:
+  - text: Mức chi tiết chấp nhận được trong 16 ngày
+  - text: Có trao đổi trực tiếp với Bộ trưởng Bộ Tài chính không
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d6
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 6/8 · Dữ liệu và dự báo
+  title: 'Dữ liệu và hệ thống dự báo: ai chủ trì?'
+  notes: Có thể gán luôn bộ chủ trì cho từng hạng mục ở cột cuối bảng; kết quả vào biên bản.
+  code: D6
+  question: Đây là điểm dễ vướng nhất giữa các bộ. Comment trong dự thảo đã ghi nhận trùng với nhiệm vụ của Bộ Nội vụ.
+  refs: c10
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Giữ như dự thảo, chỉ làm rõ ranh giới
+    note: ''
+  - key: B
+    text: Bộ GD&ĐT chủ trì cả nền tảng dữ liệu lẫn dự báo
+    note: ''
+  - key: C
+    text: Bộ Nội vụ chủ trì dự báo; Bộ GD&ĐT chủ trì dữ liệu giáo dục, kỹ năng
+    note: ''
+  hint: Cần quan điểm của Bộ trưởng trước khi làm việc với hai bộ.
+  extra_title: ''
+  extra: []
+  matrix_head: Hạng mục | Chủ trì theo dự thảo
+  matrix_rows:
+  - cells: Nền tảng dữ liệu quốc gia về giáo dục, kỹ năng, nghề nghiệp, việc làm | Bộ GD&ĐT
+  - cells: Tài khoản học tập suốt đời, hồ sơ kỹ năng số | Bộ Công an (Phụ lục II ghi cả Bộ GD&ĐT)
+  - cells: Hệ thống dự báo, cảnh báo nhu cầu nhân lực | Bộ Tài chính
+  - cells: Dữ liệu người lao động, thông tin thị trường lao động | Bộ Nội vụ
+  assign_options: Bộ GD&ĐT, Bộ Nội vụ, Bộ Tài chính, Bộ Công an
+  assign_label: Bộ chủ trì (chốt)
+- id: d7
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 7/8 · Phụ lục nhiệm vụ
+  title: 'Phụ lục II: rút gọn đến đâu?'
+  code: D7
+  question: TB 579 yêu cầu chỉ giữ nhiệm vụ rõ sản phẩm, có mốc tháng/năm.
+  refs: c9
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Giữ 16 nhiệm vụ, bổ sung mốc và sản phẩm
+    note: ''
+  - key: B
+    text: Rút còn các nhiệm vụ có sản phẩm đo được; phần còn lại chuyển vào nội dung chính
+    note: ''
+  hint: B sát kết luận hơn.
+  extra_title: Việc phải làm dù chọn phương án nào
+  extra:
+  - text: 'Nhiệm vụ 14–16: ghi tên bộ chủ trì thay cho “cơ quan quản lý nhà nước về lao động”'
+  - text: Chốt thuật ngữ “Chương trình” hay “Kế hoạch” (đang treo trong comment)
+  - text: 'Xem lại cụm “các bộ quản lý ngành” (comment: các bộ sắp không quản lý ngành)'
+  matrix_head: ''
+  matrix_rows: []
+  assign_options: ''
+  assign_label: Chọn
+- id: d8
+  kind: decision
+  seg: s3
+  eyebrow: Điểm 8/8 · Khung chính sách chung, tích hợp
+  title: Quan hệ với các đề án khác và Ban Chỉ đạo
+  code: D8
+  question: Mục I của TB 579 yêu cầu tích hợp, không trùng lặp và hình thành khung chính sách chung.
+  refs: c11, c12
+  refs_dataset: compare
+  options:
+  - key: A
+    text: Chiến lược là khung chung; các đề án (nhân tài, AI, bán dẫn) tham chiếu về Chiến lược
+    note: ''
+  - key: B
+    text: Chiến lược chỉ định hướng; khung chính sách chung nằm ở văn bản riêng
+    note: ''
+  hint: A khớp mục II (“khung định hướng tổng thể”).
+  extra_title: ''
+  extra: []
+  matrix_head: Ban Chỉ đạo quốc gia về PTNNL
+  matrix_rows:
+  - cells: Dự thảo đề xuất lập mới Ban Chỉ đạo
+  assign_options: Giữ đề xuất lập mới, Giao cơ chế điều phối đang có, Bỏ khỏi dự thảo
+  assign_label: Phương án
+- id: partners
+  kind: assign
+  seg: s4
+  eyebrow: 4 · Phối hợp liên bộ
+  title: Bốn bộ cần làm việc trước 24/11
+  notes: Chọn cấp làm việc và gõ tên đầu mối cho từng bộ; kết quả vào biên bản.
+  intro: 'Cần chốt: cấp làm việc và người đầu mối của nhóm.'
+  rows:
+  - item: Bộ Nội vụ
+    detail: Dữ liệu lao động, dự báo; chỉ tiêu NEET, đào tạo lại; nhiệm vụ 14–16 · D6, D7
+    preset: ''
+  - item: Bộ Tài chính
+    detail: Kinh phí, cơ cấu nguồn, phân kỳ; chỉ tiêu HDI, năng suất · D5, D6
+    preset: ''
+  - item: Bộ Tư pháp
+    detail: Hồ sơ trình, thẩm định; cách gọi tên văn bản · D2, D7
+    preset: ''
+  - item: Bộ KH&CN
+    detail: Chỉ tiêu R&D, AI, an ninh mạng theo NQ 217 · D1, D4
+    preset: ''
+  columns:
+  - label: Cấp làm việc
+    options: Bộ trưởng, Thứ trưởng, Vụ
+  - label: Đầu mối của nhóm
+    options: ''
+- id: roadmap
+  kind: timeline
+  seg: s5
+  eyebrow: 5 · Lộ trình đề xuất
+  title: Trình Thủ tướng ngày 27/11, trước hạn 30/11
+  notes: 30/11/2026 là thứ Hai, nên mốc gửi đi thực tế là thứ Sáu 27/11. Các mốc là đề xuất của nhóm; gõ người phụ trách dưới từng mốc.
+  items:
+  - date: 14/11
+    title: 'Họp Bộ trưởng: chốt D1–D8'
+    body: ''
+    owner: ''
+    done: false
+  - date: 16–18/11
+    title: Sửa quan điểm, chỉ tiêu, mốc thời gian, AI
+    body: ''
+    owner: ''
+    done: false
+  - date: 19–21/11
+    title: Làm việc với Bộ Nội vụ, Bộ Tài chính (dữ liệu, kinh phí)
+    body: ''
+    owner: ''
+    done: false
+  - date: 24/11
+    title: Dự thảo hoàn chỉnh và báo cáo tiếp thu, giải trình
+    body: ''
+    owner: ''
+    done: false
+  - date: 25–26/11
+    title: Lãnh đạo Bộ duyệt
+    body: ''
+    owner: ''
+    done: false
+  - date: 27/11
+    title: Bộ trưởng ký tờ trình, gửi Thủ tướng
+    body: ''
+    owner: ''
+    done: false
+  countdown_to: 2026-11-30
+  countdown_label: đến hạn báo cáo Thủ tướng
+  editable_owner: true
+- id: minutes
+  kind: summary
+  eyebrow: Tổng hợp kết luận
+  title: Kết luận của Bộ trưởng
+  notes: Slide này tự gom mọi lựa chọn, ghi chú, phân công trong buổi. Bấm Sao chép hoặc In / PDF để có ngay biên bản.
+  intro: ''
+  include: all
+  signers: ''
+  export: true

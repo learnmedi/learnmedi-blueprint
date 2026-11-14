@@ -1,0 +1,1533 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tiếp thu Thông báo 579/TB-VPCP</title><style>/* Learnmedi deck player. One 1600×900 stage scaled to the window; every colour,
+   font and motion level comes from the deck theme (CSS variables set by player.js). */
+:root {
+  --primary: #12305a; --accent: #b0812b; --bg: #f4f6f9; --surface: #fff; --ink: #0f1b2d; --muted: #5a6577;
+  --good: #1d7a4e; --warn: #b26b00; --bad: #b42318;
+  --hf: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --bf: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fs: 1; --line: color-mix(in srgb, var(--ink) 12%, transparent); --soft: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  --r: 14px; --dur: 420ms; --ease: cubic-bezier(.2,.7,.2,1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #0b1220; overflow: hidden; }
+body { font-family: var(--bf); color: var(--ink); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+input, textarea, select { font: inherit; color: var(--ink); }
+
+#deck-app { position: fixed; inset: 0; display: flex; flex-direction: column; background: color-mix(in srgb, var(--ink) 92%, #000); }
+.dk-viewport { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.dk-stage { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform-origin: center center; background: var(--bg); overflow: hidden; border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+.dk-slide { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 64px 88px 70px; font-size: calc(26px * var(--fs)); line-height: 1.45; }
+.dk-slide.bg-tint { background: var(--soft); }
+.dk-slide.bg-dark { background: color-mix(in srgb, var(--primary) 82%, #000); color: #fff; --ink: #fff; --muted: rgba(255,255,255,.72); --line: rgba(255,255,255,.18); --surface: rgba(255,255,255,.06); --soft: rgba(255,255,255,.08); }
+.dk-slide.bg-primary { background: var(--primary); color: #fff; --ink: #fff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.22); --surface: rgba(255,255,255,.08); --soft: rgba(255,255,255,.1); }
+.dk-slide.bg-image { background-size: cover; background-position: center; color: #fff; --ink: #fff; --muted: rgba(255,255,255,.8); }
+.dk-slide.bg-image::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,10,20,.82), rgba(5,10,20,.35)); }
+.dk-slide.bg-image > * { position: relative; }
+
+/* Accent rail */
+.dk-slide::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--tone, var(--primary)); opacity: .9; }
+.dk-slide.k-hero::after, .dk-slide.k-section::after { display: none; }
+
+/* Header */
+.dk-head { margin-bottom: 30px; max-width: 1340px; }
+.dk-eyebrow { font-size: .62em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: flex; gap: 14px; align-items: center; }
+.dk-eyebrow .code { background: var(--accent); color: #fff; padding: 3px 10px; border-radius: 6px; letter-spacing: .06em; }
+.dk-title { font-family: var(--hf); font-weight: 700; font-size: 1.72em; line-height: 1.16; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.dk-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 22px; }
+.dk-foot { position: absolute; left: 88px; right: 88px; bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--muted); gap: 20px; }
+.dk-foot .src { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-foot .pg { font-variant-numeric: tabular-nums; }
+.dk-logo { position: absolute; right: 88px; top: 40px; height: 44px; }
+.intro { color: var(--muted); font-size: .86em; max-width: 1300px; }
+.md p { margin: 0 0 .5em; } .md p:last-child { margin-bottom: 0; } .md ul, .md ol { margin: .2em 0; padding-left: 1.2em; } .md a { color: var(--accent); }
+.md strong { font-weight: 700; } .md code { background: var(--soft); padding: 1px 6px; border-radius: 5px; font-size: .9em; }
+
+/* Tones */
+.t-default { --tone: var(--primary); } .t-primary { --tone: var(--primary); } .t-accent { --tone: var(--accent); }
+.t-good { --tone: var(--good); } .t-warn { --tone: var(--warn); } .t-bad { --tone: var(--bad); } .t-muted { --tone: var(--muted); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: .64em; font-weight: 700; background: color-mix(in srgb, var(--tone, var(--primary)) 13%, transparent); color: var(--tone, var(--primary)); white-space: nowrap; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.chip.plain::before { display: none; }
+
+/* Hero */
+.k-hero { justify-content: center; padding: 90px 110px; background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 70%, #000) 100%); color: #fff; --ink: #fff; --muted: rgba(255,255,255,.76); --line: rgba(255,255,255,.2); }
+.k-hero .dk-eyebrow { color: color-mix(in srgb, var(--accent) 70%, #fff); }
+.k-hero .dk-title { font-size: 2.7em; max-width: 1250px; }
+.k-hero .sub { font-size: 1.05em; color: var(--muted); margin-top: 22px; max-width: 1150px; }
+.k-hero .meta { margin-top: 26px; font-size: .7em; color: var(--muted); letter-spacing: .03em; }
+.k-hero .hero-stats { display: flex; gap: 22px; margin-top: 64px; }
+.k-hero .hero-stat { min-width: 220px; padding: 22px 28px; border-left: 3px solid var(--accent); background: rgba(255,255,255,.06); border-radius: 0 12px 12px 0; }
+.k-hero .hero-stat b { display: block; font-family: var(--hf); font-size: 2.4em; line-height: 1; font-variant-numeric: tabular-nums; }
+.k-hero .hero-stat span { font-size: .62em; color: var(--muted); }
+.k-hero.lay-center { align-items: center; text-align: center; } .k-hero.lay-center .hero-stats { justify-content: center; }
+.k-hero .deco { position: absolute; right: -160px; top: -160px; width: 720px; height: 720px; border-radius: 50%; border: 1px solid rgba(255,255,255,.08); }
+.k-hero .deco::before { content: ""; position: absolute; inset: 90px; border-radius: 50%; border: 1px solid rgba(255,255,255,.07); }
+.k-hero .deco::after { content: ""; position: absolute; inset: 200px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%); }
+.k-hero.lay-split { flex-direction: row; align-items: center; gap: 60px; }
+.k-hero .hero-img { width: 560px; height: 640px; object-fit: cover; border-radius: 16px; }
+
+/* Section */
+.k-section { justify-content: center; background: color-mix(in srgb, var(--primary) 88%, #000); color: #fff; --ink: #fff; --muted: rgba(255,255,255,.72); }
+.k-section .num { font-family: var(--hf); font-size: 6em; font-weight: 700; line-height: 1; color: color-mix(in srgb, var(--accent) 80%, #fff); opacity: .95; }
+.k-section .dk-title { font-size: 2.3em; margin-top: 18px; }
+.k-section .sub { color: var(--muted); margin-top: 18px; font-size: 1em; max-width: 1100px; }
+
+/* Stats */
+.stat-grid { display: grid; gap: 22px; grid-template-columns: repeat(var(--cols, 3), 1fr); }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 28px 30px; border-top: 4px solid var(--tone, var(--primary)); }
+.stat b { display: block; font-family: var(--hf); font-size: 2.6em; line-height: 1.05; color: var(--tone, var(--primary)); font-variant-numeric: tabular-nums; }
+.stat .lbl { font-weight: 600; margin-top: 8px; font-size: .86em; }
+.stat .note { color: var(--muted); font-size: .66em; margin-top: 6px; }
+
+/* Bullets */
+.bl { display: flex; flex-direction: column; gap: 18px; margin: 0; padding: 0; list-style: none; }
+.bl li { display: flex; gap: 20px; align-items: flex-start; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.bl li .mk { flex: none; width: 14px; height: 14px; margin-top: .5em; border-radius: 3px; background: var(--tone, var(--accent)); }
+.bl.numbered li .mk { width: 46px; height: 46px; margin-top: 0; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: .8em; background: var(--tone, var(--primary)); }
+.bl li .sub { color: var(--muted); font-size: .8em; margin-top: 4px; }
+.bl li.hidden-step { opacity: 0; transform: translateY(14px); }
+.bl li.past-step { opacity: .55; }
+.bl.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.bl.cards li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 24px 26px; }
+.bl.two_col { display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; }
+
+/* Agenda */
+.agenda { display: flex; flex-direction: column; gap: 10px; }
+.ag-row { display: grid; grid-template-columns: 120px 1fr 140px; align-items: center; gap: 26px; padding: 18px 26px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); text-align: left; width: 100%; }
+.ag-row.cur { border-color: var(--accent); box-shadow: inset 4px 0 0 var(--accent); }
+.ag-row .tm { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--primary); }
+.ag-row .ttl { font-weight: 650; }
+.ag-row .out { color: var(--muted); font-size: .72em; margin-top: 2px; }
+.ag-row .min { justify-self: end; color: var(--muted); font-size: .76em; }
+.ag-bar { height: 10px; border-radius: 99px; overflow: hidden; display: flex; background: var(--line); margin-top: 8px; }
+.ag-bar i { display: block; height: 100%; }
+button.ag-row:hover, .goto:hover { border-color: var(--accent); }
+
+/* Cards */
+.cards { display: grid; gap: 20px; grid-template-columns: repeat(var(--cols, 3), 1fr); align-items: stretch; }
+.card { position: relative; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 26px 28px; display: flex; flex-direction: column; gap: 10px; border-top: 4px solid var(--tone, var(--line)); transition: transform .25s var(--ease), box-shadow .25s; }
+.card.hl { border: 2px solid var(--tone, var(--accent)); box-shadow: 0 12px 36px color-mix(in srgb, var(--tone, var(--accent)) 22%, transparent); }
+.card .kick { font-size: .6em; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tone, var(--accent)); }
+.card .ttl { font-family: var(--hf); font-weight: 700; font-size: 1em; line-height: 1.25; }
+.card .bd { color: var(--muted); font-size: .76em; }
+.card .tag { position: absolute; right: 18px; top: 18px; }
+.card.expandable .bd { display: none; } .card.expandable.open .bd { display: block; }
+.card.clickable { cursor: pointer; } .card.clickable:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+.card .more { font-size: .6em; color: var(--accent); font-weight: 700; margin-top: auto; }
+
+/* Compare */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; min-height: 0; }
+.cmp-col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 28px 32px; border-top: 5px solid var(--tone, var(--primary)); overflow: auto; }
+.cmp-col h3 { margin: 0 0 14px; font-family: var(--hf); font-size: .9em; color: var(--tone, var(--primary)); text-transform: uppercase; letter-spacing: .06em; }
+.cmp-col .md { font-size: .86em; }
+.verdict { display: flex; gap: 16px; align-items: flex-start; padding: 20px 26px; background: var(--soft); border-radius: var(--r); font-weight: 600; font-size: .86em; }
+.verdict::before { content: "→"; color: var(--accent); font-weight: 800; }
+
+/* Quote */
+.k-quote .dk-body { justify-content: center; }
+.qt { font-family: var(--hf); font-size: 1.5em; line-height: 1.35; max-width: 1300px; padding-left: 40px; border-left: 6px solid var(--tone, var(--accent)); }
+.qt-cite { margin-top: 24px; padding-left: 46px; color: var(--muted); font-size: .76em; }
+
+/* Chart */
+.chart { flex: 1; min-height: 0; display: flex; align-items: flex-end; gap: 26px; padding: 10px 10px 0; border-bottom: 2px solid var(--line); }
+.bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 10px; }
+.bar i { display: block; width: 100%; max-width: 140px; background: var(--tone, var(--primary)); border-radius: 8px 8px 0 0; height: 0; transition: height 900ms var(--ease); }
+.bar b { font-variant-numeric: tabular-nums; }
+.bar-lbls { display: flex; gap: 26px; padding: 12px 10px 0; } .bar-lbls span { flex: 1; text-align: center; font-size: .66em; color: var(--muted); }
+.hbars { display: flex; flex-direction: column; gap: 16px; }
+.hbar { display: grid; grid-template-columns: 320px 1fr 120px; gap: 18px; align-items: center; font-size: .8em; }
+.hbar .track { height: 26px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.hbar .track i { display: block; height: 100%; width: 0; background: var(--tone, var(--primary)); border-radius: 99px; transition: width 900ms var(--ease); }
+.hbar b { text-align: right; font-variant-numeric: tabular-nums; }
+.donut-wrap { display: flex; align-items: center; gap: 70px; flex: 1; }
+.donut-wrap svg { width: 460px; height: 460px; transform: rotate(-90deg); }
+.donut-wrap circle { fill: none; stroke-width: 54; transition: stroke-dasharray 900ms var(--ease); }
+.legend { display: flex; flex-direction: column; gap: 14px; font-size: .86em; }
+.legend div { display: flex; gap: 14px; align-items: center; } .legend i { width: 18px; height: 18px; border-radius: 4px; background: var(--tone); }
+.legend b { font-variant-numeric: tabular-nums; margin-left: auto; padding-left: 30px; }
+.donut-center { position: relative; } .donut-center .tot { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font-family: var(--hf); font-size: 2.6em; font-weight: 700; }
+.donut-center .tot small { display: block; font-size: .3em; color: var(--muted); font-weight: 500; }
+.line-svg { flex: 1; width: 100%; }
+
+/* Timeline */
+.tl-count { display: flex; align-items: baseline; gap: 18px; margin-bottom: 4px; }
+.tl-count b { font-family: var(--hf); font-size: 2.4em; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+.tl-count span { color: var(--muted); font-size: .8em; }
+.timeline { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 18px; padding-top: 34px; flex: 1; min-height: 0; }
+.timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 3px; background: var(--line); }
+.timeline .prog { position: absolute; left: 0; top: 14px; height: 3px; background: var(--accent); width: 0; transition: width 1.2s var(--ease); }
+.tl-item { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.tl-item::before { content: ""; position: absolute; top: -27px; left: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 3px solid var(--primary); }
+.tl-item.done::before { background: var(--primary); }
+.tl-item.now::before { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 22%, transparent); }
+.tl-item .d { font-weight: 700; color: var(--primary); font-variant-numeric: tabular-nums; }
+.tl-item .t { font-weight: 600; font-size: .82em; line-height: 1.3; }
+.tl-item .b { color: var(--muted); font-size: .66em; }
+.tl-item input { margin-top: auto; width: 100%; font-size: .62em; padding: 8px 10px; border: 1px dashed var(--line); border-radius: 8px; background: var(--soft); }
+.tl-item input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+/* Tables */
+.tbl-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.flt { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); font-size: .62em; font-weight: 600; background: var(--surface); }
+.flt.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+.flt .n { opacity: .7; margin-left: 6px; font-variant-numeric: tabular-nums; }
+.tbl-search { margin-left: auto; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: .62em; width: 280px; background: var(--surface); }
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .66em; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.tbl th { text-align: left; font-size: .86em; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 14px 18px; background: var(--soft); font-weight: 700; }
+.tbl td { padding: 14px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+.tbl tr.row { cursor: pointer; transition: background .15s; } .tbl tr.row:hover td { background: var(--soft); }
+.tbl tr.sel td { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.tbl .w-s { width: 13%; } .tbl .w-l { width: 42%; }
+.goto { border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-weight: 700; font-size: .92em; background: var(--surface); color: var(--primary); }
+.pager { display: flex; gap: 8px; justify-content: flex-end; font-size: .6em; color: var(--muted); align-items: center; }
+.pager button { border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; background: var(--surface); }
+.drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 640px; background: var(--surface); box-shadow: -20px 0 60px rgba(0,0,0,.18); padding: 56px 50px; display: flex; flex-direction: column; gap: 18px; overflow: auto; z-index: 5; transform: translateX(105%); transition: transform .35s var(--ease); color: var(--ink); }
+.drawer.open { transform: none; }
+.drawer h3 { margin: 0; font-family: var(--hf); font-size: 1.1em; }
+.drawer .x { position: absolute; right: 22px; top: 18px; font-size: 1.2em; color: var(--muted); }
+.drawer .fld { font-size: .56em; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.drawer .val { font-size: .76em; margin-top: 4px; }
+
+/* Matrix */
+.matrix { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 20px; flex: 1; min-height: 0; }
+.mx-col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); display: flex; flex-direction: column; overflow: hidden; }
+.mx-head { padding: 20px 24px; border-bottom: 4px solid var(--tone, var(--primary)); display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; width: 100%; }
+.mx-head b { font-family: var(--hf); font-size: 2em; color: var(--tone, var(--primary)); font-variant-numeric: tabular-nums; line-height: 1; }
+.mx-head span { font-weight: 700; font-size: .74em; }
+.mx-cells { padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+.mx-cell { text-align: left; padding: 12px 16px; border-radius: 10px; background: color-mix(in srgb, var(--tone, var(--primary)) 9%, var(--surface)); font-size: .66em; font-weight: 600; border-left: 4px solid var(--tone, var(--primary)); transition: transform .2s var(--ease); }
+.mx-cell:hover { transform: translateX(4px); }
+.mx-cell.pop { animation: pop .5s var(--ease) both; }
+
+/* Decision */
+.k-decision .dk-body { flex-direction: row; gap: 34px; }
+.dec-main { flex: 1.35; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.dec-side { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.dec-q { font-size: .86em; color: var(--muted); }
+.opts { display: flex; flex-direction: column; gap: 12px; }
+.opt { display: grid; grid-template-columns: 54px 1fr; gap: 18px; align-items: start; text-align: left; padding: 18px 22px; border-radius: var(--r); background: var(--surface); border: 2px solid var(--line); transition: border-color .2s, background .2s, transform .2s var(--ease), opacity .2s; }
+.opt:hover { border-color: color-mix(in srgb, var(--primary) 45%, transparent); }
+.opt .key { width: 54px; height: 54px; border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-family: var(--hf); background: var(--soft); color: var(--primary); font-size: .9em; }
+.opt .tx { font-weight: 600; font-size: .84em; } .opt .nt { color: var(--muted); font-size: .66em; margin-top: 4px; font-weight: 400; }
+.opt.chosen { border-color: var(--good); background: color-mix(in srgb, var(--good) 8%, var(--surface)); }
+.opt.chosen .key { background: var(--good); color: #fff; }
+.opts.has-choice .opt:not(.chosen) { opacity: .55; }
+.opt .badge { justify-self: start; margin-top: 8px; }
+.hint { padding: 16px 20px; border-radius: var(--r); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); border: 1px dashed var(--accent); font-size: .7em; }
+.hint b { color: var(--accent); display: block; font-size: .8em; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 22px; }
+.box h4 { margin: 0 0 10px; font-size: .58em; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.box ul { margin: 0; padding-left: 1.1em; font-size: .66em; } .box li { margin: 4px 0; }
+.status-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.st-btn { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: .58em; font-weight: 700; background: var(--surface); }
+.st-btn.on { color: #fff; background: var(--tone); border-color: var(--tone); }
+.concl { width: 100%; min-height: 96px; resize: none; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: .64em; background: var(--soft); }
+.concl:focus, .note-area:focus { outline: 2px solid var(--accent); }
+.refs { display: flex; gap: 8px; flex-wrap: wrap; }
+.ref { font-size: .56em; padding: 4px 10px; border-radius: 6px; background: var(--soft); border: 1px solid var(--line); }
+.mini-tbl { width: 100%; border-collapse: collapse; font-size: .6em; }
+.mini-tbl th { text-align: left; color: var(--muted); font-size: .9em; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.mini-tbl td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.mini-tbl select { font-size: 1em; padding: 4px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); max-width: 220px; }
+
+/* Assign */
+.assign { width: 100%; border-collapse: separate; border-spacing: 0 10px; font-size: .72em; }
+.assign th { text-align: left; color: var(--muted); font-size: .8em; letter-spacing: .08em; text-transform: uppercase; padding: 0 16px; }
+.assign td { background: var(--surface); padding: 16px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); vertical-align: middle; }
+.assign td:first-child { border-left: 1px solid var(--line); border-radius: 12px 0 0 12px; font-weight: 700; }
+.assign td:last-child { border-right: 1px solid var(--line); border-radius: 0 12px 12px 0; }
+.assign .dt { color: var(--muted); font-weight: 400; font-size: .86em; margin-top: 3px; }
+.assign select, .assign input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--soft); font-size: .95em; }
+.assign select.set, .assign input.set { border-color: var(--good); background: color-mix(in srgb, var(--good) 8%, var(--surface)); }
+
+/* Poll, rank, checklist, note */
+.poll { display: flex; flex-direction: column; gap: 14px; }
+.poll-opt { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; text-align: left; padding: 18px 24px; border-radius: var(--r); background: var(--surface); border: 2px solid var(--line); overflow: hidden; }
+.poll-opt .fill { position: absolute; left: 0; top: 0; bottom: 0; background: color-mix(in srgb, var(--primary) 12%, transparent); width: 0; transition: width .6s var(--ease); }
+.poll-opt > span, .poll-opt > b { position: relative; } .poll-opt b { font-variant-numeric: tabular-nums; }
+.poll-opt.mine { border-color: var(--primary); }
+.poll-opt .pn { display: block; font-size: .7em; color: var(--muted); }
+.poll-ctl { display: flex; gap: 8px; } .poll-ctl button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-weight: 800; position: relative; }
+.rank { display: flex; flex-direction: column; gap: 10px; }
+.rank-item { display: grid; grid-template-columns: 50px 1fr auto; gap: 16px; align-items: center; padding: 14px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); cursor: grab; transition: transform .25s var(--ease); }
+.rank-item .no { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 800; }
+.rank-item .mv button { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.rank-item.drag { opacity: .4; }
+.check { display: flex; flex-direction: column; gap: 12px; }
+.check-item { display: flex; gap: 18px; align-items: center; text-align: left; padding: 14px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.check-item .bx { width: 34px; height: 34px; border-radius: 8px; border: 2px solid var(--line); display: grid; place-items: center; color: #fff; font-weight: 900; flex: none; }
+.check-item.on .bx { background: var(--good); border-color: var(--good); }
+.check-item.on .lbl { text-decoration: line-through; color: var(--muted); }
+.note-area { width: 100%; flex: 1; resize: none; padding: 20px 24px; border-radius: var(--r); border: 1px solid var(--line); font-size: .8em; background: var(--surface); line-height: 1.5; }
+
+/* Summary */
+.sum { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 30px; overflow: auto; flex: 1; min-height: 0; align-content: start; }
+.sum-item { display: grid; grid-template-columns: 70px 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .66em; }
+.sum-item .cd { font-weight: 800; color: var(--accent); font-family: var(--hf); }
+.sum-item .tt { font-weight: 700; } .sum-item .ch { margin-top: 4px; } .sum-item .ch.none { color: var(--muted); font-style: italic; }
+.sum-item .nt { color: var(--muted); margin-top: 4px; white-space: pre-wrap; }
+.sum-actions { display: flex; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: .62em; border: 1px solid var(--line); background: var(--surface); }
+.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.sum-sign { display: flex; justify-content: space-around; margin-top: 10px; font-size: .62em; color: var(--muted); text-align: center; }
+.sum-sign div { min-width: 260px; } .sum-sign b { display: block; color: var(--ink); margin-bottom: 70px; }
+
+/* Learn kinds */
+.quiz-q { font-weight: 650; font-size: .96em; }
+.quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.qo { text-align: left; padding: 18px 22px; border-radius: var(--r); background: var(--surface); border: 2px solid var(--line); font-size: .8em; font-weight: 600; }
+.qo.right { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, var(--surface)); }
+.qo.wrong { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, var(--surface)); }
+.explain { padding: 14px 20px; border-radius: var(--r); background: var(--soft); font-size: .72em; }
+.qnav { display: flex; gap: 8px; align-items: center; font-size: .62em; color: var(--muted); }
+.qnav .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); } .qnav .dot.cur { background: var(--primary); } .qnav .dot.ok { background: var(--good); } .qnav .dot.ko { background: var(--bad); }
+.timer { margin-left: auto; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+.cls { display: grid; grid-template-columns: 1fr 1.2fr; gap: 26px; flex: 1; min-height: 0; }
+.cls-items { display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+.cls-item { padding: 14px 18px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); font-size: .7em; }
+.cls-item .bks { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.cls-item .bks button { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); font-size: .9em; background: var(--soft); }
+.cls-item.ok { border-color: var(--good); } .cls-item.ko { border-color: var(--bad); }
+.cls-item .why { color: var(--muted); font-size: .92em; margin-top: 8px; }
+.cls-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-content: start; }
+.bucket { background: var(--soft); border-radius: var(--r); padding: 16px; min-height: 150px; }
+.bucket h4 { margin: 0 0 10px; font-size: .66em; } .bucket div { font-size: .56em; padding: 6px 10px; background: var(--surface); border-radius: 8px; margin-bottom: 6px; }
+.reveal { display: flex; flex-direction: column; gap: 14px; overflow: auto; }
+.rv { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 24px; text-align: left; width: 100%; }
+.rv .q { font-weight: 650; font-size: .82em; } .rv .a { display: none; margin-top: 10px; color: var(--muted); font-size: .74em; border-top: 1px dashed var(--line); padding-top: 10px; }
+.rv.open .a { display: block; } .rv .more { font-size: .58em; color: var(--accent); font-weight: 700; margin-top: 8px; }
+.flash { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; overflow: auto; }
+.fc { perspective: 1000px; height: 210px; }
+.fc-in { position: relative; width: 100%; height: 100%; transition: transform .6s var(--ease); transform-style: preserve-3d; }
+.fc.on .fc-in { transform: rotateY(180deg); }
+.fc-f, .fc-b { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--r); padding: 22px; display: grid; place-items: center; text-align: center; border: 1px solid var(--line); background: var(--surface); font-size: .74em; }
+.fc-f { font-weight: 700; font-family: var(--hf); font-size: .9em; } .fc-b { transform: rotateY(180deg); background: var(--soft); }
+.img-full { flex: 1; min-height: 0; width: 100%; border-radius: var(--r); } .img-cap { color: var(--muted); font-size: .72em; }
+
+/* Chrome */
+.dk-bar { flex: none; height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 16px; color: rgba(255,255,255,.86); font-size: 14px; background: rgba(8,12,22,.94); border-top: 1px solid rgba(255,255,255,.06); z-index: 20; }
+.dk-bar .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 34vw; }
+.dk-bar .seg { color: rgba(255,255,255,.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dk-bar .sp { flex: 1; }
+.dk-bar button { height: 34px; padding: 0 12px; border-radius: 8px; background: rgba(255,255,255,.07); color: #fff; font-size: 13px; white-space: nowrap; }
+.dk-bar button:hover { background: rgba(255,255,255,.15); }
+.dk-bar button.on { background: var(--accent); }
+.dk-bar .pg { font-variant-numeric: tabular-nums; color: rgba(255,255,255,.7); min-width: 64px; text-align: center; }
+.dk-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.08); z-index: 21; }
+.dk-progress i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .4s var(--ease); }
+.live-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.08); font-weight: 700; font-size: 12px; }
+.live-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239,68,68,.6); animation: pulse 1.6s infinite; }
+.live-pill.away::before { background: #f59e0b; animation: none; } .live-pill.ended::before { background: #94a3b8; animation: none; }
+.follow { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 40; display: flex; gap: 10px; align-items: center; padding: 8px 10px 8px 16px; border-radius: 999px; background: rgba(8,12,22,.9); color: #fff; font-size: 13px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+.follow button { padding: 6px 12px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; font-size: 12px; }
+.follow.following button { background: rgba(255,255,255,.12); }
+
+/* Presenter panel */
+.dk-main { flex: 1; min-height: 0; display: flex; }
+.dk-panel { width: 400px; flex: none; background: #0f1626; color: #e5e9f0; display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,.06); font-size: 14px; }
+.dk-panel[hidden] { display: none; }
+.pn-clock { padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.pn-clock .big { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.pn-clock .row { display: flex; justify-content: space-between; gap: 10px; color: #9aa6b8; margin-top: 4px; }
+.pn-clock .late { color: #f87171; } .pn-clock .ok { color: #4ade80; }
+.pn-segs { padding: 10px 18px; border-bottom: 1px solid rgba(255,255,255,.06); display: flex; flex-direction: column; gap: 6px; }
+.pn-seg { display: grid; grid-template-columns: 1fr auto; gap: 8px; font-size: 13px; color: #9aa6b8; }
+.pn-seg.cur { color: #fff; font-weight: 700; }
+.pn-seg .mt { height: 4px; grid-column: 1 / -1; background: rgba(255,255,255,.08); border-radius: 99px; overflow: hidden; }
+.pn-seg .mt i { display: block; height: 100%; background: #60a5fa; } .pn-seg .mt i.over { background: #f87171; }
+.pn-notes { flex: 1; overflow: auto; padding: 16px 18px; line-height: 1.55; font-size: 15px; }
+.pn-notes h5 { margin: 0 0 8px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #7c8aa0; }
+.pn-next { padding: 12px 18px; border-top: 1px solid rgba(255,255,255,.06); color: #9aa6b8; }
+.pn-next b { color: #fff; display: block; margin-top: 2px; }
+
+/* Grid overview */
+.dk-grid { position: fixed; inset: 0; z-index: 50; background: rgba(6,10,18,.96); overflow: auto; padding: 30px 40px 60px; color: #fff; }
+.dk-grid h2 { margin: 0 0 18px; font-size: 18px; }
+.dk-grid .grp { margin: 20px 0 10px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #94a3b8; }
+.dk-grid .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.dk-grid .tile { text-align: left; padding: 14px; border-radius: 10px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); min-height: 92px; display: flex; flex-direction: column; gap: 6px; color: #fff; }
+.dk-grid .tile.cur { border-color: var(--accent); background: rgba(255,255,255,.1); }
+.dk-grid .tile small { color: #94a3b8; font-size: 11px; } .dk-grid .tile b { font-size: 14px; line-height: 1.3; }
+.dk-grid .tile .done { color: #4ade80; font-size: 11px; }
+.dk-grid .close { position: fixed; right: 24px; top: 18px; font-size: 26px; color: #fff; }
+
+/* Modal / toast */
+.dk-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(0,0,0,.55); }
+.dk-modal > div { background: #fff; color: #0f1b2d; border-radius: 14px; padding: 26px 28px; width: min(560px, 92vw); font-size: 15px; box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+.dk-modal h3 { margin: 0 0 10px; } .dk-modal p { color: #475569; margin: 8px 0; }
+.dk-modal .url { display: flex; gap: 8px; margin: 14px 0; } .dk-modal .url input { flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+.dk-modal .row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; margin-top: 16px; }
+.dk-modal button { padding: 9px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 700; font-size: 14px; background: #fff; }
+.dk-modal button.primary { background: #12305a; color: #fff; border-color: #12305a; }
+.dk-modal button.danger { color: #b42318; border-color: #f2c4c0; }
+.dk-modal select { padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
+.dk-modal .qr { display: grid; place-items: center; margin: 10px 0; } .dk-modal .qr svg { width: 200px; height: 200px; }
+.dk-toast { position: fixed; left: 50%; bottom: 70px; transform: translateX(-50%); z-index: 70; padding: 10px 16px; border-radius: 10px; background: #0f172a; color: #fff; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+.dk-black { position: fixed; inset: 0; background: #000; z-index: 45; }
+.dk-loading { color: #cbd5e1; font-size: 15px; margin: auto; text-align: center; }
+
+/* Motion */
+.enter-next { animation: inNext var(--dur) var(--ease) both; }
+.enter-prev { animation: inPrev var(--dur) var(--ease) both; }
+.stagger > * { animation: rise var(--dur) var(--ease) both; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; } .stagger > *:nth-child(3) { animation-delay: 120ms; } .stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; } .stagger > *:nth-child(6) { animation-delay: 300ms; } .stagger > *:nth-child(n+7) { animation-delay: 340ms; }
+.motion-none .enter-next, .motion-none .enter-prev, .motion-none .stagger > *, .motion-none .mx-cell.pop { animation: none !important; }
+.motion-none * { transition: none !important; }
+.motion-lively { --dur: 560ms; }
+@keyframes inNext { from { opacity: 0; transform: translateX(46px); } to { opacity: 1; transform: none; } }
+@keyframes inPrev { from { opacity: 0; transform: translateX(-46px); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.94); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,.6); } 70% { box-shadow: 0 0 0 9px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+@media (prefers-reduced-motion: reduce) { .enter-next, .enter-prev, .stagger > *, .mx-cell.pop { animation: none !important; } }
+
+/* Small screens (viewers on phones): the stage still scales; chrome compacts. */
+@media (max-width: 720px) {
+  .dk-bar { gap: 6px; padding: 0 8px; } .dk-bar .seg, .dk-bar .opt-wide { display: none; } .dk-bar .t { max-width: 40vw; }
+  .dk-panel { position: fixed; inset: auto 0 52px 0; width: auto; height: 45vh; z-index: 30; }
+}
+
+/* Print: the minutes (summary) or every slide as a page. */
+@media print {
+  @page { size: 1600px 900px; margin: 0; }
+  html, body { overflow: visible; background: #fff; height: auto; }
+  #deck-app { position: static; display: block; background: #fff; }
+  .dk-bar, .dk-panel, .follow, .dk-progress, .dk-toast { display: none !important; }
+  .dk-viewport { display: block; overflow: visible; }
+  .dk-stage { position: relative; left: 0; top: 0; transform: none !important; box-shadow: none; border-radius: 0; page-break-after: always; }
+  .drawer { display: none; }
+}
+
+/* QR card (on the slide; movable by the presenter) */
+.dk-qr { position: absolute; z-index: 8; background: #fff; color: #0f1b2d; border-radius: 18px; padding: 16px 16px 12px; box-shadow: 0 18px 50px rgba(0,0,0,.28); display: flex; flex-direction: column; align-items: center; gap: 8px; animation: pop .4s var(--ease) both; }
+.dk-qr img { width: 100%; aspect-ratio: 1; display: block; image-rendering: pixelated; pointer-events: none; }
+.dk-qr .qr-cap { text-align: center; line-height: 1.25; } .dk-qr .qr-cap b { display: block; font-size: 20px; } .dk-qr .qr-cap span { font-size: 13px; color: #5a6577; word-break: break-all; }
+.dk-qr.movable { cursor: grab; touch-action: none; } .dk-qr.movable:active { cursor: grabbing; }
+.dk-qr .qr-tools { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); display: none; gap: 4px; background: rgba(8,12,22,.92); padding: 6px; border-radius: 10px; white-space: nowrap; }
+.dk-qr.movable:hover .qr-tools { display: flex; }
+.dk-qr .qr-tools button { width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,.1); color: #fff; font-size: 16px; }
+
+/* Phones: slides reflow into a scrolling column instead of a tiny 16:9 box. */
+body.dk-mobile .dk-viewport { display: block; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+body.dk-mobile .dk-stage { position: relative; left: auto; top: auto; width: 100%; height: auto; min-height: 100%; transform: none !important; border-radius: 0; box-shadow: none; overflow: visible; }
+body.dk-mobile .dk-slide { position: relative; inset: auto; min-height: calc(100vh - 52px); padding: 28px 20px 64px; font-size: 16px; }
+body.dk-mobile .dk-slide::after { width: 4px; }
+body.dk-mobile .dk-head { margin-bottom: 18px; }
+body.dk-mobile .dk-title { font-size: 1.5em; }
+body.dk-mobile .dk-foot { left: 20px; right: 20px; bottom: 16px; font-size: 11px; }
+body.dk-mobile .dk-logo { display: none; }
+body.dk-mobile .k-hero { padding: 48px 22px; justify-content: center; }
+body.dk-mobile .k-hero .dk-title { font-size: 2em; }
+body.dk-mobile .k-hero .hero-stats { flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+body.dk-mobile .k-hero .hero-stat { min-width: 0; flex: 1 1 40%; padding: 14px 16px; }
+body.dk-mobile .k-hero .deco { width: 360px; height: 360px; right: -140px; top: -140px; }
+body.dk-mobile .k-hero.lay-split { flex-direction: column; } body.dk-mobile .k-hero .hero-img { width: 100%; height: auto; }
+body.dk-mobile .k-section .num { font-size: 4em; }
+body.dk-mobile .stat-grid, body.dk-mobile .cards { grid-template-columns: 1fr 1fr !important; gap: 12px; }
+body.dk-mobile .stat { padding: 16px; } body.dk-mobile .stat b { font-size: 2em; }
+body.dk-mobile .bl.cards, body.dk-mobile .bl.two_col, body.dk-mobile .compare, body.dk-mobile .quiz-opts, body.dk-mobile .cls { grid-template-columns: 1fr; display: grid; }
+body.dk-mobile .ag-row { grid-template-columns: 64px 1fr; padding: 12px 14px; gap: 12px; } body.dk-mobile .ag-row .min { grid-column: 2; justify-self: start; }
+body.dk-mobile .k-decision .dk-body { flex-direction: column; gap: 16px; }
+body.dk-mobile .opt { grid-template-columns: 40px 1fr; padding: 12px 14px; } body.dk-mobile .opt .key { width: 40px; height: 40px; }
+body.dk-mobile .matrix { grid-auto-flow: row; grid-auto-columns: auto; }
+body.dk-mobile .timeline { grid-auto-flow: row; padding-top: 0; padding-left: 28px; gap: 22px; }
+body.dk-mobile .timeline::before { left: 8px; right: auto; top: 0; bottom: 0; width: 3px; height: auto; }
+body.dk-mobile .timeline .prog { display: none; }
+body.dk-mobile .tl-item::before { top: 4px; left: -28px; }
+body.dk-mobile .tbl { display: block; overflow-x: auto; font-size: .78em; } body.dk-mobile .tbl-search { width: 100%; margin-left: 0; }
+body.dk-mobile .assign { display: block; overflow-x: auto; font-size: .82em; }
+body.dk-mobile .hbar { grid-template-columns: 1fr; gap: 6px; }
+body.dk-mobile .donut-wrap { flex-direction: column; gap: 24px; } body.dk-mobile .donut-wrap svg { width: 260px; height: 260px; }
+body.dk-mobile .chart { min-height: 280px; gap: 10px; }
+body.dk-mobile .sum { grid-template-columns: 1fr; }
+body.dk-mobile .qt { font-size: 1.2em; padding-left: 18px; }
+body.dk-mobile .drawer { position: fixed; top: auto; left: 0; right: 0; bottom: 52px; width: auto; max-height: 70vh; padding: 28px 22px; border-radius: 18px 18px 0 0; transform: translateY(105%); z-index: 35; font-size: 16px; }
+body.dk-mobile .drawer.open { transform: none; }
+body.dk-mobile .dk-bar button { padding: 0 10px; }
+body.dk-mobile .follow { top: auto; bottom: 64px; font-size: 12px; max-width: 94vw; }
+body.dk-mobile .flash { grid-template-columns: 1fr; }
+
+/* Refinements: fill sparse slides, compact options next to a table, timeline cards, quiet texture. */
+.dk-slide:not(.k-hero):not(.k-section):not(.bg-dark):not(.bg-primary):not(.bg-image) { background:
+  radial-gradient(1100px 520px at 108% -12%, color-mix(in srgb, var(--primary) 7%, transparent), transparent 60%),
+  radial-gradient(700px 380px at -8% 112%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 60%), var(--bg); }
+.dk-body.few { justify-content: center; padding-bottom: 40px; }
+.bl.big { gap: 22px; } .bl.big li { font-size: 1.12em; }
+.bl.numbered.big li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 26px 30px; align-items: center; box-shadow: 0 6px 22px rgba(15,27,45,.05); }
+.bl.numbered.big li .mk { width: 58px; height: 58px; font-size: .9em; }
+.cards.tall { flex: 1; max-height: 560px; } .cards.tall .card { padding: 34px 34px; justify-content: flex-start; } .cards.tall .card .ttl { font-size: 1.15em; } .cards.tall .card .bd { font-size: .86em; }
+.tbl { font-size: .74em; } .tbl td { padding: 13px 18px; }
+.opts.compact { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 10px; }
+.opts.compact .opt { grid-template-columns: 1fr; padding: 14px 16px; gap: 8px; } .opts.compact .opt .key { width: 40px; height: 40px; }
+.opts.compact .opt .tx { font-size: .7em; }
+.dec-main .box { overflow: auto; }
+.opt .tx { font-size: .9em; }
+.tl-item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 14px; }
+.tl-item::before { top: -29px; left: 14px; }
+.tl-item .grow { flex: 1; } .tl-item input { margin-top: 6px; }
+.timeline { flex: 0 1 auto; }
+.k-timeline .dk-body { justify-content: flex-start; gap: 34px; }
+body.dk-mobile .opts.compact { grid-template-columns: 1fr; }
+body.dk-mobile .opts.compact .opt { grid-template-columns: 40px 1fr; }
+</style></head><body><div id="deck-app"></div><script>window.LMDECK = {"mode":"present","offline":true,"payload":{"mode":"present","deck_id":"ctcjdyyfnot9629qvuco","slug":"tiep-thu-tb-579","rev":2,"title":"Tiếp thu Thông báo 579/TB-VPCP","site":{"name":"Nhóm Chiến lược"},"theme":{"preset":"executive","colors":{"primary":"#12305a","accent":"#b0812b","background":"#f4f6f9","surface":"#ffffff","ink":"#0f1b2d","muted":"#5a6577","good":"#1d7a4e","warn":"#b26b00","bad":"#b42318"},"heading_font":"Be Vietnam Pro","body_font":"Be Vietnam Pro","size":"m","motion":"subtle","logo":"","page_numbers":true},"deck":{"lmdeck":1,"meta":{"title":"Tiếp thu Thông báo 579/TB-VPCP","subtitle":"Chiến lược phát triển nguồn nhân lực đến năm 2030, tầm nhìn đến năm 2050","date":"14/11/2026","author":"Nhóm soạn thảo","lang":"vi","duration_min":75,"start_time":"","footer":"TB 579/TB-VPCP (09/11/2026) · Dự thảo QĐ bản 13/8/2026"},"theme":{"preset":"executive","primary":"","accent":"","background":"","surface":"","ink":"","muted":"","good":"","warn":"","bad":"","heading_font":"","body_font":"","size":"m","motion":"subtle","logo":"","page_numbers":true},"segments":[{"id":"s1","name":"Mục tiêu cuộc họp","min":5,"outcome":"Thống nhất phạm vi và đầu ra cần có hôm nay"},{"id":"s2","name":"Báo cáo nhanh: đối chiếu TB 579 với dự thảo","min":10,"outcome":"Bộ trưởng nắm 12 điểm và mức độ đáp ứng hiện tại"},{"id":"s3","name":"Xin ý kiến 8 điểm cần quyết định","min":40,"outcome":"Chốt phương án cho từng điểm D1–D8"},{"id":"s4","name":"Phối hợp liên bộ","min":10,"outcome":"Ai làm việc với Bộ Nội vụ, Bộ Tài chính, Bộ Tư pháp; ở cấp nào"},{"id":"s5","name":"Lộ trình đến 30/11 và phân công","min":10,"outcome":"Mốc nội bộ và người chịu trách nhiệm"}],"data":{"compare":[{"id":"c1","topic":"Quan điểm","req":"Chiến lược là công cụ phục vụ trực tiếp đổi mới mô hình phát triển, theo NQ Đại hội và NQ 19-NQ/TW (28/7/2026)","now":"5 quan điểm chung; chưa dẫn NQ 19-NQ/TW, chưa gắn với mô hình phát triển mới","status":"Chưa có","fix":"Viết lại quan điểm 1–2; bổ sung NQ 19-NQ/TW, NQ Đại hội vào căn cứ","dec":"d3","tb":"“Chiến lược phát triển nguồn nhân lực phải là công cụ quan trọng phục vụ trực tiếp việc đổi mới mô hình phát triển đất nước theo Nghị quyết Đại hội Đảng toàn quốc, Nghị quyết số 19-NQ/TW…” (mục 2, ý 1)"},{"id":"c2","topic":"Ngành ưu tiên","req":"Rà soát nghị quyết, chiến lược, quy hoạch ngành; xác định ngành, lĩnh vực ưu tiên theo từng giai đoạn","now":"Chưa có danh mục ngành, lĩnh vực ưu tiên","status":"Chưa có","fix":"Lập danh mục lĩnh vực chiến lược, ghi rõ nguồn nghị quyết hoặc quy hoạch","dec":"d1","tb":"“Xác định rõ các mục tiêu, định hướng, ngành, lĩnh vực ưu tiên phát triển của đất nước trong từng giai đoạn…” (mục 2, ý 1)"},{"id":"c3","topic":"Nhu cầu theo lĩnh vực","req":"Không cần chỉ tiêu cho mọi ngành; với lĩnh vực chiến lược phải có dự báo nhu cầu, nguồn lực, chỉ tiêu và nhiệm vụ theo giai đoạn","now":"21 chỉ tiêu chung (Phụ lục I); không có dự báo theo lĩnh vực","status":"Một phần","fix":"Rút gọn chỉ tiêu chung; thêm phần nhu cầu nhân lực theo lĩnh vực chiến lược","dec":"d1","tb":"“Không nhất thiết phải đề ra các mục tiêu, chỉ tiêu về nhân lực cho tất cả các ngành, lĩnh vực nhưng phải làm rõ nhu cầu… đối với những ngành, lĩnh vực có ý nghĩa chiến lược” (mục 2, ý 2)"},{"id":"c4","topic":"Mốc thời gian","req":"Rà soát nghị quyết của Đảng để chọn và thống nhất mốc thời gian","now":"Chỉ có mốc 2030 và tầm nhìn 2050","status":"Cần quyết định","fix":"Chọn mốc (có thêm 2035 hoặc 2045 không) và cách gọi tên giai đoạn","dec":"d2","tb":"“Rà soát các nghị quyết của Đảng để lựa chọn, thống nhất mốc thời gian cụ thể” (mục 2, ý 3, điểm 1)"},{"id":"c5","topic":"Chỉ tiêu R&D, STEM, AI, an ninh mạng","req":"Rà soát cho khớp NQ 217/NQ-CP (06/8/2026)","now":"Có STEM 35% và nhân lực trình độ cao 2,5–3%; không có R&D, AI, an ninh mạng","status":"Một phần","fix":"Đối chiếu NQ 217; bổ sung hoặc dẫn chiếu các chỉ tiêu còn thiếu","dec":"d1","tb":"“Rà soát các chỉ tiêu về nhân lực nghiên cứu, phát triển công nghệ, STEM, trí tuệ nhân tạo và an ninh mạng… phù hợp với Nghị quyết số 217/NQ-CP” (mục 2, ý 3, điểm 2)"},{"id":"c6","topic":"Lĩnh vực chưa có mục tiêu","req":"Lĩnh vực trọng tâm chưa có mục tiêu nhân lực thì nghiên cứu, đề xuất theo nhu cầu thực tế","now":"Chưa rà soát","status":"Chưa có","fix":"Rà soát chéo danh mục lĩnh vực (c2) với các chỉ tiêu đang có","dec":"d1","tb":"“Đối với các lĩnh vực phát triển trọng tâm nhưng chưa có mục tiêu nhân lực tương ứng, cần nghiên cứu, đề xuất…” (mục 2, ý 3, điểm 3)"},{"id":"c7","topic":"Kỹ năng sử dụng AI","req":"Đưa kỹ năng sử dụng AI thành kỹ năng nền tảng của người học, người lao động","now":"AI có trong đổi mới chương trình (nhóm IV, mục 1b); chưa là kỹ năng nền tảng, chưa có chỉ tiêu","status":"Một phần","fix":"Chọn mức thể hiện: định hướng, nhiệm vụ Phụ lục II hay chỉ tiêu","dec":"d4","tb":"“Nghiên cứu đưa kỹ năng sử dụng trí tuệ nhân tạo trở thành một trong những kỹ năng nền tảng của người học, người lao động” (mục 2, ý 3, điểm 4)"},{"id":"c8","topic":"Kinh phí","req":"Nhu cầu kinh phí, cơ cấu nguồn (đầu tư/thường xuyên, TW/ĐP, GD/KHCN, xã hội hóa), phân kỳ theo khả năng cân đối ngân sách","now":"Một đoạn nguyên tắc chung (mục V)","status":"Chưa có","fix":"Xây dựng phần kinh phí; làm việc với Bộ Tài chính","dec":"d5","tb":"“Xác định rõ nhu cầu kinh phí, cơ cấu nguồn vốn… phân kỳ từng giai đoạn phù hợp với khả năng cân đối của ngân sách nhà nước” (mục 2, ý 4)"},{"id":"c9","topic":"Phụ lục nhiệm vụ","req":"Thời hạn theo tháng/năm; chủ trì, phối hợp, sản phẩm rõ; chỉ giữ nhiệm vụ rõ sản phẩm","now":"16 nhiệm vụ, thời hạn theo khoảng năm (2026–2030); nhiệm vụ 14–16 chưa nêu tên cơ quan chủ trì","status":"Một phần","fix":"Rút gọn; ghi mốc tháng/năm, sản phẩm và tên bộ chủ trì","dec":"d7","tb":"“Thời hạn hoàn thành (theo tháng, năm); cơ quan chủ trì, cơ quan phối hợp; sản phẩm đầu ra; … chỉ đưa vào phụ lục những nhiệm vụ rõ sản phẩm” (mục 2, ý 5)"},{"id":"c10","topic":"Dữ liệu và dự báo","req":"Thống nhất phân công Bộ GD&ĐT, Bộ Nội vụ, Bộ Tài chính về dữ liệu và hệ thống dự báo","now":"4 đầu mối: GD&ĐT (nền tảng dữ liệu), Công an (tài khoản học tập), Tài chính (dự báo), Nội vụ (dữ liệu lao động)","status":"Cần quyết định","fix":"Chốt quan điểm của Bộ trước khi làm việc với hai bộ","dec":"d6","tb":"“Thống nhất phân công giữa Bộ Giáo dục và Đào tạo, Bộ Nội vụ và Bộ Tài chính trong quản lý, kết nối dữ liệu và xây dựng, vận hành hệ thống dự báo nguồn nhân lực” (mục 2, ý 5)"},{"id":"c11","topic":"Khung chính sách chung (mục I)","req":"Khung chính sách chung, quy định mở cho các ngành; tránh ban hành chính sách riêng, trùng lặp","now":"Có điều phối và thử nghiệm chính sách; chưa định vị Chiến lược là khung chung","status":"Một phần","fix":"Xác định Chiến lược có chứa khung chính sách chung hay không","dec":"d8","tb":"“Hình thành khung chính sách chung áp dụng cho các ngành, lĩnh vực, quy định theo hướng mở… tránh ban hành chính sách riêng, trùng lặp” (mục 1b)"},{"id":"c12","topic":"Tích hợp, không trùng lặp (mục I)","req":"Tích hợp nhiệm vụ tương đồng; không trùng mục tiêu, sản phẩm, kinh phí giữa các đề án","now":"Đề xuất lập mới Ban Chỉ đạo quốc gia về PTNNL; chưa đối chiếu với các đề án khác","status":"Cần quyết định","fix":"Cân nhắc Ban Chỉ đạo; lập bảng ranh giới với các đề án trong chuỗi","dec":"d8","tb":"“Thống nhất nguyên tắc sắp xếp, tích hợp những nhiệm vụ có nội dung tương đồng… bảo đảm không trùng lặp mục tiêu, sản phẩm và kinh phí” (mục 1a)"}]},"slides":[{"id":"cover","kind":"hero","eyebrow":"Làm việc với Bộ trưởng Bộ Giáo dục và Đào tạo · 14/11/2026","title":"Tiếp thu Thông báo 579/TB-VPCP","notes":"Mở đầu 30 giây: hôm nay nhóm cần Bộ trưởng chốt 8 điểm để kịp trình Thủ tướng trước 30/11.\nBa con số: 16 ngày, 12 yêu cầu, 8 điểm cần quyết định.\n","subtitle":"Chiến lược phát triển nguồn nhân lực đến năm 2030, tầm nhìn đến năm 2050","meta":"Nhóm soạn thảo · Hạn báo cáo Thủ tướng trước 30/11/2026","stats":[{"value":"16","label":"ngày đến hạn báo cáo Thủ tướng"},{"value":"12","label":"yêu cầu của TB 579 liên quan trực tiếp"},{"value":"8","label":"điểm cần Bộ trưởng quyết định"}],"layout":"left","image":""},{"id":"goals","kind":"bullets","seg":"s1","eyebrow":"1 · Mục tiêu cuộc họp","title":"Hôm nay cần Bộ trưởng chốt 8 điểm để kịp trình trước 30/11","notes":"Đầu ra của buổi họp là 3 thứ này. Slide cuối sẽ tự tổng hợp thành biên bản kết luận để Bộ trưởng xem lại ngay cuối buổi.","intro":"","items":[{"text":"**Phương án đã chốt cho D1–D8**: bộ chỉ tiêu, mốc thời gian, quan điểm, AI, kinh phí, dữ liệu, phụ lục, quan hệ với các đề án","sub":"","tone":"default"},{"text":"**Đầu mối làm việc với các bộ**: Nội vụ, Tài chính, Tư pháp, KH&CN; ở cấp nào","sub":"","tone":"default"},{"text":"**Lộ trình nội bộ đến ngày trình**: mốc và người chịu trách nhiệm","sub":"","tone":"default"}],"reveal":true,"layout":"numbered"},{"id":"agenda","kind":"agenda","seg":"s1","eyebrow":"Chương trình đề xuất · 75 phút","title":"Năm phần, dồn thời gian cho phần xin quyết định","notes":"Bấm vào từng phần để nhảy tới. Phần 3 chiếm hơn nửa thời gian, khoảng 5 phút mỗi điểm.","start":"","items":[{"title":"Mục tiêu cuộc họp","minutes":5,"outcome":"Thống nhất phạm vi và đầu ra cần có hôm nay","goto":"goals"},{"title":"Báo cáo nhanh: đối chiếu TB 579 với dự thảo","minutes":10,"outcome":"Bộ trưởng nắm 12 điểm và mức độ đáp ứng hiện tại","goto":"context"},{"title":"Xin ý kiến 8 điểm cần quyết định","minutes":40,"outcome":"Chốt phương án cho từng điểm D1–D8","goto":"decide"},{"title":"Phối hợp liên bộ","minutes":10,"outcome":"Ai làm việc với các bộ; ở cấp nào","goto":"partners"},{"title":"Lộ trình đến 30/11 và phân công","minutes":10,"outcome":"Mốc nội bộ và người chịu trách nhiệm","goto":"roadmap"}]},{"id":"context","kind":"cards","seg":"s2","eyebrow":"2 · Bối cảnh","title":"TB 579 có ba phần; phần II là việc của nhóm","notes":"Phần II là phần nhóm chịu trách nhiệm. Phần I và III ảnh hưởng tới D8 (quan hệ với các đề án khác).","intro":"","items":[{"kicker":"I · Chuỗi đề án","title":"Tích hợp, không trùng lặp","body":"Khung chính sách chung. Nhiệm vụ có hạn trong 2026 trình trước **15/12**.","tag":"Liên quan gián tiếp","tone":"muted","highlight":false,"goto":""},{"kicker":"II · Chiến lược PTNNL","title":"Hoàn thiện dự thảo và hồ sơ","body":"Đồng ý sự cần thiết. Báo cáo Thủ tướng trước **30/11/2026**.","tag":"Việc của nhóm","tone":"accent","highlight":true,"goto":"overview"},{"kicker":"III · Nhân tài KH cơ bản","title":"Chương trình quốc gia 2026–2035","body":"Trình trước 30/11. Cần ranh giới rõ với Chiến lược để không trùng.","tag":"Cần phân định","tone":"warn","highlight":false,"goto":""}],"columns":3,"expandable":false},{"id":"core_quote","kind":"quote","seg":"s2","eyebrow":"Yêu cầu gốc của Phó Thủ tướng","notes":"Đây là câu định hướng cho toàn bộ việc sửa. D3 (quan điểm) xoay quanh câu này.","quote":"Chiến lược phát triển nguồn nhân lực phải là **công cụ quan trọng phục vụ trực tiếp việc đổi mới mô hình phát triển đất nước**…","cite":"Thông báo 579/TB-VPCP, 09/11/2026","ref":"Mục 2, ý 1","tone":"accent"},{"id":"overview","kind":"matrix","seg":"s2","eyebrow":"2 · Đối chiếu tổng quan","title":"12 yêu cầu của TB 579 so với dự thảo 13/8","notes":"4 điểm chưa có, 5 điểm có một phần, 3 điểm cần Bộ trưởng quyết định.\nBấm vào một ô để mở chi tiết và nguyên văn TB 579; bấm tiêu đề cột để mở bảng đã lọc.\n","intro":"","dataset":"compare","group_key":"status","label_key":"topic","order":"Chưa có, Một phần, Cần quyết định","table_slide":"compare_table","detail":[{"key":"req","label":"TB 579 yêu cầu"},{"key":"now","label":"Dự thảo hiện có"},{"key":"fix","label":"Việc cần làm"},{"key":"tb","label":"Nguyên văn TB 579"}],"status_tones":[{"value":"Chưa có","tone":"bad"},{"value":"Một phần","tone":"warn"},{"value":"Cần quyết định","tone":"accent"}]},{"id":"compare_table","kind":"table","seg":"s2","eyebrow":"2 · Bảng đối chiếu chi tiết","title":"Mỗi yêu cầu gắn với một điểm cần quyết định","notes":"Bấm một dòng để mở chi tiết; bấm nút D… để nhảy tới slide xin quyết định.","intro":"","dataset":"compare","columns":[{"key":"topic","label":"Nội dung","width":"m","format":"text"},{"key":"now","label":"Dự thảo hiện có","width":"l","format":"text"},{"key":"status","label":"Mức đáp ứng","width":"s","format":"status"},{"key":"dec","label":"Điểm","width":"s","format":"goto"}],"filter_key":"status","search":false,"page_size":6,"detail":[{"key":"req","label":"TB 579 yêu cầu"},{"key":"now","label":"Dự thảo hiện có"},{"key":"fix","label":"Việc cần làm"},{"key":"tb","label":"Nguyên văn TB 579"}],"status_tones":[{"value":"Chưa có","tone":"bad"},{"value":"Một phần","tone":"warn"},{"value":"Cần quyết định","tone":"accent"}]},{"id":"decide","kind":"section","seg":"s3","title":"8 điểm cần Bộ trưởng quyết định","number":"03","subtitle":"Mỗi điểm có câu hỏi, các phương án, gợi ý sơ bộ của nhóm và ô ghi kết luận. Khoảng 5 phút mỗi điểm."},{"id":"d1","kind":"decision","seg":"s3","eyebrow":"Điểm 1/8 · Ngành ưu tiên, nhu cầu theo lĩnh vực, chỉ tiêu","title":"Bộ chỉ tiêu: giữ bao nhiêu, bổ sung gì?","notes":"Nếu chọn C, cần Bộ KH&CN hỗ trợ dự báo theo lĩnh vực; gắn với làm việc liên bộ (phần 4).","code":"D1","question":"Phụ lục I đang có **21 chỉ tiêu**. TB 579 cho phép không đặt chỉ tiêu cho mọi ngành, nhưng phải làm rõ nhu cầu ở lĩnh vực chiến lược.","refs":"c2, c3, c5, c6","refs_dataset":"compare","options":[{"key":"A","text":"Giữ 21 chỉ tiêu, bổ sung R&D, AI, an ninh mạng","note":""},{"key":"B","text":"Rút còn khoảng 10 chỉ tiêu (theo góp ý trong bản track changes)","note":""},{"key":"C","text":"Khoảng 10 chỉ tiêu chung, kèm phụ lục nhu cầu nhân lực theo lĩnh vực chiến lược","note":""}],"hint":"C sát kết luận nhất, nhưng tốn công dự báo nhất.","extra_title":"Chỉ tiêu đang mơ hồ, cần sửa dù chọn phương án nào","extra":[{"text":"Tổng tỷ suất sinh “tăng trung bình 2% mỗi năm”"},{"text":"Tỷ lệ nữ học STEM “tăng tối thiểu 50%”: so với mốc nào?"},{"text":"Nhân lực trình độ cao “2,5–3%”: của tổng số nào?"},{"text":"Dùng “lĩnh vực đột phá” hay “công nghệ chiến lược” (đang treo trong comment)"}],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d2","kind":"decision","seg":"s3","eyebrow":"Điểm 2/8 · Mốc thời gian","title":"Mốc thời gian và tên giai đoạn","code":"D2","question":"TB 579 yêu cầu chọn mốc theo nghị quyết của Đảng. Tên Chiến lược trong TB 579 là “giai đoạn 2026–2030”, dự thảo dùng “đến năm 2030”.","refs":"c4","refs_dataset":"compare","options":[{"key":"A","text":"Giữ mốc 2030 và tầm nhìn 2050","note":""},{"key":"B","text":"Thêm mốc 2035","note":""},{"key":"C","text":"Thêm mốc 2035 và 2045","note":""}],"hint":"Cần đối chiếu nghị quyết trước khi chốt.","extra_title":"Cũng cần chốt","extra":[{"text":"Tên gọi: “đến năm 2030” hay “giai đoạn 2026–2030”"}],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d3","kind":"decision","seg":"s3","eyebrow":"Điểm 3/8 · Quan điểm","title":"Quan điểm và căn cứ","code":"D3","question":"Chiến lược phải là công cụ phục vụ đổi mới mô hình phát triển. Dự thảo **chưa dẫn NQ 19-NQ/TW**.","refs":"c1","refs_dataset":"compare","options":[{"key":"A","text":"Bổ sung căn cứ, chỉnh câu chữ 5 quan điểm hiện có","note":""},{"key":"B","text":"Viết lại quan điểm 1–2 xoay quanh mô hình phát triển mới","note":""}],"hint":"B, nếu Bộ trưởng muốn thông điệp rõ hơn.","extra_title":"Văn bản cần đưa vào căn cứ","extra":[{"text":"Nghị quyết Đại hội Đảng toàn quốc"},{"text":"NQ 19-NQ/TW ngày 28/7/2026 về đổi mới mô hình phát triển"},{"text":"NQ 217/NQ-CP ngày 06/8/2026 (cho phần chỉ tiêu)"}],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d4","kind":"decision","seg":"s3","eyebrow":"Điểm 4/8 · Kỹ năng sử dụng AI","title":"Kỹ năng sử dụng AI là kỹ năng nền tảng","code":"D4","question":"Ý mới của Phó Thủ tướng. Dự thảo mới nhắc AI trong đổi mới chương trình.","refs":"c7","refs_dataset":"compare","options":[{"key":"A","text":"Ghi ở phần định hướng, quan điểm","note":""},{"key":"B","text":"Thêm nhiệm vụ riêng ở Phụ lục II, có sản phẩm và mốc","note":""},{"key":"C","text":"Thêm chỉ tiêu (ví dụ tỷ lệ người học, người lao động đạt chuẩn kỹ năng AI)","note":""}],"hint":"C chỉ nên chọn khi đã có cách đo.","extra_title":"","extra":[],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d5","kind":"decision","seg":"s3","eyebrow":"Điểm 5/8 · Kinh phí","title":"Kinh phí: phần thiếu nhiều nhất","code":"D5","question":"Dự thảo mới có một đoạn nguyên tắc. TB 579 yêu cầu **nhu cầu, cơ cấu nguồn và phân kỳ**.","refs":"c8","refs_dataset":"compare","options":[{"key":"A","text":"Đầy đủ: tổng nhu cầu, cơ cấu nguồn, phân kỳ 2026–2030","note":""},{"key":"B","text":"Nguyên tắc và phân kỳ; dẫn chiếu kinh phí của các đề án thành phần","note":""}],"hint":"A cần số liệu của Bộ Tài chính trước khoảng 21/11.","extra_title":"Xin Bộ trưởng","extra":[{"text":"Mức chi tiết chấp nhận được trong 16 ngày"},{"text":"Có trao đổi trực tiếp với Bộ trưởng Bộ Tài chính không"}],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d6","kind":"decision","seg":"s3","eyebrow":"Điểm 6/8 · Dữ liệu và dự báo","title":"Dữ liệu và hệ thống dự báo: ai chủ trì?","notes":"Có thể gán luôn bộ chủ trì cho từng hạng mục ở cột cuối bảng; kết quả vào biên bản.","code":"D6","question":"Đây là điểm dễ vướng nhất giữa các bộ. Comment trong dự thảo đã ghi nhận trùng với nhiệm vụ của Bộ Nội vụ.","refs":"c10","refs_dataset":"compare","options":[{"key":"A","text":"Giữ như dự thảo, chỉ làm rõ ranh giới","note":""},{"key":"B","text":"Bộ GD&ĐT chủ trì cả nền tảng dữ liệu lẫn dự báo","note":""},{"key":"C","text":"Bộ Nội vụ chủ trì dự báo; Bộ GD&ĐT chủ trì dữ liệu giáo dục, kỹ năng","note":""}],"hint":"Cần quan điểm của Bộ trưởng trước khi làm việc với hai bộ.","extra_title":"","extra":[],"matrix_head":"Hạng mục | Chủ trì theo dự thảo","matrix_rows":[{"cells":"Nền tảng dữ liệu quốc gia về giáo dục, kỹ năng, nghề nghiệp, việc làm | Bộ GD&ĐT"},{"cells":"Tài khoản học tập suốt đời, hồ sơ kỹ năng số | Bộ Công an (Phụ lục II ghi cả Bộ GD&ĐT)"},{"cells":"Hệ thống dự báo, cảnh báo nhu cầu nhân lực | Bộ Tài chính"},{"cells":"Dữ liệu người lao động, thông tin thị trường lao động | Bộ Nội vụ"}],"assign_options":"Bộ GD&ĐT, Bộ Nội vụ, Bộ Tài chính, Bộ Công an","assign_label":"Bộ chủ trì (chốt)"},{"id":"d7","kind":"decision","seg":"s3","eyebrow":"Điểm 7/8 · Phụ lục nhiệm vụ","title":"Phụ lục II: rút gọn đến đâu?","code":"D7","question":"TB 579 yêu cầu chỉ giữ nhiệm vụ rõ sản phẩm, có mốc tháng/năm.","refs":"c9","refs_dataset":"compare","options":[{"key":"A","text":"Giữ 16 nhiệm vụ, bổ sung mốc và sản phẩm","note":""},{"key":"B","text":"Rút còn các nhiệm vụ có sản phẩm đo được; phần còn lại chuyển vào nội dung chính","note":""}],"hint":"B sát kết luận hơn.","extra_title":"Việc phải làm dù chọn phương án nào","extra":[{"text":"Nhiệm vụ 14–16: ghi tên bộ chủ trì thay cho “cơ quan quản lý nhà nước về lao động”"},{"text":"Chốt thuật ngữ “Chương trình” hay “Kế hoạch” (đang treo trong comment)"},{"text":"Xem lại cụm “các bộ quản lý ngành” (comment: các bộ sắp không quản lý ngành)"}],"matrix_head":"","matrix_rows":[],"assign_options":"","assign_label":"Chọn"},{"id":"d8","kind":"decision","seg":"s3","eyebrow":"Điểm 8/8 · Khung chính sách chung, tích hợp","title":"Quan hệ với các đề án khác và Ban Chỉ đạo","code":"D8","question":"Mục I của TB 579 yêu cầu tích hợp, không trùng lặp và hình thành khung chính sách chung.","refs":"c11, c12","refs_dataset":"compare","options":[{"key":"A","text":"Chiến lược là khung chung; các đề án (nhân tài, AI, bán dẫn) tham chiếu về Chiến lược","note":""},{"key":"B","text":"Chiến lược chỉ định hướng; khung chính sách chung nằm ở văn bản riêng","note":""}],"hint":"A khớp mục II (“khung định hướng tổng thể”).","extra_title":"","extra":[],"matrix_head":"Ban Chỉ đạo quốc gia về PTNNL","matrix_rows":[{"cells":"Dự thảo đề xuất lập mới Ban Chỉ đạo"}],"assign_options":"Giữ đề xuất lập mới, Giao cơ chế điều phối đang có, Bỏ khỏi dự thảo","assign_label":"Phương án"},{"id":"partners","kind":"assign","seg":"s4","eyebrow":"4 · Phối hợp liên bộ","title":"Bốn bộ cần làm việc trước 24/11","notes":"Chọn cấp làm việc và gõ tên đầu mối cho từng bộ; kết quả vào biên bản.","intro":"Cần chốt: cấp làm việc và người đầu mối của nhóm.","rows":[{"item":"Bộ Nội vụ","detail":"Dữ liệu lao động, dự báo; chỉ tiêu NEET, đào tạo lại; nhiệm vụ 14–16 · D6, D7","preset":""},{"item":"Bộ Tài chính","detail":"Kinh phí, cơ cấu nguồn, phân kỳ; chỉ tiêu HDI, năng suất · D5, D6","preset":""},{"item":"Bộ Tư pháp","detail":"Hồ sơ trình, thẩm định; cách gọi tên văn bản · D2, D7","preset":""},{"item":"Bộ KH&CN","detail":"Chỉ tiêu R&D, AI, an ninh mạng theo NQ 217 · D1, D4","preset":""}],"columns":[{"label":"Cấp làm việc","options":"Bộ trưởng, Thứ trưởng, Vụ"},{"label":"Đầu mối của nhóm","options":""}]},{"id":"roadmap","kind":"timeline","seg":"s5","eyebrow":"5 · Lộ trình đề xuất","title":"Trình Thủ tướng ngày 27/11, trước hạn 30/11","notes":"30/11/2026 là thứ Hai, nên mốc gửi đi thực tế là thứ Sáu 27/11. Các mốc là đề xuất của nhóm; gõ người phụ trách dưới từng mốc.","items":[{"date":"14/11","title":"Họp Bộ trưởng: chốt D1–D8","body":"","owner":"","done":false},{"date":"16–18/11","title":"Sửa quan điểm, chỉ tiêu, mốc thời gian, AI","body":"","owner":"","done":false},{"date":"19–21/11","title":"Làm việc với Bộ Nội vụ, Bộ Tài chính (dữ liệu, kinh phí)","body":"","owner":"","done":false},{"date":"24/11","title":"Dự thảo hoàn chỉnh và báo cáo tiếp thu, giải trình","body":"","owner":"","done":false},{"date":"25–26/11","title":"Lãnh đạo Bộ duyệt","body":"","owner":"","done":false},{"date":"27/11","title":"Bộ trưởng ký tờ trình, gửi Thủ tướng","body":"","owner":"","done":false}],"countdown_to":"2026-11-30","countdown_label":"đến hạn báo cáo Thủ tướng","editable_owner":true},{"id":"minutes","kind":"summary","eyebrow":"Tổng hợp kết luận","title":"Kết luận của Bộ trưởng","notes":"Slide này tự gom mọi lựa chọn, ghi chú, phân công trong buổi. Bấm Sao chép hoặc In / PDF để có ngay biên bản.","intro":"","include":"all","signers":"","export":true}]},"results":null,"offline":true}};</script><script>// Learnmedi deck player: one script for every way a deck is shown.
+//   present  — the presenter (staff): notes, clock, hints, live session, audience window, saving results
+//   preview  — a draft for staff and share-link assistants
+//   public   — a published deck (/d/slug): free browsing, interactions stay on the viewer's device
+//   live     — the audience of a live session (/live/code): follows the presenter, or browses freely
+//              and jumps back ("Về theo người trình bày")
+// The deck is data (validated by the server against the blueprint slide kinds); this file only renders
+// it. Text goes in as text (Markdown is escaped first, then a few tags are added), never as HTML.
+(() => {
+  'use strict';
+  const BOOT = window.LMDECK || {};
+  const QS = new URLSearchParams(location.search);
+  const AUDIENCE = QS.get('screen') === 'audience';
+
+  // ───────────────────────── helpers ─────────────────────────
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+      else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+      else if (k === 'html') el.innerHTML = v;
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat(Infinity)) {
+      if (kid === null || kid === undefined || kid === false) continue;
+      el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    }
+    return el;
+  }
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const safeUrl = (u) => /^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(u.trim()) ? u.trim() : '';
+  function inline(src) {
+    let s = esc(src);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, t, u) => { const url = safeUrl(u.replace(/&amp;/g, '&')); return url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${t}</a>` : t; });
+    return s;
+  }
+  /** Markdown → element (paragraphs, - / 1. lists, **bold**, *em*, `code`, [links](https://…)). */
+  function md(src, cls) {
+    const box = h('div', { class: 'md' + (cls ? ' ' + cls : '') });
+    const blocks = String(src ?? '').replace(/\r/g, '').split(/\n\s*\n/);
+    let html = '';
+    for (const b of blocks) {
+      const lines = b.split('\n').filter((l) => l.trim() !== '');
+      if (!lines.length) continue;
+      if (lines.every((l) => /^\s*[-*•]\s+/.test(l))) html += '<ul>' + lines.map((l) => '<li>' + inline(l.replace(/^\s*[-*•]\s+/, '')) + '</li>').join('') + '</ul>';
+      else if (lines.every((l) => /^\s*\d+[.)]\s+/.test(l))) html += '<ol>' + lines.map((l) => '<li>' + inline(l.replace(/^\s*\d+[.)]\s+/, '')) + '</li>').join('') + '</ol>';
+      else html += '<p>' + lines.map(inline).join('<br>') + '</p>';
+    }
+    box.innerHTML = html;
+    return box;
+  }
+  const txt = (src, tag = 'span', cls) => { const el = h(tag, { class: cls }); el.innerHTML = inline(src || ''); return el; };
+  const mediaUrl = (v) => !v ? '' : (/^[a-z0-9]{6,40}$/i.test(v) ? '/media/' + v : (/^https:\/\//i.test(v) ? v : ''));
+  const rc = (el, ...kids) => el.replaceChildren(...kids.flat().filter((x) => x !== null && x !== undefined && x !== false));
+  const clone = (v) => JSON.parse(JSON.stringify(v ?? null));
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
+  };
+  function toast(msg) {
+    const t = h('div', { class: 'dk-toast' }, msg);
+    document.body.append(t);
+    setTimeout(() => t.remove(), 2600);
+  }
+  async function api(method, url, body) {
+    const r = await fetch(url, { method, credentials: 'same-origin', headers: body ? { 'content-type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+    const ct = r.headers.get('content-type') || '';
+    const data = ct.includes('json') ? await r.json() : await r.text();
+    if (!r.ok) { const e = new Error((data && data.error && (data.error.message || data.error)) || (typeof data === 'string' ? data : 'Lỗi ' + r.status)); e.status = r.status; throw e; }
+    return data;
+  }
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  // ───────────────────────── state ─────────────────────────
+  let P = null, D = null, MODE = BOOT.mode || 'public';
+  const S = { idx: 0, step: 0, dir: 1, results: {}, ui: {}, panel: false, hints: true, follow: true, remote: null, live: null, grid: false, black: false,
+    clock: { start: 0, seg: {}, last: 0 } };
+  const PRESENTER = () => MODE === 'present' && !AUDIENCE;
+  const INTERACTIVE = () => !AUDIENCE;
+  let KEY = '';
+  let channel = null;
+
+  const slides = () => D.slides;
+  const cur = () => D.slides[S.idx];
+  const visible = (i) => !D.slides[i].hidden || PRESENTER();
+  const seq = () => D.slides.map((s, i) => i).filter((i) => !D.slides[i].hidden);
+  const segOf = (s) => (D.segments || []).find((g) => g.id === s.seg);
+  const dataset = (name) => (D.data && D.data[name]) || [];
+  const R = (s) => (S.results[s.id] = S.results[s.id] || {});
+  const U = (s) => (S.ui[s.id] = S.ui[s.id] || {});
+  const indexOfId = (id) => D.slides.findIndex((s) => s.id === String(id || '').trim().toLowerCase() || s.id === String(id || '').trim());
+  const tones = (s, key = 'status_tones') => Object.fromEntries((s[key] || []).map((t) => [t.value, t.tone]));
+  const toneClass = (t) => 't-' + (t || 'default');
+
+  // ───────────────────────── boot ─────────────────────────
+  async function boot() {
+    const root = $('#deck-app');
+    root.append(h('div', { class: 'dk-loading' }, 'Đang tải bài trình chiếu…'));
+    try {
+      P = BOOT.payload || await api('GET', BOOT.src);
+    } catch (e) {
+      rc(root, h('div', { class: 'dk-loading' }, h('p', null, e.status === 404 || e.status === 410 ? 'Phiên trình chiếu đã kết thúc hoặc bài không còn.' : 'Không tải được bài trình chiếu.'), h('p', { style: { opacity: .7 } }, e.message)));
+      return;
+    }
+    MODE = P.mode || MODE;
+    D = P.deck;
+    document.title = (D.meta.title || 'Trình chiếu') + ' — ' + ((P.site && P.site.name) || 'Learnmedi');
+    document.documentElement.lang = D.meta.lang || 'vi';
+    applyTheme(P.theme);
+    KEY = 'lmdeck:' + P.deck_id + ':' + MODE;
+    const saved = store.get(KEY);
+    if (MODE === 'live') {
+      const st = (P.live && P.live.state) || {};
+      S.remote = st; S.liveVer = (P.live && P.live.ver) || 0; S.liveStatus = P.live && P.live.status;
+      applyRemote(st, true);
+    } else if (saved && saved.rev === P.rev) {
+      Object.assign(S, { idx: saved.idx || 0, results: saved.results || {}, ui: saved.ui || {}, clock: saved.clock || S.clock });
+    } else if (saved) {
+      S.results = saved.results || {};
+      S.idx = Math.min(saved.idx || 0, D.slides.length - 1);
+    } else if (P.results && typeof P.results === 'object') {
+      S.results = clone(P.results.results || P.results) || {};
+    }
+    if (S.idx >= D.slides.length || S.idx < 0) S.idx = 0;
+    if (!visible(S.idx)) S.idx = seq()[0] || 0;
+    S.panel = PRESENTER() && window.innerWidth > 1280 && store.get('lmdeck:panel') !== false;
+    S.live = P.live && MODE === 'present' ? P.live : null;
+    try { channel = new BroadcastChannel('lmdeck-' + P.deck_id); } catch { channel = null; }
+    if (channel && AUDIENCE) channel.onmessage = (e) => { if (e.data && e.data.type === 'state') { applyRemote(e.data.state, false); } };
+    if (channel && PRESENTER()) channel.onmessage = (e) => { if (e.data && e.data.type === 'hello') broadcast(); };
+    layout();
+    render(true);
+    bindKeys();
+    if (AUDIENCE && channel) channel.postMessage({ type: 'hello' });
+    if (MODE === 'live') pollLive();
+    if (PRESENTER() && S.live && S.live.status !== 'ended') startLiveLoop();
+    setInterval(tick, 1000);
+    window.addEventListener('resize', fit);
+  }
+
+  function applyTheme(t) {
+    const r = document.documentElement.style;
+    const c = t.colors || {};
+    const map = { primary: '--primary', accent: '--accent', background: '--bg', surface: '--surface', ink: '--ink', muted: '--muted', good: '--good', warn: '--warn', bad: '--bad' };
+    for (const [k, v] of Object.entries(map)) if (c[k]) r.setProperty(v, c[k]);
+    const fam = (f) => `"${f}", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`;
+    r.setProperty('--hf', fam(t.heading_font)); r.setProperty('--bf', fam(t.body_font));
+    r.setProperty('--fs', { s: .9, m: 1, l: 1.1 }[t.size] || 1);
+    document.body.classList.add('motion-' + (t.motion || 'subtle'));
+    if (!BOOT.offline) {
+      const fams = [...new Set([t.heading_font, t.body_font])].map((f) => 'family=' + encodeURIComponent(f).replace(/%20/g, '+') + ':ital,wght@0,400;0,600;0,700;0,800;1,400').join('&');
+      document.head.append(h('link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?' + fams + '&display=swap' }));
+    }
+  }
+
+  // ───────────────────────── layout & chrome ─────────────────────────
+  let stage, viewport, panel, bar, progress;
+  function layout() {
+    const root = $('#deck-app');
+    stage = h('div', { class: 'dk-stage' });
+    viewport = h('div', { class: 'dk-viewport' }, stage);
+    panel = h('aside', { class: 'dk-panel', hidden: !S.panel });
+    bar = h('div', { class: 'dk-bar' });
+    progress = h('div', { class: 'dk-progress' }, h('i'));
+    const main = h('div', { class: 'dk-main' }, viewport, PRESENTER() ? panel : null);
+    rc(root, main, AUDIENCE ? null : bar, AUDIENCE ? null : progress);
+    viewport.addEventListener('click', (e) => {
+      if (e.target === viewport) next();
+    });
+    let tx = 0;
+    viewport.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; }, { passive: true });
+    viewport.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 60 && !e.target.closest('input,textarea,select')) { detach(); dx < 0 ? next() : prev(); } });
+    fit();
+  }
+  const MOBILE = () => !AUDIENCE && window.innerWidth < 760;
+  function fit() {
+    if (!stage) return;
+    const mob = MOBILE();
+    if (document.body.classList.contains('dk-mobile') !== mob) { document.body.classList.toggle('dk-mobile', mob); }
+    if (mob) { stage.style.transform = ''; return; }
+    const w = viewport.clientWidth, hh = viewport.clientHeight;
+    const k = Math.min(w / 1600, hh / 900) * (AUDIENCE ? 1 : 0.985);
+    stage.style.transform = `translate(-50%, -50%) scale(${k})`;
+  }
+
+  function renderBar() {
+    if (AUDIENCE) return;
+    const s = cur();
+    const order = seq();
+    const pos = order.indexOf(S.idx);
+    const seg = segOf(s);
+    const items = [];
+    if (MODE === 'live') {
+      const st = S.liveStatus || 'live';
+      items.push(h('span', { class: 'live-pill ' + st }, st === 'ended' ? 'Đã kết thúc' : st === 'away' ? 'Người trình bày tạm vắng' : 'Trực tiếp'));
+    }
+    items.push(h('button', { title: 'Mục lục (G)', onclick: () => toggleGrid() }, '☰'));
+    items.push(h('span', { class: 't' }, D.meta.title));
+    if (seg) items.push(h('span', { class: 'seg' }, '· ' + seg.name));
+    items.push(h('span', { class: 'sp' }));
+    items.push(h('button', { title: 'Trước (←)', onclick: () => { detach(); prev(); } }, '‹'));
+    items.push(h('span', { class: 'pg' }, s.hidden ? 'ẩn' : (pos + 1) + ' / ' + order.length));
+    items.push(h('button', { title: 'Tiếp (→)', onclick: () => { detach(); next(); } }, '›'));
+    if (PRESENTER()) {
+      items.push(h('button', { class: S.panel ? 'on' : '', title: 'Ghi chú và đồng hồ (T)', onclick: togglePanel }, 'Ghi chú'));
+      items.push(h('button', { class: S.hints ? 'on opt-wide' : 'opt-wide', title: 'Hiện/ẩn gợi ý của nhóm (H)', onclick: () => { S.hints = !S.hints; render(false); } }, 'Gợi ý'));
+      items.push(h('button', { class: 'opt-wide', title: 'Mở cửa sổ cho máy chiếu (không có ghi chú, gợi ý)', onclick: openAudience }, 'Màn chiếu ↗'));
+      if (!BOOT.offline) items.push(h('button', { class: S.live && S.live.status !== 'ended' ? 'on' : '', onclick: liveDialog }, S.live && S.live.status !== 'ended' ? '● Trực tiếp' : 'Phát trực tiếp'));
+      if (!BOOT.offline) items.push(h('button', { class: qrState().on && S.live && S.live.status !== 'ended' ? 'on' : '', title: 'Mã QR để người xem quét (Q)', onclick: toggleQr }, 'QR'));
+      items.push(h('button', { class: 'opt-wide', onclick: moreDialog }, '⋯'));
+    }
+    items.push(h('button', { title: 'Toàn màn hình (F)', onclick: fullscreen }, '⛶'));
+    rc(bar, ...items);
+    const pct = order.length ? ((pos + 1) / order.length) * 100 : 0;
+    progress.firstChild.style.width = (s.hidden ? 0 : pct) + '%';
+  }
+
+  // ───────────────────────── navigation ─────────────────────────
+  function stepsOf(s) {
+    if (s.kind === 'bullets' && s.reveal !== false) return (s.items || []).length;
+    return 0;
+  }
+  function next() {
+    const s = cur();
+    if (S.step < stepsOf(s)) { S.step++; changed(); render(false); return; }
+    const order = seq();
+    const at = order.indexOf(S.idx);
+    const to = at === -1 ? order.find((i) => i > S.idx) : order[at + 1];
+    if (to === undefined) return;
+    go(to, 1);
+  }
+  function prev() {
+    if (S.step > 0) { S.step--; changed(); render(false); return; }
+    const order = seq();
+    const at = order.indexOf(S.idx);
+    const to = at === -1 ? [...order].reverse().find((i) => i < S.idx) : order[at - 1];
+    if (to === undefined) return;
+    go(to, -1, true);
+  }
+  function go(i, dir = 1, atEnd = false) {
+    if (i < 0 || i >= D.slides.length) return;
+    clockMark();
+    S.dir = dir;
+    S.idx = i;
+    S.step = atEnd ? stepsOf(D.slides[i]) : 0;
+    if (!S.clock.start && PRESENTER()) S.clock.start = Date.now();
+    changed();
+    render(true);
+  }
+  function goId(id, dir = 1) { const i = indexOfId(id); if (i >= 0) { detach(); go(i, dir); } else toast('Không có slide ' + id); }
+
+  // ───────────────────────── render ─────────────────────────
+  function render(animate) {
+    const s = cur();
+    const active = document.activeElement;
+    const typing = active && active.closest && active.closest('.dk-stage') && /INPUT|TEXTAREA|SELECT/.test(active.tagName);
+    if (typing && !animate) { renderBar(); renderPanel(); return; }
+    const el = slideEl(s);
+    if (animate) el.classList.add(S.dir < 0 ? 'enter-prev' : 'enter-next');
+    rc(stage, el);
+    const qr = qrCard();
+    if (qr) stage.append(qr);
+    if (MOBILE()) viewport.scrollTop = animate ? 0 : viewport.scrollTop;
+    if (animate) requestAnimationFrame(() => afterMount(el));
+    else afterMount(el, true);
+    renderBar();
+    renderPanel();
+    if (S.grid) renderGrid();
+  }
+
+  function slideEl(s) {
+    const kind = KINDS[s.kind] || KINDS._unknown;
+    const cls = ['dk-slide', 'k-' + s.kind, s.bg ? 'bg-' + s.bg : '', s.accent ? toneClass(s.accent) : ''].filter(Boolean).join(' ');
+    const el = h('section', { class: cls, 'data-id': s.id });
+    if (s.bg === 'image' && s.bg_image) el.style.backgroundImage = `url("${mediaUrl(s.bg_image).replace(/"/g, '')}")`;
+    const own = kind.full ? kind(s, el) : null;
+    if (!own) {
+      const head = s.title || s.eyebrow || s.code ? h('header', { class: 'dk-head' },
+        (s.eyebrow || s.code) ? h('div', { class: 'dk-eyebrow' }, s.code ? h('span', { class: 'code' }, s.code) : null, s.eyebrow || (segOf(s) || {}).name || '') : null,
+        s.title ? txt(s.title, 'h2', 'dk-title') : null) : null;
+      const body = h('div', { class: 'dk-body' });
+      kind(s, body);
+      el.append(head, body);
+    }
+    const order = seq();
+    const pos = order.indexOf(S.idx);
+    const foot = h('footer', { class: 'dk-foot' }, h('span', { class: 'src' }, s.source || D.meta.footer || ''), P.theme.page_numbers && s.kind !== 'hero' ? h('span', { class: 'pg' }, (pos + 1) + ' / ' + order.length) : null);
+    if (s.kind !== 'hero' && s.kind !== 'section') el.append(foot);
+    if (P.theme.logo && s.kind !== 'hero') el.append(h('img', { class: 'dk-logo', src: mediaUrl(P.theme.logo), alt: '' }));
+    return el;
+  }
+
+  function afterMount(el, quiet) {
+    const motion = (P.theme.motion || 'subtle') !== 'none' && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $$('[data-count]', el).forEach((n) => countUp(n, motion && !quiet));
+    $$('[data-h]', el).forEach((n) => { const v = n.dataset.h; if (motion && !quiet) requestAnimationFrame(() => requestAnimationFrame(() => { n.style.height = v; })); else n.style.height = v; });
+    $$('[data-w]', el).forEach((n) => { const v = n.dataset.w; if (motion && !quiet) requestAnimationFrame(() => requestAnimationFrame(() => { n.style.width = v; })); else n.style.width = v; });
+    $$('[data-dash]', el).forEach((n) => { const v = n.dataset.dash; if (motion && !quiet) requestAnimationFrame(() => requestAnimationFrame(() => n.setAttribute('stroke-dasharray', v))); else n.setAttribute('stroke-dasharray', v); });
+  }
+
+  function countUp(node, animate) {
+    const raw = node.dataset.count;
+    const m = raw.match(/^(\D*?)(\d+(?:[.,]\d+)?)(.*)$/);
+    if (!m || !animate) { node.textContent = raw; return; }
+    const [, pre, num, post] = m;
+    const comma = num.includes(',');
+    const target = parseFloat(num.replace(',', '.'));
+    const decimals = (num.split(/[.,]/)[1] || '').length;
+    const t0 = performance.now(), dur = 900;
+    const stepFn = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const v = target * (1 - Math.pow(1 - k, 3));
+      let s = v.toFixed(decimals);
+      if (comma) s = s.replace('.', ',');
+      node.textContent = pre + s + post;
+      if (k < 1) requestAnimationFrame(stepFn); else node.textContent = raw;
+    };
+    node.textContent = pre + (0).toFixed(decimals) + post;
+    requestAnimationFrame(stepFn);
+  }
+
+  // Interaction: record, persist, sync. A viewer who interacts stops following.
+  function setR(s, patch, rerender = true) {
+    detach();
+    Object.assign(R(s), patch);
+    changed();
+    if (rerender) render(false);
+  }
+  function setU(s, patch, rerender = true) {
+    Object.assign(U(s), patch);
+    changed();
+    if (rerender) render(false);
+  }
+
+  // ───────────────────────── slide kinds ─────────────────────────
+  const KINDS = {};
+  KINDS._unknown = (s, b) => b.append(h('p', null, 'Kiểu slide chưa hỗ trợ: ' + s.kind));
+
+  KINDS.hero = Object.assign((s, el) => {
+    el.classList.add('lay-' + (s.layout || 'left'));
+    const text = h('div', { class: 'stagger', style: { position: 'relative', zIndex: 1 } },
+      s.eyebrow ? h('div', { class: 'dk-eyebrow' }, s.eyebrow) : null,
+      txt(s.title || D.meta.title, 'h1', 'dk-title'),
+      s.subtitle ? md(s.subtitle, 'sub') : null,
+      s.meta ? h('div', { class: 'meta' }, s.meta) : null,
+      (s.stats || []).length ? h('div', { class: 'hero-stats' }, s.stats.map((x) => h('div', { class: 'hero-stat' }, h('b', { 'data-count': x.value }, x.value), h('span', null, x.label)))) : null);
+    el.append(h('div', { class: 'deco' }), text);
+    if (s.layout === 'split' && s.image) el.append(h('img', { class: 'hero-img', src: mediaUrl(s.image), alt: '' }));
+    return true;
+  }, { full: true });
+
+  KINDS.section = Object.assign((s, el) => {
+    el.append(h('div', { class: 'stagger' }, s.number ? h('div', { class: 'num' }, s.number) : null, s.eyebrow ? h('div', { class: 'dk-eyebrow' }, s.eyebrow) : null, txt(s.title, 'h2', 'dk-title'), s.subtitle ? md(s.subtitle, 'sub') : null));
+    return true;
+  }, { full: true });
+
+  KINDS.stats = (s, b) => {
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    b.append(h('div', { class: 'stat-grid stagger', style: { '--cols': Math.min(s.columns || 3, (s.items || []).length || 1) } },
+      (s.items || []).map((x) => h('div', { class: 'stat ' + toneClass(x.tone) }, h('b', { 'data-count': x.value }, x.value), h('div', { class: 'lbl' }, x.label), x.note ? h('div', { class: 'note' }, x.note) : null))));
+  };
+
+  KINDS.bullets = (s, b) => {
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const reveal = s.reveal !== false;
+    const few = (s.items || []).length <= 4 && !s.intro;
+    if (few) b.classList.add('few');
+    const list = h('ul', { class: 'bl ' + (s.layout || 'list') + (few ? ' big' : '') });
+    (s.items || []).forEach((it, i) => {
+      const state = !reveal ? '' : i >= S.step ? 'hidden-step' : (i < S.step - 1 ? 'past-step' : '');
+      list.append(h('li', { class: [toneClass(it.tone), state].join(' ') }, h('span', { class: 'mk' }, s.layout === 'numbered' ? String(i + 1) : ''), h('div', null, md(it.text), it.sub ? md(it.sub, 'sub') : null)));
+    });
+    if (reveal && S.step === (s.items || []).length) $$('li', list).forEach((li) => li.classList.remove('past-step'));
+    b.append(list);
+  };
+
+  KINDS.agenda = (s, b) => {
+    const start = s.start || D.meta.start_time;
+    let t = start ? start.split(':').map(Number) : null;
+    const fmt = (m) => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+    let at = t ? t[0] * 60 + t[1] : 0;
+    const total = (s.items || []).reduce((a, x) => a + (x.minutes || 0), 0) || 1;
+    const curSeg = (segOf(cur()) || {}).name;
+    const palette = ['var(--primary)', 'var(--accent)', 'color-mix(in srgb, var(--primary) 55%, #fff)', 'color-mix(in srgb, var(--accent) 55%, #fff)', 'var(--muted)'];
+    b.append(h('div', { class: 'agenda stagger' }, (s.items || []).map((x) => {
+      const row = h(x.goto ? 'button' : 'div', { class: 'ag-row' + (curSeg && curSeg === x.title ? ' cur' : ''), onclick: x.goto ? () => goId(x.goto) : null },
+        h('span', { class: 'tm' }, t ? fmt(at) : (x.minutes || 0) + '′'),
+        h('div', null, h('div', { class: 'ttl' }, x.title), x.outcome ? h('div', { class: 'out' }, x.outcome) : null),
+        h('span', { class: 'min' }, (x.minutes || 0) + ' phút'));
+      at += x.minutes || 0;
+      return row;
+    })));
+    b.append(h('div', { class: 'ag-bar' }, (s.items || []).map((x, i) => h('i', { style: { width: ((x.minutes || 0) / total * 100) + '%', background: palette[i % palette.length] } }))));
+  };
+
+  KINDS.cards = (s, b) => {
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const u = U(s);
+    const fewCards = (s.items || []).length <= (s.columns || 3);
+    b.append(h('div', { class: 'cards stagger' + (fewCards ? ' tall' : ''), style: { '--cols': s.columns || 3 } }, (s.items || []).map((c, i) => {
+      const open = (u.open || {})[i];
+      const click = c.goto ? () => goId(c.goto) : s.expandable ? () => setU(s, { open: { ...(u.open || {}), [i]: !open } }) : null;
+      return h('div', { class: ['card', toneClass(c.tone), c.highlight ? 'hl' : '', s.expandable ? 'expandable' : '', open ? 'open' : '', click ? 'clickable' : ''].join(' '), onclick: click },
+        c.tag ? h('span', { class: 'chip plain tag ' + toneClass(c.tone) }, c.tag) : null,
+        c.kicker ? h('div', { class: 'kick' }, c.kicker) : null, txt(c.title, 'div', 'ttl'), c.body ? md(c.body, 'bd') : null,
+        c.goto ? h('div', { class: 'more' }, 'Mở →') : s.expandable && c.body ? h('div', { class: 'more' }, open ? 'Thu gọn' : 'Xem thêm') : null);
+    })));
+  };
+
+  KINDS.compare = (s, b) => {
+    b.append(h('div', { class: 'compare stagger' },
+      h('div', { class: 'cmp-col ' + toneClass(s.left_tone) }, h('h3', null, s.left_title), md(s.left)),
+      h('div', { class: 'cmp-col ' + toneClass(s.right_tone) }, h('h3', null, s.right_title), md(s.right))));
+    if (s.verdict) b.append(h('div', { class: 'verdict' }, md(s.verdict)));
+  };
+
+  KINDS.quote = (s, b) => {
+    b.append(h('div', { class: toneClass(s.tone) }, h('div', { class: 'qt' }, md(s.quote)), (s.cite || s.ref) ? h('div', { class: 'qt-cite' }, [s.cite, s.ref].filter(Boolean).join(' · ')) : null));
+  };
+
+  KINDS.chart = (s, b) => {
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const items = s.items || [];
+    const unit = s.unit ? ' ' + s.unit : '';
+    const fmtN = (v) => Number(v).toLocaleString('vi-VN') + unit;
+    const max = Math.max(...items.map((x) => Math.abs(x.value || 0)), 1);
+    if (s.chart === 'hbar') {
+      b.append(h('div', { class: 'hbars' }, items.map((x) => h('div', { class: 'hbar ' + toneClass(x.tone) }, h('span', null, x.label), h('div', { class: 'track' }, h('i', { 'data-w': (Math.abs(x.value) / max * 100) + '%' })), h('b', null, fmtN(x.value))))));
+    } else if (s.chart === 'donut') {
+      const total = items.reduce((a, x) => a + Math.max(0, x.value || 0), 0) || 1;
+      const C = 2 * Math.PI * 180;
+      let off = 0;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 460 460');
+      const toneVar = { good: '--good', bad: '--bad', warn: '--warn', accent: '--accent', muted: '--muted' };
+      items.forEach((x, i) => {
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const len = Math.max(0, x.value || 0) / total * C;
+        c.setAttribute('cx', 230); c.setAttribute('cy', 230); c.setAttribute('r', 180);
+        c.setAttribute('stroke', `var(${toneVar[x.tone] || (i % 2 ? '--accent' : '--primary')})`);
+        c.setAttribute('stroke-dasharray', `0 ${C}`); c.setAttribute('stroke-dashoffset', -off);
+        c.dataset.dash = `${Math.max(0, len - 4)} ${C}`;
+        off += len;
+        svg.append(c);
+      });
+      b.append(h('div', { class: 'donut-wrap' }, h('div', { class: 'donut-center' }, svg, h('div', { class: 'tot' }, h('div', null, h('span', { 'data-count': String(total) }, String(total)), h('small', null, s.unit || 'tổng')))),
+        h('div', { class: 'legend' }, items.map((x, i) => h('div', { class: toneClass(x.tone || (i % 2 ? 'accent' : 'primary')) }, h('i'), h('span', null, x.label), h('b', null, fmtN(x.value)))))));
+    } else if (s.chart === 'line') {
+      const W = 1400, H = 520, pad = 40;
+      const pts = items.map((x, i) => [pad + (items.length > 1 ? i * (W - 2 * pad) / (items.length - 1) : W / 2), H - pad - (x.value / max) * (H - 2 * pad)]);
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('class', 'line-svg');
+      const pl = document.createElementNS(ns, 'polyline'); pl.setAttribute('points', pts.map((p) => p.join(',')).join(' ')); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', 'var(--primary)'); pl.setAttribute('stroke-width', '6'); pl.setAttribute('stroke-linejoin', 'round');
+      const len = pts.reduce((a, p, i) => i ? a + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+      pl.setAttribute('stroke-dasharray', `0 ${len + 10}`); pl.dataset.dash = `${len + 10} 0`; pl.style.transition = 'stroke-dasharray 1.2s ease';
+      svg.append(pl);
+      pts.forEach((p, i) => {
+        const c = document.createElementNS(ns, 'circle'); c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 10); c.setAttribute('fill', 'var(--accent)'); svg.append(c);
+        const t = document.createElementNS(ns, 'text'); t.setAttribute('x', p[0]); t.setAttribute('y', p[1] - 22); t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', '26'); t.setAttribute('fill', 'currentColor'); t.textContent = fmtN(items[i].value); svg.append(t);
+      });
+      b.append(svg, h('div', { class: 'bar-lbls' }, items.map((x) => h('span', null, x.label))));
+    } else {
+      b.append(h('div', { class: 'chart' }, items.map((x) => h('div', { class: 'bar ' + toneClass(x.tone) }, h('b', null, fmtN(x.value)), h('i', { 'data-h': (Math.abs(x.value) / max * 100) + '%' })))), h('div', { class: 'bar-lbls' }, items.map((x) => h('span', null, x.label))));
+    }
+  };
+
+  function parseDay(text, year) {
+    const m = String(text || '').match(/(\d{1,2})\s*(?:[–-]\s*\d{1,2})?\s*\/\s*(\d{1,2})(?:\s*\/\s*(\d{2,4}))?/);
+    if (!m) return null;
+    const y = m[3] ? (m[3].length === 2 ? 2000 + +m[3] : +m[3]) : year;
+    return new Date(y, +m[2] - 1, +m[1]);
+  }
+  KINDS.timeline = (s, b) => {
+    const r = R(s);
+    const target = s.countdown_to ? new Date(s.countdown_to + 'T00:00:00') : null;
+    const year = target ? target.getFullYear() : new Date().getFullYear();
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    if (target && !isNaN(target)) {
+      const days = Math.max(0, Math.ceil((target - today) / 86400000));
+      b.append(h('div', { class: 'tl-count' }, h('b', { 'data-count': String(days) }, String(days)), h('span', null, 'ngày ' + (s.countdown_label || 'còn lại'))));
+    }
+    const items = s.items || [];
+    const dates = items.map((x) => parseDay(x.date, year));
+    let nowIdx = -1;
+    dates.forEach((d, i) => { if (d && d <= today) nowIdx = i; });
+    const line = h('div', { class: 'timeline stagger' }, h('div', { class: 'prog', 'data-w': items.length ? ((nowIdx + 0.5) / items.length * 100) + '%' : '0%' }));
+    items.forEach((x, i) => {
+      const owner = (r.owners || {})[i] ?? x.owner ?? '';
+      line.append(h('div', { class: 'tl-item' + (x.done || i < nowIdx ? ' done' : '') + (i === nowIdx ? ' now' : '') },
+        h('div', { class: 'd' }, x.date), txt(x.title, 'div', 't'), x.body ? md(x.body, 'b') : null, h('div', { class: 'grow' }),
+        s.editable_owner !== false && INTERACTIVE() ? h('input', { value: owner, placeholder: 'Người phụ trách…', oninput: (e) => setR(s, { owners: { ...(R(s).owners || {}), [i]: e.target.value } }, false) }) : owner ? h('div', { class: 'b' }, '→ ' + owner) : null));
+    });
+    b.append(line);
+  };
+
+  KINDS.image = (s, b) => {
+    b.append(h('img', { class: 'img-full', src: mediaUrl(s.image), alt: s.alt || '', style: { objectFit: s.fit || 'contain' } }));
+    if (s.caption) b.append(md(s.caption, 'img-cap'));
+  };
+
+  // Tables and the detail drawer.
+  function drawer(title, fields, onClose) {
+    return h('aside', { class: 'drawer open' }, h('button', { class: 'x', onclick: onClose, 'aria-label': 'Đóng' }, '×'), h('h3', null, title),
+      fields.filter((f) => f.value !== undefined && f.value !== '').map((f) => h('div', null, h('div', { class: 'fld' }, f.label), md(String(f.value), 'val'))));
+  }
+  function rowTitle(row, keys) { for (const k of keys) if (row[k]) return String(row[k]); return String(row.id || ''); }
+
+  KINDS.table = (s, b) => {
+    const rows = dataset(s.dataset);
+    const u = U(s);
+    const tmap = tones(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    let list = rows.map((r, i) => ({ r, i }));
+    const tools = h('div', { class: 'tbl-tools' });
+    if (s.filter_key) {
+      const vals = [...new Set(rows.map((r) => String(r[s.filter_key] ?? '')))].filter(Boolean);
+      tools.append(h('button', { class: 'flt' + (!u.f ? ' on' : ''), onclick: () => setU(s, { f: '', p: 0 }) }, 'Tất cả', h('span', { class: 'n' }, rows.length)));
+      vals.forEach((v) => tools.append(h('button', { class: 'flt ' + toneClass(tmap[v]) + (u.f === v ? ' on' : ''), onclick: () => setU(s, { f: u.f === v ? '' : v, p: 0 }) }, v, h('span', { class: 'n' }, rows.filter((r) => String(r[s.filter_key]) === v).length))));
+      if (u.f) list = list.filter((x) => String(x.r[s.filter_key]) === u.f);
+    }
+    if (s.search) {
+      const inp = h('input', { class: 'tbl-search', placeholder: 'Tìm…', value: u.q || '', oninput: debounce((e) => setU(s, { q: e.target.value, p: 0 }), 250) });
+      tools.append(inp);
+      if (u.q) { const q = u.q.toLowerCase(); list = list.filter((x) => Object.values(x.r).some((v) => String(v).toLowerCase().includes(q))); }
+    }
+    if (tools.childNodes.length) b.append(tools);
+    const size = s.page_size || 8;
+    const pages = Math.max(1, Math.ceil(list.length / size));
+    const p = Math.min(u.p || 0, pages - 1);
+    const shown = list.slice(p * size, p * size + size);
+    const cell = (c, v) => {
+      if (c.format === 'status') return v ? h('span', { class: 'chip ' + toneClass(tmap[v]) }, v) : '';
+      if (c.format === 'tag') return v ? h('span', { class: 'chip plain' }, v) : '';
+      if (c.format === 'goto') return v ? h('button', { class: 'goto', onclick: (e) => { e.stopPropagation(); goId(v); } }, String(v).toUpperCase() + ' →') : '';
+      if (c.format === 'markdown') return md(String(v ?? ''));
+      return txt(String(v ?? ''));
+    };
+    const table = h('table', { class: 'tbl' }, h('thead', null, h('tr', null, (s.columns || []).map((c) => h('th', { class: 'w-' + (c.width || 'm') }, c.label)))),
+      h('tbody', { class: 'stagger' }, shown.map(({ r, i }) => h('tr', { class: 'row' + (u.sel === i ? ' sel' : ''), onclick: () => setU(s, { sel: u.sel === i ? null : i }) }, (s.columns || []).map((c) => h('td', null, cell(c, r[c.key])))))));
+    b.append(table);
+    if (pages > 1) b.append(h('div', { class: 'pager' }, h('button', { onclick: () => setU(s, { p: Math.max(0, p - 1) }) }, '‹'), (p + 1) + ' / ' + pages, h('button', { onclick: () => setU(s, { p: Math.min(pages - 1, p + 1) }) }, '›')));
+    if (u.sel !== null && u.sel !== undefined && rows[u.sel]) {
+      const row = rows[u.sel];
+      const fields = (s.detail && s.detail.length ? s.detail : (s.columns || [])).map((c) => ({ label: c.label, value: row[c.key] }));
+      const stage2 = b.closest('.dk-slide') || b;
+      queueMicrotask(() => stage2.append(drawer(rowTitle(row, (s.columns || []).map((c) => c.key)), fields, () => setU(s, { sel: null }))));
+    }
+  };
+
+  KINDS.matrix = (s, b) => {
+    const rows = dataset(s.dataset);
+    const tmap = tones(s);
+    const u = U(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const order = (s.order || '').split(',').map((x) => x.trim()).filter(Boolean);
+    const groups = [...new Set([...order, ...rows.map((r) => String(r[s.group_key] ?? ''))])].filter((g) => g && rows.some((r) => String(r[s.group_key]) === g));
+    b.append(h('div', { class: 'matrix stagger' }, groups.map((g) => {
+      const items = rows.map((r, i) => ({ r, i })).filter((x) => String(x.r[s.group_key]) === g);
+      return h('div', { class: 'mx-col ' + toneClass(tmap[g]) },
+        h(s.table_slide ? 'button' : 'div', { class: 'mx-head', onclick: s.table_slide ? () => { const t = D.slides[indexOfId(s.table_slide)]; if (t) { S.ui[t.id] = { ...(S.ui[t.id] || {}), f: g, p: 0, sel: null }; } goId(s.table_slide); } : null },
+          h('span', null, g), h('b', { 'data-count': String(items.length) }, String(items.length))),
+        h('div', { class: 'mx-cells' }, items.map((x, k) => h('button', { class: 'mx-cell pop', style: { animationDelay: (k * 70 + 150) + 'ms' }, onclick: () => setU(s, { sel: x.i }) }, String(x.r[s.label_key] ?? x.r.id ?? '')))));
+    })));
+    if (u.sel !== null && u.sel !== undefined && rows[u.sel]) {
+      const row = rows[u.sel];
+      const fields = (s.detail && s.detail.length ? s.detail.map((c) => ({ label: c.label, value: row[c.key] })) : Object.entries(row).map(([k, v]) => ({ label: k, value: v })));
+      const el = b.closest('.dk-slide') || b;
+      queueMicrotask(() => el.append(drawer(String(row[s.label_key] ?? ''), fields, () => setU(s, { sel: null }))));
+    }
+  };
+
+  // Decisions.
+  const STATUSES = [['chot', 'Chốt', 'good'], ['more', 'Cần thêm thông tin', 'warn'], ['study', 'Giao nghiên cứu thêm', 'accent']];
+  KINDS.decision = (s, b) => {
+    const r = R(s);
+    const main = h('div', { class: 'dec-main' });
+    const side = h('div', { class: 'dec-side' });
+    if (s.question) main.append(md(s.question, 'dec-q'));
+    if (s.refs) {
+      const rows = dataset(s.refs_dataset);
+      main.append(h('div', { class: 'refs' }, s.refs.split(',').map((x) => x.trim()).filter(Boolean).map((id) => {
+        const row = rows.find((x) => String(x.id) === id);
+        return h('span', { class: 'ref' }, id.toUpperCase() + (row ? ' · ' + rowTitle(row, ['topic', 'title', 'name', 'label']) : ''));
+      })));
+    }
+    const compact = (s.matrix_rows || []).length > 1;
+    const opts = h('div', { class: 'opts' + (r.choice ? ' has-choice' : '') + (compact ? ' compact' : ''), style: compact ? { '--n': (s.options || []).length } : null }, (s.options || []).map((o) => h('button', { class: 'opt' + (r.choice === o.key ? ' chosen' : ''), disabled: !INTERACTIVE(), onclick: () => setR(s, { choice: r.choice === o.key ? '' : o.key, status: r.status || (r.choice === o.key ? '' : 'chot') }) },
+      h('span', { class: 'key' }, r.choice === o.key ? '✓' : o.key), h('div', null, md(o.text, 'tx'), o.note ? md(o.note, 'nt') : null))));
+    main.append(opts);
+    if (s.matrix_head || (s.matrix_rows || []).length) {
+      const head = (s.matrix_head || '').split('|').map((x) => x.trim());
+      const choices = (s.assign_options || '').split(',').map((x) => x.trim()).filter(Boolean);
+      const t = h('table', { class: 'mini-tbl' }, h('thead', null, h('tr', null, head.map((x) => h('th', null, x)), choices.length ? h('th', null, s.assign_label || 'Chọn') : null)),
+        h('tbody', null, (s.matrix_rows || []).map((row, i) => h('tr', null, row.cells.split('|').map((c) => h('td', null, txt(c.trim()))), choices.length ? h('td', null,
+          h('select', { disabled: !INTERACTIVE(), onchange: (e) => setR(s, { assign: { ...(R(s).assign || {}), [i]: e.target.value } }) }, h('option', { value: '' }, '—'), choices.map((c) => h('option', { value: c, selected: (r.assign || {})[i] === c }, c)))) : null))));
+      main.append(h('div', { class: 'box' }, t));
+    }
+    if (s.hint && PRESENTER() && S.hints) side.append(h('div', { class: 'hint' }, h('b', null, 'Gợi ý của nhóm'), md(s.hint)));
+    if ((s.extra || []).length) side.append(h('div', { class: 'box' }, h('h4', null, s.extra_title || 'Kèm theo'), h('ul', null, s.extra.map((x) => h('li', null, md(x.text))))));
+    side.append(h('div', { class: 'box' }, h('h4', null, 'Kết luận'),
+      h('div', { class: 'status-row' }, STATUSES.map(([k, label, tone]) => h('button', { class: 'st-btn ' + toneClass(tone) + (r.status === k ? ' on' : ''), disabled: !INTERACTIVE(), onclick: () => setR(s, { status: r.status === k ? '' : k }) }, label))),
+      h('textarea', { class: 'concl', placeholder: 'Ghi ý kiến kết luận…', disabled: !INTERACTIVE(), oninput: (e) => setR(s, { note: e.target.value }, false) }, r.note || '')));
+    b.append(main, side);
+  };
+
+  KINDS.assign = (s, b) => {
+    const r = R(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const cols = s.columns || [];
+    b.append(h('table', { class: 'assign' }, h('thead', null, h('tr', null, h('th', null, ''), cols.map((c) => h('th', null, c.label)))),
+      h('tbody', { class: 'stagger' }, (s.rows || []).map((row, i) => h('tr', null, h('td', null, row.item, row.detail ? h('div', { class: 'dt' }, row.detail) : null),
+        cols.map((c, j) => {
+          const v = ((r.rows || {})[i] || {})[j] ?? '';
+          const save = (val) => { const rows = { ...(R(s).rows || {}) }; rows[i] = { ...(rows[i] || {}), [j]: val }; setR(s, { rows }, false); };
+          const opts = (c.options || '').split(',').map((x) => x.trim()).filter(Boolean);
+          if (opts.length) return h('td', null, h('select', { class: v ? 'set' : '', disabled: !INTERACTIVE(), onchange: (e) => { save(e.target.value); e.target.classList.toggle('set', !!e.target.value); } }, h('option', { value: '' }, j === 0 && row.preset ? 'Gợi ý: ' + row.preset : '—'), opts.map((o) => h('option', { value: o, selected: v === o }, o))));
+          return h('td', null, h('input', { class: v ? 'set' : '', value: v, placeholder: j === 0 && row.preset ? row.preset : 'Nhập…', disabled: !INTERACTIVE(), oninput: (e) => { save(e.target.value); e.target.classList.toggle('set', !!e.target.value); } }));
+        }))))));
+  };
+
+  KINDS.poll = (s, b) => {
+    const r = R(s);
+    const votes = r.votes || [];
+    const mine = r.mine || [];
+    const total = votes.reduce((a, x) => a + (x || 0), 0);
+    b.append(md(s.question, 'quiz-q'));
+    b.append(h('div', { class: 'poll stagger' }, (s.options || []).map((o, i) => {
+      const n = votes[i] || 0;
+      const pct = total ? Math.round(n / total * 100) : 0;
+      const pick = () => {
+        let m = s.multi ? (mine.includes(i) ? mine.filter((x) => x !== i) : [...mine, i]) : (mine[0] === i ? [] : [i]);
+        const v = [...votes];
+        mine.forEach((x) => { v[x] = Math.max(0, (v[x] || 0) - 1); });
+        m.forEach((x) => { v[x] = (v[x] || 0) + 1; });
+        setR(s, { mine: m, votes: v });
+      };
+      return h('div', { class: 'poll-opt' + (mine.includes(i) ? ' mine' : ''), onclick: PRESENTER() ? null : pick },
+        h('span', { class: 'fill', 'data-w': pct + '%' }),
+        h('span', null, o.text, mine.includes(i) && o.note ? h('span', { class: 'pn' }, o.note) : null),
+        PRESENTER() ? h('span', { class: 'poll-ctl' }, h('b', { style: { minWidth: '90px', textAlign: 'right', alignSelf: 'center' } }, n + ' · ' + pct + '%'),
+          h('button', { onclick: (e) => { e.stopPropagation(); const v = [...votes]; v[i] = Math.max(0, (v[i] || 0) - 1); setR(s, { votes: v }); } }, '−'),
+          h('button', { onclick: (e) => { e.stopPropagation(); const v = [...votes]; v[i] = (v[i] || 0) + 1; setR(s, { votes: v }); } }, '+')) : h('b', null, total ? pct + '%' : ''));
+    })));
+  };
+
+  KINDS.rank = (s, b) => {
+    const r = R(s);
+    const n = (s.items || []).length;
+    let order = (r.order || []).filter((x) => x < n);
+    for (let i = 0; i < n; i++) if (!order.includes(i)) order.push(i);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const move = (from, to) => { if (to < 0 || to >= n) return; const o = [...order]; const [x] = o.splice(from, 1); o.splice(to, 0, x); setR(s, { order: o }); };
+    let dragFrom = -1;
+    b.append(h('div', { class: 'rank' }, order.map((ix, pos) => h('div', { class: 'rank-item', draggable: INTERACTIVE() ? 'true' : null,
+      ondragstart: (e) => { dragFrom = pos; e.currentTarget.classList.add('drag'); }, ondragend: (e) => e.currentTarget.classList.remove('drag'),
+      ondragover: (e) => e.preventDefault(), ondrop: (e) => { e.preventDefault(); if (dragFrom >= 0) move(dragFrom, pos); } },
+      h('span', { class: 'no' }, pos + 1), h('span', null, s.items[ix].text),
+      INTERACTIVE() ? h('span', { class: 'mv' }, h('button', { onclick: () => move(pos, pos - 1), 'aria-label': 'Lên' }, '↑'), ' ', h('button', { onclick: () => move(pos, pos + 1), 'aria-label': 'Xuống' }, '↓')) : null))));
+  };
+
+  KINDS.checklist = (s, b) => {
+    const r = R(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    b.append(h('div', { class: 'check stagger' }, (s.items || []).map((it, i) => {
+      const on = (r.done || {})[i] ?? it.done;
+      return h('button', { class: 'check-item' + (on ? ' on' : ''), disabled: !INTERACTIVE(), onclick: () => setR(s, { done: { ...(R(s).done || {}), [i]: !on } }) }, h('span', { class: 'bx' }, on ? '✓' : ''), h('span', { class: 'lbl' }, it.text));
+    })));
+  };
+
+  KINDS.note = (s, b) => {
+    const r = R(s);
+    if (s.prompt) b.append(md(s.prompt, 'intro'));
+    b.append(h('textarea', { class: 'note-area', rows: s.lines || 6, placeholder: s.placeholder || 'Ghi chú…', disabled: !INTERACTIVE(), oninput: (e) => setR(s, { text: e.target.value }, false) }, r.text || ''));
+  };
+
+  // The minutes: every decision, assignment, poll, ranking, checklist, note and owner set in the session.
+  function minutes(include) {
+    const out = [];
+    D.slides.forEach((s) => {
+      const r = S.results[s.id] || {};
+      const title = s.title || s.question || s.id;
+      if (s.kind === 'decision') {
+        const o = (s.options || []).find((x) => x.key === r.choice);
+        const st = (STATUSES.find((x) => x[0] === r.status) || [])[1];
+        const assign = Object.entries(r.assign || {}).filter(([, v]) => v).map(([i, v]) => { const row = (s.matrix_rows || [])[i]; return (row ? row.cells.split('|')[0].trim() : '#' + i) + ': ' + v; });
+        out.push({ code: s.code || '', title, choice: o ? o.key + '. ' + o.text.replace(/\*\*/g, '') : '', status: st || '', note: [r.note, assign.length ? 'Phân công: ' + assign.join('; ') : ''].filter(Boolean).join('\n') });
+      } else if (include === 'decisions') {
+        // decisions only
+      } else if (s.kind === 'assign') {
+        const lines = (s.rows || []).map((row, i) => { const v = (r.rows || {})[i] || {}; const vals = (s.columns || []).map((c, j) => v[j] ? c.label + ': ' + v[j] : '').filter(Boolean); return vals.length ? row.item + ' — ' + vals.join(', ') : ''; }).filter(Boolean);
+        if (lines.length) out.push({ code: '', title, choice: '', status: '', note: lines.join('\n') });
+      } else if (s.kind === 'poll' && (r.votes || []).some(Boolean)) {
+        out.push({ code: '', title, choice: '', status: '', note: (s.options || []).map((o, i) => o.text + ': ' + ((r.votes || [])[i] || 0)).join('\n') });
+      } else if (s.kind === 'rank' && r.order) {
+        out.push({ code: '', title, choice: '', status: '', note: r.order.map((ix, i) => (i + 1) + '. ' + ((s.items || [])[ix] || {}).text).join('\n') });
+      } else if (s.kind === 'checklist' && r.done) {
+        out.push({ code: '', title, choice: '', status: '', note: (s.items || []).map((it, i) => ((r.done || {})[i] ? '☑ ' : '☐ ') + it.text).join('\n') });
+      } else if (s.kind === 'note' && r.text) {
+        out.push({ code: '', title, choice: '', status: '', note: r.text });
+      } else if (s.kind === 'timeline' && r.owners && Object.values(r.owners).some(Boolean)) {
+        out.push({ code: '', title, choice: '', status: '', note: (s.items || []).map((it, i) => (r.owners[i] ? it.date + ' — ' + it.title + ': ' + r.owners[i] : '')).filter(Boolean).join('\n') });
+      }
+    });
+    return out;
+  }
+  function minutesText(s) {
+    const items = minutes(s.include);
+    const lines = [D.meta.title, [D.meta.date, D.meta.subtitle].filter(Boolean).join(' · '), '', (s.title || 'Kết luận').toUpperCase(), ''];
+    items.forEach((x) => { lines.push((x.code ? x.code + '. ' : '') + x.title); if (x.choice) lines.push('  Phương án: ' + x.choice); if (x.status) lines.push('  Trạng thái: ' + x.status); if (x.note) lines.push(x.note.split('\n').map((l) => '  ' + l).join('\n')); lines.push(''); });
+    return lines.join('\n');
+  }
+  KINDS.summary = (s, b) => {
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const items = minutes(s.include);
+    b.append(h('div', { class: 'sum stagger' }, items.length ? items.map((x) => h('div', { class: 'sum-item' }, h('span', { class: 'cd' }, x.code || '•'),
+      h('div', null, h('div', { class: 'tt' }, x.title), x.choice ? h('div', { class: 'ch' }, '✓ ' + x.choice) : x.code ? h('div', { class: 'ch none' }, 'Chưa chọn phương án') : null,
+        x.status ? h('span', { class: 'chip ' + toneClass((STATUSES.find((y) => y[1] === x.status) || [])[2]) }, x.status) : null, x.note ? h('div', { class: 'nt' }, x.note) : null))) : h('p', { class: 'intro' }, 'Chưa có lựa chọn hay ghi chú nào trong buổi này.')));
+    if (s.signers) b.append(h('div', { class: 'sum-sign' }, s.signers.split('|').map((x) => h('div', null, h('b', null, x.trim()), ' '))));
+    if (s.export !== false && !AUDIENCE) b.append(h('div', { class: 'sum-actions' },
+      h('button', { class: 'btn primary', onclick: async () => { try { await navigator.clipboard.writeText(minutesText(s)); toast('Đã sao chép kết luận'); } catch { toast('Trình duyệt chặn sao chép'); } } }, 'Sao chép'),
+      h('button', { class: 'btn', onclick: () => window.print() }, 'In / PDF'),
+      h('button', { class: 'btn', onclick: () => download((D.meta.title || 'ket-luan') + '.md', minutesText(s)) }, 'Tải về (.md)'),
+      PRESENTER() && !BOOT.offline ? h('button', { class: 'btn', onclick: () => saveResults(true) }, 'Lưu lên site') : null));
+  };
+
+  // Learning kinds.
+  KINDS.quiz = (s, b) => {
+    const r = R(s), u = U(s);
+    const qs = s.questions || [];
+    const qi = Math.min(u.q || 0, qs.length - 1);
+    const q = qs[qi];
+    if (!q) return;
+    const ans = (r.answers || {})[qi];
+    b.append(h('div', { class: 'qnav' }, qs.map((x, i) => { const a = (r.answers || {})[i]; return h('span', { class: 'dot' + (i === qi ? ' cur' : a === undefined ? '' : a === x.answer ? ' ok' : ' ko') }); }), h('span', null, 'Câu ' + (qi + 1) + '/' + qs.length),
+      s.timer && ans === undefined ? h('span', { class: 'timer', 'data-timer': s.timer }, s.timer + 's') : null));
+    b.append(md(q.q, 'quiz-q'));
+    b.append(h('div', { class: 'quiz-opts stagger' }, (q.options || []).map((o, i) => h('button', { class: 'qo' + (ans === undefined ? '' : i === q.answer ? ' right' : i === ans ? ' wrong' : ''), disabled: ans !== undefined || !INTERACTIVE(), onclick: () => setR(s, { answers: { ...(R(s).answers || {}), [qi]: i } }) }, String.fromCharCode(65 + i) + '. ' + o.text))));
+    if (ans !== undefined && q.explain) b.append(h('div', { class: 'explain' }, md((ans === q.answer ? '**Đúng.** ' : '**Chưa đúng.** ') + q.explain)));
+    b.append(h('div', { class: 'pager' }, h('button', { onclick: () => setU(s, { q: Math.max(0, qi - 1) }) }, '‹ Câu trước'), h('button', { onclick: () => setU(s, { q: Math.min(qs.length - 1, qi + 1) }) }, 'Câu sau ›'),
+      Object.keys(r.answers || {}).length ? h('span', null, 'Đúng ' + qs.filter((x, i) => (r.answers || {})[i] === x.answer).length + '/' + qs.length) : null));
+  };
+
+  KINDS.classify = (s, b) => {
+    const r = R(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    const bk = s.buckets || [];
+    const items = h('div', { class: 'cls-items' }, (s.items || []).map((it, i) => {
+      const a = (r.answers || {})[i];
+      return h('div', { class: 'cls-item' + (a === undefined ? '' : a === it.answer ? ' ok' : ' ko') }, h('div', null, it.text),
+        h('div', { class: 'bks' }, bk.map((x, j) => h('button', { disabled: a !== undefined || !INTERACTIVE(), onclick: () => setR(s, { answers: { ...(R(s).answers || {}), [i]: j } }) }, x.label))),
+        a !== undefined && it.why ? h('div', { class: 'why' }, (a === it.answer ? '✓ ' : '✗ Đúng là “' + (bk[it.answer] || {}).label + '”. ') + it.why) : null);
+    }));
+    const buckets = h('div', { class: 'cls-buckets' }, bk.map((x, j) => h('div', { class: 'bucket' }, h('h4', null, x.label), (s.items || []).filter((it, i) => (r.answers || {})[i] === j).map((it) => h('div', null, it.text)))));
+    b.append(h('div', { class: 'cls' }, items, buckets));
+  };
+
+  KINDS.reveal = (s, b) => {
+    const r = R(s);
+    if (s.intro) b.append(md(s.intro, 'intro'));
+    b.append(h('div', { class: 'reveal stagger' }, (s.items || []).map((it, i) => { const open = (r.open || {})[i]; return h('button', { class: 'rv' + (open ? ' open' : ''), onclick: () => setR(s, { open: { ...(R(s).open || {}), [i]: !open } }) }, md(it.q, 'q'), md(it.a, 'a'), h('div', { class: 'more' }, open ? 'Ẩn gợi ý' : 'Xem gợi ý')); })));
+  };
+
+  KINDS.flashcards = (s, b) => {
+    const r = R(s);
+    b.append(h('div', { class: 'flash stagger' }, (s.cards || []).map((c, i) => { const on = (r.flipped || {})[i]; return h('div', { class: 'fc' + (on ? ' on' : ''), onclick: () => setR(s, { flipped: { ...(R(s).flipped || {}), [i]: !on } }) }, h('div', { class: 'fc-in' }, md(c.front, 'fc-f'), md(c.back, 'fc-b'))); })));
+  };
+
+  // ───────────────────────── presenter panel & clock ─────────────────────────
+  function clockMark() {
+    if (!PRESENTER() || !S.clock.start) return;
+    const now = Date.now();
+    const seg = (cur() || {}).seg || '_';
+    S.clock.seg[seg] = (S.clock.seg[seg] || 0) + (now - (S.clock.last || now));
+    S.clock.last = now;
+  }
+  const mmss = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return (s >= 3600 ? Math.floor(s / 3600) + ':' : '') + String(Math.floor(s / 60) % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+  function tick() {
+    if (PRESENTER() && S.clock.start) { clockMark(); renderClock(); }
+    const t = $('[data-timer]', stage);
+    if (t) { const left = (+t.dataset.timer) - 1; t.dataset.timer = left; t.textContent = Math.max(0, left) + 's'; }
+  }
+  function renderClock() {
+    const box = $('.pn-clock', panel);
+    if (!box) return;
+    const elapsed = S.clock.start ? Date.now() - S.clock.start : 0;
+    const planned = (D.meta.duration_min || (D.segments || []).reduce((a, g) => a + (g.min || 0), 0)) * 60000;
+    // Where we should be: the planned end of the segments before this one plus time in this one.
+    const segs = D.segments || [];
+    const segId = (cur() || {}).seg;
+    let late = 0;
+    if (segs.length && segId) {
+      let before = 0;
+      for (const g of segs) { if (g.id === segId) break; before += (g.min || 0) * 60000; }
+      const g = segs.find((x) => x.id === segId);
+      const spent = S.clock.seg[segId] || 0;
+      late = Math.max(0, elapsed - (before + Math.max(spent, 0))) + Math.max(0, spent - (g.min || 0) * 60000);
+      late = elapsed - before - (g.min || 0) * 60000 > 0 ? elapsed - before - (g.min || 0) * 60000 : 0;
+    }
+    rc(box, 
+      h('div', { class: 'big' }, S.clock.start ? mmss(elapsed) : '00:00'),
+      h('div', { class: 'row' }, h('span', null, planned ? 'Kế hoạch ' + mmss(planned) : 'Chưa đặt thời lượng'),
+        S.clock.start ? h('span', { class: late > 60000 ? 'late' : 'ok' }, late > 60000 ? 'Trễ ' + mmss(late) : 'Đúng giờ') : h('button', { style: { color: '#60a5fa' }, onclick: () => { S.clock = { start: Date.now(), seg: {}, last: Date.now() }; changed(); renderPanel(); } }, 'Bắt đầu tính giờ')),
+      S.clock.start ? h('div', { class: 'row' }, h('button', { style: { color: '#9aa6b8', fontSize: '12px' }, onclick: () => { S.clock = { start: 0, seg: {}, last: 0 }; changed(); renderPanel(); } }, 'Đặt lại đồng hồ'), h('span', null, D.meta.start_time ? 'Bắt đầu ' + D.meta.start_time : '')) : null);
+    const segBox = $('.pn-segs', panel);
+    if (segBox) rc(segBox, ...segs.map((g) => { const spent = S.clock.seg[g.id] || 0; const pct = g.min ? spent / (g.min * 60000) * 100 : 0; return h('div', { class: 'pn-seg' + (g.id === segId ? ' cur' : '') }, h('span', null, g.name), h('span', null, mmss(spent) + ' / ' + (g.min || 0) + '′'), h('div', { class: 'mt' }, h('i', { class: pct > 100 ? 'over' : '', style: { width: Math.min(100, pct) + '%' } }))); }));
+  }
+  function renderPanel() {
+    if (!PRESENTER() || !panel) return;
+    panel.hidden = !S.panel;
+    if (!S.panel) { fit(); return; }
+    const s = cur();
+    const order = seq();
+    const nx = D.slides[order[order.indexOf(S.idx) + 1]];
+    rc(panel, h('div', { class: 'pn-clock' }), (D.segments || []).length ? h('div', { class: 'pn-segs' }) : null,
+      h('div', { class: 'pn-notes' }, h('h5', null, 'Ghi chú người trình bày'), s.notes ? md(s.notes) : h('p', { style: { color: '#7c8aa0' } }, 'Slide này chưa có ghi chú.'),
+        s.kind === 'decision' && s.hint && !S.hints ? h('div', { style: { marginTop: '14px' } }, h('h5', null, 'Gợi ý của nhóm (đang ẩn trên slide)'), md(s.hint)) : null),
+      h('div', { class: 'pn-next' }, 'Tiếp theo', h('b', null, nx ? (nx.title || nx.kind) : '— hết —')));
+    renderClock();
+    fit();
+  }
+  function togglePanel() { S.panel = !S.panel; store.set('lmdeck:panel', S.panel); renderPanel(); renderBar(); setTimeout(fit, 30); }
+
+  // ───────────────────────── grid overview ─────────────────────────
+  let gridEl = null;
+  function toggleGrid() { S.grid = !S.grid; if (S.grid) renderGrid(); else if (gridEl) { gridEl.remove(); gridEl = null; } }
+  function renderGrid() {
+    if (gridEl) gridEl.remove();
+    const groups = [];
+    D.slides.forEach((s, i) => {
+      if (s.hidden && !PRESENTER()) return;
+      const seg = segOf(s);
+      const name = seg ? seg.name : '';
+      if (!groups.length || groups[groups.length - 1].name !== name) groups.push({ name, items: [] });
+      groups[groups.length - 1].items.push([s, i]);
+    });
+    const done = (s) => { const r = S.results[s.id]; return r && Object.keys(r).length; };
+    gridEl = h('div', { class: 'dk-grid' }, h('button', { class: 'close', onclick: toggleGrid, 'aria-label': 'Đóng' }, '×'), h('h2', null, D.meta.title),
+      groups.map((g) => [g.name ? h('div', { class: 'grp' }, g.name) : null, h('div', { class: 'tiles' }, g.items.map(([s, i]) => h('button', { class: 'tile' + (i === S.idx ? ' cur' : ''), onclick: () => { toggleGrid(); detach(); go(i, i < S.idx ? -1 : 1); } },
+        h('small', null, (seq().indexOf(i) + 1 || 'ẩn') + ' · ' + (s.code || s.kind)), h('b', null, (s.title || s.question || s.kind).replace(/\*/g, '')), done(s) ? h('span', { class: 'done' }, '● đã có tương tác') : null)))]));
+    document.body.append(gridEl);
+  }
+
+  // ───────────────────────── sync: local, audience window, live ─────────────────────────
+  function snapshot() { return { slide: cur().id, step: S.step, results: S.results, ui: S.ui }; }
+  const persist = debounce(() => store.set(KEY, { rev: P.rev, idx: S.idx, results: S.results, ui: S.ui, clock: S.clock }), 300);
+  function broadcast() { if (channel && PRESENTER()) channel.postMessage({ type: 'state', state: snapshot() }); }
+  const pushLive = debounce(async () => {
+    if (!S.live || S.live.status === 'ended') return;
+    try { S.live = { ...S.live, ...(await api('POST', '/api/decks/live/' + S.live.code, { state: snapshot() })) }; } catch (e) { if (e.status === 409) { S.live.status = 'ended'; renderBar(); toast('Phiên trực tiếp đã kết thúc.'); } }
+  }, 350);
+  const autosave = debounce(() => saveResults(false), 2500);
+  function changed() {
+    if (MODE === 'live' && S.follow) return;
+    persist();
+    broadcast();
+    if (PRESENTER()) { pushLive(); if (!BOOT.offline) autosave(); }
+  }
+  async function saveResults(loud) {
+    if (!PRESENTER() || BOOT.offline) return;
+    try { await api('POST', '/api/decks/' + P.deck_id + '/results', { results: S.results }); if (loud) toast('Đã lưu kết quả lên site'); } catch (e) { if (loud) toast('Chưa lưu được: ' + e.message); }
+  }
+  function applyRemote(st, quiet) {
+    if (!st || typeof st !== 'object') return;
+    S.remote = st;
+    if (MODE === 'live' && !S.follow) { renderFollow(); return; }
+    const i = indexOfId(st.slide);
+    const moved = i >= 0 && i !== S.idx;
+    if (i >= 0) { S.dir = i < S.idx ? -1 : 1; S.idx = i; }
+    S.step = st.step || 0;
+    S.results = clone(st.results) || {};
+    S.ui = clone(st.ui) || {};
+    if (!quiet && stage) render(moved);
+    renderFollow();
+  }
+  function detach() {
+    if (MODE !== 'live' || !S.follow) return;
+    S.follow = false;
+    renderFollow();
+  }
+  function rejoin() { S.follow = true; applyRemote(S.remote || {}, false); }
+  let followEl = null;
+  function renderFollow() {
+    if (MODE !== 'live') return;
+    if (!followEl) { followEl = h('div', { class: 'follow' }); document.body.append(followEl); }
+    const ended = S.liveStatus === 'ended';
+    followEl.className = 'follow' + (S.follow ? ' following' : '');
+    rc(followEl, ...(ended ? [h('span', null, 'Phiên trình chiếu đã kết thúc · bạn xem lại tự do')] : S.follow
+      ? [h('span', null, S.liveStatus === 'away' ? 'Người trình bày tạm vắng · đang chờ' : 'Đang theo người trình bày'), h('button', { onclick: () => { S.follow = false; renderFollow(); } }, 'Xem tự do')]
+      : [h('span', null, 'Bạn đang xem tự do'), h('button', { onclick: rejoin }, '↺ Về theo người trình bày')]));
+  }
+  async function pollLive() {
+    renderFollow();
+    const path = (P.live && P.live.state_path) || BOOT.state;
+    let wait = 1500;
+    for (;;) {
+      await new Promise((r) => setTimeout(r, document.hidden ? 5000 : wait));
+      try {
+        const r = await api('GET', path + '?v=' + (S.liveVer || 0));
+        const changedStatus = r.status !== S.liveStatus;
+        S.liveStatus = r.status;
+        if (r.state) { S.liveVer = r.ver; applyRemote(r.state, false); }
+        if (changedStatus) { renderBar(); renderFollow(); }
+        if (r.status === 'ended') { S.follow = false; renderFollow(); wait = 30000; }
+        else wait = 1500;
+      } catch (e) {
+        if (e.status === 410 || e.status === 404) { S.liveStatus = 'ended'; S.follow = false; renderBar(); renderFollow(); return; }
+        wait = 5000;
+      }
+    }
+  }
+  let liveLoop = null;
+  function startLiveLoop() {
+    if (liveLoop) return;
+    pushLive();
+    liveLoop = setInterval(async () => {
+      if (!S.live || S.live.status === 'ended') { clearInterval(liveLoop); liveLoop = null; return; }
+      try { S.live = { ...S.live, ...(await api('POST', '/api/decks/live/' + S.live.code, {})) }; } catch (e) { if (e.status === 409) { S.live.status = 'ended'; renderBar(); } }
+    }, 20000);
+  }
+
+  // ───────────────────────── QR card (scan to join the live session) ─────────────────────────
+  // A card on the slide (so it shows on the projector), placed and sized by the presenter:
+  // drag it anywhere, snap to a corner, change its size, hide it (Q). Its place is part of the
+  // shared state, so the audience window shows it in the same spot; phones of viewers never do.
+  const QR_SIZES = { s: 230, m: 330, l: 470 };
+  const qrState = () => S.ui._qr || {};
+  function liveCode() { return PRESENTER() || AUDIENCE ? (S.live && S.live.status !== 'ended' ? S.live.code : (AUDIENCE && S.ui._qr && S.ui._qr.code)) : null; }
+  function qrCard() {
+    const q = qrState();
+    const code = liveCode();
+    if (!q.on || !code || MODE === 'live' || MOBILE()) return null;
+    const size = QR_SIZES[q.size || 'm'];
+    const x = q.x ?? 80, y = q.y ?? 52;
+    const card = h('div', { class: 'dk-qr' + (PRESENTER() ? ' movable' : ''), style: { left: x + '%', top: y + '%', width: size + 'px' } },
+      h('img', { src: '/live/' + code + '/qr.svg', alt: 'QR', draggable: 'false' }),
+      h('div', { class: 'qr-cap' }, h('b', null, 'Quét để theo dõi'), h('span', null, location.host + '/live/' + code)),
+      PRESENTER() ? h('div', { class: 'qr-tools' },
+        h('button', { title: 'Nhỏ hơn', onclick: (e) => { e.stopPropagation(); setQr({ size: q.size === 'l' ? 'm' : 's' }); } }, '−'),
+        h('button', { title: 'Lớn hơn', onclick: (e) => { e.stopPropagation(); setQr({ size: q.size === 's' ? 'm' : 'l' }); } }, '+'),
+        [['↖', 2, 6], ['↗', 98, 6], ['↙', 2, 94], ['↘', 98, 94], ['⊙', 50, 50]].map(([icon, px, py]) => h('button', { title: 'Đặt vào góc', onclick: (e) => { e.stopPropagation(); snapQr(px, py); } }, icon)),
+        h('button', { title: 'Ẩn (Q)', onclick: (e) => { e.stopPropagation(); setQr({ on: false }); } }, '×')) : null);
+    if (PRESENTER()) {
+      card.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button')) return;
+        e.preventDefault();
+        card.setPointerCapture(e.pointerId);
+        const rect = stage.getBoundingClientRect();
+        const k = rect.width / 1600;
+        const start = { mx: e.clientX, my: e.clientY, x: card.offsetLeft, y: card.offsetTop };
+        const move = (ev) => {
+          const nx = Math.max(0, Math.min(1600 - card.offsetWidth, start.x + (ev.clientX - start.mx) / k));
+          const ny = Math.max(0, Math.min(900 - card.offsetHeight, start.y + (ev.clientY - start.my) / k));
+          card.style.left = (nx / 16) + '%'; card.style.top = (ny / 9) + '%';
+        };
+        const up = () => {
+          card.removeEventListener('pointermove', move); card.removeEventListener('pointerup', up);
+          setQr({ x: parseFloat(card.style.left), y: parseFloat(card.style.top) }, false);
+        };
+        card.addEventListener('pointermove', move); card.addEventListener('pointerup', up);
+      });
+    }
+    return card;
+  }
+  function snapQr(px, py) {
+    const size = QR_SIZES[qrState().size || 'm'];
+    const w = size / 16, hgt = (size + 70) / 9;
+    setQr({ x: Math.max(0, Math.min(100 - w, px - (px > 50 ? w : px === 50 ? w / 2 : 0))), y: Math.max(0, Math.min(100 - hgt, py - (py > 50 ? hgt : py === 50 ? hgt / 2 : 0))) });
+  }
+  function setQr(patch, rerender = true) {
+    S.ui._qr = { ...qrState(), ...patch, code: S.live && S.live.code };
+    changed();
+    if (rerender) render(false);
+  }
+  function toggleQr() {
+    if (!PRESENTER()) return;
+    if (!S.live || S.live.status === 'ended') { liveDialog(); return; }
+    setQr({ on: !qrState().on });
+  }
+
+  // ───────────────────────── dialogs ─────────────────────────
+  function modal(...kids) {
+    const m = h('div', { class: 'dk-modal', onclick: (e) => { if (e.target === m) m.remove(); } }, h('div', null, ...kids));
+    document.body.append(m);
+    return m;
+  }
+  function liveDialog() {
+    const active = S.live && S.live.status !== 'ended';
+    if (!active) {
+      const keep = h('select', null, h('option', { value: '0' }, 'đóng ngay khi kết thúc'), h('option', { value: '24' }, 'cho xem lại 1 ngày'), h('option', { value: '168' }, 'cho xem lại 7 ngày'));
+      const m = modal(h('h3', null, 'Phát trực tiếp cho người xem'),
+        h('p', null, 'Người có link xem trên máy của họ: tự đi theo slide và các lựa chọn của bạn, hoặc tự xem, tự bấm, rồi bấm “Về theo người trình bày”. Họ không thấy ghi chú, gợi ý và slide ẩn.'),
+        h('p', null, 'Link hoạt động khi bạn đang trình chiếu. Chuyển cửa sổ hay tắt màn hình một lúc không làm dừng phiên; phiên tự kết thúc sau 30 phút không có tín hiệu từ trang này, sau 12 giờ, hoặc khi bạn bấm “Kết thúc”.'),
+        h('p', null, 'Sau khi kết thúc: ', keep),
+        h('div', { class: 'row' }, h('button', { onclick: () => m.remove() }, 'Huỷ'), h('button', { class: 'primary', onclick: async () => {
+          try { S.live = await api('POST', '/api/decks/' + P.deck_id + '/live', { keep_hours: +keep.value }); m.remove(); startLiveLoop(); setQr({ on: true }); toast('Đang phát trực tiếp: mã QR đã hiện trên slide (kéo để di chuyển, Q để ẩn).'); } catch (e) { toast(e.message); }
+        } }, 'Bắt đầu')));
+      return;
+    }
+    const inp = h('input', { value: S.live.url, readonly: true, onclick: (e) => e.target.select() });
+    const m = modal(h('h3', null, '● Đang phát trực tiếp'), h('div', { class: 'qr' }, h('img', { src: '/live/' + S.live.code + '/qr.svg', alt: 'QR', style: { width: '200px', height: '200px' } })), h('p', null, 'Người xem quét mã, hoặc mở link:'),
+      h('div', { class: 'url' }, inp, h('button', { onclick: async () => { try { await navigator.clipboard.writeText(S.live.url); toast('Đã sao chép link'); } catch { inp.select(); } } }, 'Sao chép')),
+      h('p', null, 'Mã phiên: ', h('b', null, S.live.code), S.live.keep_hours ? ' · cho xem lại ' + (S.live.keep_hours >= 168 ? '7 ngày' : '1 ngày') + ' sau khi kết thúc' : ' · link đóng khi kết thúc'),
+      h('div', { class: 'row' }, h('button', { class: 'danger', onclick: async () => {
+        if (!confirm('Kết thúc phiên trực tiếp?')) return;
+        try { S.live = { ...S.live, ...(await api('POST', '/api/decks/live/' + S.live.code, { state: snapshot(), end: true })) }; m.remove(); renderBar(); toast('Đã kết thúc phiên'); saveResults(false); } catch (e) { toast(e.message); }
+      } }, 'Kết thúc phiên'), h('button', { onclick: () => { setQr({ on: !qrState().on }); m.remove(); } }, qrState().on ? 'Ẩn QR trên slide' : 'Hiện QR trên slide'), h('button', { onclick: () => window.open(S.live.url, '_blank') }, 'Mở thử'), h('button', { class: 'primary', onclick: () => m.remove() }, 'Xong')));
+  }
+  function moreDialog() {
+    const m = modal(h('h3', null, D.meta.title),
+      h('div', { class: 'row', style: { justifyContent: 'flex-start' } },
+        h('button', { onclick: () => { saveResults(true); } }, 'Lưu kết quả lên site'),
+        h('button', { onclick: () => { if (confirm('Xoá mọi lựa chọn, ghi chú trên máy này?')) { S.results = {}; S.ui = {}; changed(); render(false); m.remove(); } } }, 'Xoá kết quả trên máy'),
+        !BOOT.offline ? h('button', { onclick: () => { location.href = '/api/decks/' + P.deck_id + '/offline.html'; } }, 'Tải bản offline (.html)') : null,
+        h('button', { onclick: () => download((D.meta.title || 'ket-qua') + '.json', JSON.stringify({ deck: P.deck_id, rev: P.rev, results: S.results }, null, 2)) }, 'Tải kết quả (.json)'),
+        P.edit_path && !BOOT.offline ? h('button', { onclick: () => { location.href = P.edit_path; } }, 'Sửa deck') : null),
+      h('p', null, 'Phím tắt: ← → chuyển · G mục lục · T ghi chú/đồng hồ · H gợi ý · Q mã QR · F toàn màn hình · B màn đen.'),
+      h('div', { class: 'row' }, h('button', { class: 'primary', onclick: () => m.remove() }, 'Đóng')));
+  }
+  function openAudience() {
+    const w = window.open(location.pathname + '?screen=audience', 'lmdeck-audience', 'width=1280,height=760');
+    if (!w) toast('Trình duyệt chặn cửa sổ mới. Cho phép popup rồi thử lại.');
+    else setTimeout(broadcast, 800);
+  }
+  function download(name, text) {
+    const a = h('a', { href: URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' })), download: name.replace(/[\\/:*?"<>|]+/g, '-') });
+    document.body.append(a); a.click(); a.remove();
+  }
+  function fullscreen() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(() => {}); setTimeout(fit, 200); }
+
+  // ───────────────────────── keys ─────────────────────────
+  function bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.closest && e.target.closest('input, textarea, select')) { if (e.key === 'Escape') e.target.blur(); return; }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key;
+      if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(k)) { e.preventDefault(); detach(); next(); }
+      else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); detach(); prev(); }
+      else if (k === 'Home') { detach(); go(seq()[0], -1); }
+      else if (k === 'End') { detach(); go(seq()[seq().length - 1], 1); }
+      else if (k === 'g' || k === 'G') toggleGrid();
+      else if ((k === 't' || k === 'T') && PRESENTER()) togglePanel();
+      else if ((k === 'h' || k === 'H') && PRESENTER()) { S.hints = !S.hints; render(false); }
+      else if ((k === 'q' || k === 'Q') && PRESENTER()) toggleQr();
+      else if (k === 'f' || k === 'F') fullscreen();
+      else if (k === 'b' || k === 'B' || k === '.') { S.black = !S.black; const b = $('.dk-black'); if (b) b.remove(); else document.body.append(h('div', { class: 'dk-black', onclick: () => $('.dk-black')?.remove() })); }
+      else if (k === 'Escape') { if (S.grid) toggleGrid(); $('.dk-modal')?.remove(); }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', boot);
+  if (document.readyState !== 'loading') boot();
+})();
+</script></body></html>

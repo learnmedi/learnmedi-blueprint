@@ -3,7 +3,7 @@
 key: site.decks
 label: Trình chiếu tương tác
 description: Bộ slide tương tác (biểu quyết, xin quyết định, bảng lọc, quiz, tổng hợp kết luận), trình chiếu trực tiếp có link cho người xem, sửa bằng AI qua link chia sẻ.
-workspace: learn
+workspace: office
 default_tier: premium
 default_enabled: true
 locked: false
@@ -17,8 +17,8 @@ surfaces:
   widgets: []
 routes:
   public: [/d/*, /live/*]
-  staff: [/learn/presentation, /api/decks, /__preview/deck]
-reserved_slugs: [d, live]
+  staff: [/office, /api/decks, /__preview/deck]
+reserved_slugs: [d, live, office]
 tools:
   - name: list_decks
   - name: get_deck
@@ -27,6 +27,8 @@ tools:
   - name: get_slide_kind_schema
   - name: get_deck_theme_schema
   - name: get_deck_results
+  - name: get_deck_history
+  - name: show_slide
   - name: create_deck
   - name: set_deck
   - name: update_deck_meta
