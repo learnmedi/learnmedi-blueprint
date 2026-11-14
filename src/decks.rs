@@ -160,9 +160,24 @@ pub struct Slide {
     /// Planned minutes on this slide (presenter clock); 0 = not set.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub minutes: i64,
+    /// Jump buttons shown on the slide (any kind): target slide id, or "back".
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub links: Vec<SlideLink>,
     #[serde(flatten)]
     pub props: Map<String, Value>,
 }
+
+/// A jump button: `goto` = a slide id (hidden slides too) or "back" (the slide
+/// the viewer jumped from).
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+#[serde(default, deny_unknown_fields)]
+pub struct SlideLink {
+    pub label: String,
+    pub goto: String,
+}
+
+/// Most jump buttons on one slide.
+pub const MAX_LINKS: usize = 6;
 
 fn is_false(b: &bool) -> bool {
     !*b
@@ -172,7 +187,7 @@ fn is_zero(n: &i64) -> bool {
 }
 
 /// Common slide keys (the rest are the kind's fields).
-pub const COMMON_KEYS: &[&str] = &["id", "kind", "seg", "eyebrow", "title", "notes", "source", "hidden", "accent", "bg", "bg_image", "minutes"];
+pub const COMMON_KEYS: &[&str] = &["id", "kind", "seg", "eyebrow", "title", "notes", "source", "hidden", "accent", "bg", "bg_image", "minutes", "links"];
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 #[serde(default, deny_unknown_fields)]
@@ -491,6 +506,16 @@ pub fn validate_slide(s: &mut Slide, at: &str) -> Result<Vec<String>, String> {
         }
     }
     s.minutes = s.minutes.clamp(0, 600);
+    if s.links.len() > MAX_LINKS {
+        return Err(format!("{at}.links: tối đa {MAX_LINKS} nút"));
+    }
+    for (i, l) in s.links.iter_mut().enumerate() {
+        l.label = text_field(&l.label, 60, &format!("{at}.links[{i}].label"))?;
+        l.goto = l.goto.trim().to_ascii_lowercase();
+        if l.goto != "back" && !id_ok(&l.goto) {
+            return Err(format!("{at}.links[{i}].goto: id slide (chữ không dấu, số, _ -) hoặc \"back\""));
+        }
+    }
     let clean = validate_object(&kind.fields, &s.props, at, &mut assets)?;
     s.props = clean.as_object().cloned().unwrap_or_default();
     Ok(assets)
@@ -723,6 +748,7 @@ pub fn lint(d: &Deck) -> Vec<Lint> {
                 gotos.push(str_of(s, key).to_string());
             }
         }
+        gotos.extend(s.links.iter().filter(|l| l.goto != "back").map(|l| l.goto.clone()));
         for list in ["items", "rows"] {
             if let Some(arr) = s.props.get(list).and_then(|v| v.as_array()) {
                 for it in arr {
@@ -836,6 +862,7 @@ pub fn schema_json() -> Value {
             "seg": "id của một segment", "eyebrow": "dòng nhỏ trên tiêu đề", "title": "tiêu đề slide",
             "notes": "ghi chú người trình bày (Markdown)", "source": "dòng nguồn dưới slide", "hidden": "true = bỏ qua khi trình chiếu",
             "accent": TONES, "bg": BACKGROUNDS, "bg_image": "id ảnh hoặc https://", "minutes": "số phút dự kiến cho slide",
+            "links": format!("nút chuyển slide, dùng được trên mọi kind (tối đa {MAX_LINKS}): [{{label: \"Xem chi tiết\", goto: \"id-slide\"}}]; goto trỏ được cả slide ẩn; goto: \"back\" = quay về slide vừa xem. Kết quả, lựa chọn và ghi chú giữ nguyên khi chuyển."),
         },
         "meta": {"title": "", "subtitle": "", "date": "", "author": "", "lang": LANGS, "duration_min": 0, "start_time": "HH:MM", "footer": ""},
         "segments": {"id": "s1", "name": "Tên phần", "min": 10, "outcome": "Kết quả cần có"},
