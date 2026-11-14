@@ -138,7 +138,7 @@ Steps 1–6 are built (blueprint v0.4.0, site v0.2.0, engine v0.2.0); not yet re
    `show_in_nav` / `show_in_footer`). Fixed routes still answer for sites not yet migrated and hand
    over to the tab once it exists. **Migration not run yet** (the maintainer runs it by hand in
    DataGrip; migration scripts are not kept in the repos).
-5. `/overview` (owner only) with its grouped menu (`OVERVIEW_MENU` in `studio.js`, also the
+5. `/overview` (owner only) with its grouped menu (`OVERVIEW_MENU` in `staff/core.js`, also the
    "Chuyển ▾" switcher; the top bar no longer lists workspaces), "Quản lý trang" in the account
    menu, engine `/dashboard?site=N`, `User.default_site_id`, `PUT /api/platform/default-site`, `#N` on /account.
 6. Scholar (`site.scholar`): `import_publications` (Crossref + OpenAlex), `sync_orcid` (awaiting
