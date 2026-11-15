@@ -3,6 +3,7 @@
 pub mod blocks;
 pub mod decks;
 pub mod scholar;
+pub mod journals;
 pub mod sections;
 pub mod error;
 pub mod features;

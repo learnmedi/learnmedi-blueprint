@@ -45,6 +45,21 @@ pub fn slugify(input: &str) -> String {
     out
 }
 
+/// Lowercase ASCII text without Vietnamese diacritics; other characters become spaces,
+/// runs of spaces collapse ("Nguyễn Văn  Ánh" → "nguyen van anh").
+pub fn fold_text(input: &str) -> String {
+    let mut out = String::with_capacity(input.len());
+    for c in input.chars() {
+        let m = fold_vietnamese(c).to_ascii_lowercase();
+        if m.is_ascii_alphanumeric() {
+            out.push(m);
+        } else if !out.ends_with(' ') && !out.is_empty() {
+            out.push(' ');
+        }
+    }
+    out.trim_end().to_string()
+}
+
 fn fold_vietnamese(c: char) -> char {
     const GROUPS: &[(&str, char)] = &[
         ("àáạảãâầấậẩẫăằắặẳẵ", 'a'),

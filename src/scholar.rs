@@ -15,6 +15,8 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::journals::{PointsSource, RECOMMEND_FACTOR};
+
 /// Extra fields a publication (collection item) may carry for the scholar features.
 pub const DOI: &str = "doi";
 pub const CITATIONS: &str = "citations";
@@ -30,7 +32,9 @@ pub const AUTHOR_COUNT: &str = "author_count";
 pub const REVIEW: &str = "review";
 /// Where the metadata came from: `crossref`, `openalex`, `orcid`, `manual`.
 pub const SOURCE: &str = "source";
-pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE];
+/// The journal's ISSNs from Crossref, `;`-separated (`-` = Crossref has none).
+pub const ISSN: &str = "issn";
+pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE, ISSN];
 
 pub const PGS_MIN_POINTS: f64 = 10.0;
 pub const GS_MIN_POINTS: f64 = 20.0;
@@ -187,6 +191,9 @@ pub struct WorkMeta {
     pub year: Option<i32>,
     pub url: String,
     pub citations: Option<u64>,
+    /// The journal's ISSNs (`1234-5679`), checked.
+    #[serde(default)]
+    pub issn: Vec<String>,
 }
 
 fn first_str(v: &Value) -> String {
@@ -225,7 +232,16 @@ pub fn parse_crossref(body: &Value) -> Option<WorkMeta> {
         m.get(*k)?.get("date-parts")?.as_array()?.first()?.as_array()?.first()?.as_i64().map(|y| y as i32)
     });
     let citations = m.get("is-referenced-by-count").and_then(Value::as_u64);
-    Some(WorkMeta { url: format!("https://doi.org/{doi}"), doi, title, authors, venue, year, citations })
+    let mut issn: Vec<String> = Vec::new();
+    let typed = m.get("issn-type").and_then(Value::as_array).into_iter().flatten().filter_map(|t| t.get("value").and_then(Value::as_str));
+    for raw in m.get("ISSN").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str).chain(typed) {
+        if let Some(i) = crate::journals::normalize_issn(raw) {
+            if !issn.contains(&i) {
+                issn.push(i);
+            }
+        }
+    }
+    Some(WorkMeta { url: format!("https://doi.org/{doi}"), doi, title, authors, venue, year, citations, issn })
 }
 
 /// `GET https://api.openalex.org/works/doi:{doi}` → citation count.
@@ -263,6 +279,26 @@ pub struct PaperPoints {
     pub authors: u32,
     pub role: AuthorRole,
     pub personal: f64,
+    /// Where `points` comes from (typed, the council's list, an estimate).
+    pub points_source: PointsSource,
+    /// What the automatic value is based on (empty when typed).
+    pub points_note: String,
+    /// The quartile was read from SJR, not typed.
+    pub quartile_auto: bool,
+    /// The role was worked out from the author list, not chosen.
+    pub role_auto: bool,
+    /// The owner chose the role (`role_auto` false and this false: default "equal").
+    pub role_typed: bool,
+}
+
+/// The owner's role from the author list (Crossref order: first author first), or
+/// None when the owner's name is unknown or not in the list.
+pub fn auto_role(owner: &str, authors: &[String]) -> Option<AuthorRole> {
+    if authors.len() == 1 && crate::journals::same_person(owner, &authors[0]) {
+        return Some(AuthorRole::Sole);
+    }
+    let at = authors.iter().position(|a| crate::journals::same_person(owner, a))?;
+    Some(if at == 0 { AuthorRole::Main } else { AuthorRole::Co })
 }
 
 #[derive(Clone, Debug, Default, Serialize)]
@@ -278,6 +314,14 @@ pub struct Summary {
     /// 0..100 (capped).
     pub progress_percent: f64,
     pub enough: bool,
+    /// Advised total before applying: `RECOMMEND_FACTOR` × the minimum, because
+    /// the council marks each paper inside its range, often below the top.
+    pub recommended_points: f64,
+    pub recommended_enough: bool,
+    /// Part of `points_total` that is estimated from Scopus quartiles.
+    pub estimated_points: f64,
+    /// Papers whose points were filled automatically (list or estimate).
+    pub auto_papers: usize,
 }
 
 pub fn summarize(papers: &[PaperPoints], with_doi: usize, target: Target) -> Summary {
@@ -285,6 +329,8 @@ pub fn summarize(papers: &[PaperPoints], with_doi: usize, target: Target) -> Sum
     let total = (total * 100.0).round() / 100.0;
     let cites: Vec<u64> = papers.iter().map(|p| p.citations).collect();
     let min = target.min_points();
+    let recommended = min * RECOMMEND_FACTOR;
+    let estimated: f64 = papers.iter().filter(|p| p.points_source == PointsSource::Estimate).map(|p| p.personal).sum();
     Summary {
         publications: papers.len(),
         with_doi,
@@ -296,6 +342,10 @@ pub fn summarize(papers: &[PaperPoints], with_doi: usize, target: Target) -> Sum
         target_points: min,
         progress_percent: (total / min * 100.0).min(100.0).max(0.0),
         enough: total >= min,
+        recommended_points: recommended,
+        recommended_enough: total >= recommended,
+        estimated_points: (estimated * 100.0).round() / 100.0,
+        auto_papers: papers.iter().filter(|p| matches!(p.points_source, PointsSource::Hdgsnn | PointsSource::Estimate)).count(),
     }
 }
 

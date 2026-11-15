@@ -1,7 +1,7 @@
 # Scholar profile: publications by DOI/ORCID, HĐGSNN points (private), CV export.
 key: site.scholar
 label: Hồ sơ khoa học
-description: Nhập công bố theo DOI/ORCID, chỉ số trích dẫn, điểm HĐGSNN tự đánh giá (riêng tư) và xuất lý lịch khoa học.
+description: Nhập công bố theo DOI/ORCID, chỉ số trích dẫn, điểm HĐGSNN tự đánh giá (riêng tư, tự tính theo danh mục HĐGSNN và hạng Scopus) và xuất lý lịch khoa học.
 workspace: overview
 default_tier: basic
 default_enabled: true
@@ -21,4 +21,4 @@ tools:
   - name: set_publication_scholar
 prompt: |
   - Hồ sơ khoa học: get_scholar_profile trước. Người dùng đưa DOI (hoặc link doi.org) → import_publications (nháp; hỏi có công khai không). Có ORCID → set_scholar_settings orcid rồi sync_orcid; bài mới ở trạng thái chờ duyệt, đọc tên từng bài cho chủ site và chỉ set_publication_scholar reviewed=true khi họ xác nhận. Công bố là mục của tab Nghiên cứu: không chép tay vào khối cards hay timeline.
-  - Điểm HĐGSNN là tự đánh giá và riêng tư: hạng Q1–Q4 và điểm của tạp chí (theo danh mục HĐGS ngành) phải do chủ site đưa, không đoán; vai trò tác giả (sole/main/co/equal) quyết định cách chia điểm. Chỉ bật public_badge khi chủ site yêu cầu. Lý lịch khoa học: điền cv trong set_scholar_settings rồi đưa link /overview/cv (in PDF) và /overview/cv.doc (Word).
+  - Điểm HĐGSNN là tự đánh giá và riêng tư. Bài nào chủ site chưa nhập điểm thì site tự tính: tạp chí có trong danh mục HĐGSNN của ngành (theo ISSN, đúng năm đăng) lấy điểm tối đa của danh mục; tạp chí Scopus khác thì ước tính theo hạng SJR và khung của ngành (ghi rõ "ước tính"); vai trò tác giả tự suy từ danh sách tác giả khi biết họ tên chủ site (cv.full_name). Ngành lấy từ field trong set_scholar_settings, nên hỏi nếu còn trống. Điểm, hạng hay vai trò chủ site đưa thì ghi bằng set_publication_scholar và luôn thắng giá trị tự tính; reset để trả về tự tính. Khi nói về tổng điểm, khuyên chỉ nộp hồ sơ khi đạt khoảng 1,5 lần điểm chuẩn (recommended_points), vì hội đồng chấm trong khung và thường dưới mức tối đa. Chỉ bật public_badge khi chủ site yêu cầu. Lý lịch khoa học: điền cv trong set_scholar_settings rồi đưa link /overview/cv (in PDF) và /overview/cv.doc (Word).
