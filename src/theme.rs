@@ -54,25 +54,9 @@ fn d_weight() -> String {
     "regular".into()
 }
 
-pub const FONTS: &[&str] = &[
-    "Be Vietnam Pro",
-    "Inter",
-    "Fraunces",
-    "Playfair Display",
-    "Merriweather",
-    "Lora",
-    "Nunito",
-    "Quicksand",
-    "Montserrat",
-    "Roboto Slab",
-    "Noto Serif",
-    "Source Sans 3",
-    "Space Grotesk",
-    "IBM Plex Mono",
-    "Baloo 2",
-    "Archivo",
-    "Noto Serif Display",
-];
+/// Serif families only: every one has full Vietnamese (upright and true italic).
+/// A site uses one family for headings and text alike.
+pub const FONTS: &[&str] = &["Lora", "Source Serif 4", "Literata", "Alegreya"];
 pub const RADII: &[&str] = &["none", "sm", "md", "lg", "pill"];
 /// Menu layouts. Each one follows the menu of a real site (named in the theme YAML that uses it).
 pub const HEADER_STYLES: &[&str] = &[
@@ -200,8 +184,8 @@ impl Default for Theme {
                 text: "#1a2236".into(),
                 muted: "#5f6678".into(),
             },
-            font_heading: "Fraunces".into(),
-            font_body: "Be Vietnam Pro".into(),
+            font_heading: "Lora".into(),
+            font_body: "Lora".into(),
             radius: "lg".into(),
             header_style: "simple".into(),
             button_style: "solid".into(),

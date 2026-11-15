@@ -4,9 +4,9 @@ use serde_json::json;
 #[test]
 fn patch_colors_and_fonts() {
     let mut t = Theme::default();
-    let ch = apply_patch(&mut t, &json!({"colors": {"primary": "#123456"}, "font_heading": "inter"})).unwrap();
+    let ch = apply_patch(&mut t, &json!({"colors": {"primary": "#123456"}, "font_heading": "literata"})).unwrap();
     assert_eq!(t.colors.primary, "#123456");
-    assert_eq!(t.font_heading, "Inter");
+    assert_eq!(t.font_heading, "Literata");
     assert_eq!(ch.len(), 2);
 }
 
@@ -28,10 +28,10 @@ fn named_colours_work() {
 
 #[test]
 fn a_preset_comes_from_the_catalog_lookup() {
-    let ocean = Theme { font_body: "Inter".into(), ..Theme::default() };
+    let ocean = Theme { font_body: "Alegreya".into(), ..Theme::default() };
     let mut t = Theme::default();
     apply_patch_with(&mut t, &json!({"preset": "ocean"}), &|k| (k == "ocean").then(|| ocean.clone())).unwrap();
-    assert_eq!(t.font_body, "Inter");
+    assert_eq!(t.font_body, "Alegreya");
     assert!(apply_patch(&mut t, &json!({"preset": "ocean"})).is_err(), "no catalog, no preset");
 }
 

@@ -174,7 +174,6 @@ const FILES: &[(&str, &str)] = &[
     ("10-collections.yaml", include_str!("../ui/features/10-collections.yaml")),
     ("11-self_paced.yaml", include_str!("../ui/features/11-self_paced.yaml")),
     ("12-assets.yaml", include_str!("../ui/features/12-assets.yaml")),
-    ("13-personality.yaml", include_str!("../ui/features/13-personality.yaml")),
     ("14-fortune.yaml", include_str!("../ui/features/14-fortune.yaml")),
     ("15-associates.yaml", include_str!("../ui/features/15-associates.yaml")),
     ("16-scholar.yaml", include_str!("../ui/features/16-scholar.yaml")),

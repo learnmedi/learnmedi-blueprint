@@ -1,6 +1,6 @@
 key: site.fortune
-label: Ống xăm mỗi ngày
-description: Nút xin xăm trên mọi trang công khai; quẻ viết theo tính cách của chủ site.
+label: Lịch bloc mỗi ngày
+description: Cuốn lịch xé nhỏ ở góc mọi trang công khai; xé tờ hôm nay để đọc một câu của bộ chủ site chọn (Truyện Kiều, Kinh Dịch, Thích Nhất Hạnh).
 workspace: settings
 default_tier: basic
 default_enabled: true
@@ -13,7 +13,6 @@ routes:
   staff: []
 reserved_slugs: []
 tools:
-  - name: get_fortune_brief
-  - name: set_fortune_quotes
+  - name: set_fortune
 prompt: |
-  - Ống xăm mỗi ngày: get_fortune_brief rồi set_fortune_quotes, làm đúng brief. Khi "quotes_stale" là true (tiểu sử đổi, hoặc bộ cũ viết theo cách cũ), mời người dùng viết lại bộ quẻ.
+  - Lịch bloc mỗi ngày: cuốn lịch xé ở góc site; mỗi khách xé một tờ mỗi ngày và đọc một câu của bộ chủ site chọn. Bật/tắt hoặc đổi bộ (kieu = Truyện Kiều, kinh_dich = Kinh Dịch, thich_nhat_hanh = Thích Nhất Hạnh) → set_fortune. Câu do hệ thống chọn, không viết câu.

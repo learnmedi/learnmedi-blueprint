@@ -1,118 +1,76 @@
 use crate::fortune::*;
 
-fn q(text: &str, kind: &str) -> Quote {
-    let rank = ["thuong", "trung", "ha"][text.len() % 3];
-    Quote { text: text.into(), kind: kind.into(), rank: rank.into() }
+fn item(deck: &str, id: &str) -> DeckItem {
+    DeckItem {
+        deck: deck.into(),
+        id: id.into(),
+        text: "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.".into(),
+        original: String::new(),
+        author: "Nguyễn Du".into(),
+        work: "Truyện Kiều".into(),
+        source_url: "https://vi.wikisource.org/wiki/Truy%E1%BB%87n_Ki%E1%BB%81u".into(),
+        lang: "vi".into(),
+    }
 }
 
-/// A valid full set: the minimum of each type, the rest `normal`.
-fn full_set() -> Vec<Quote> {
-    let mut out = Vec::new();
-    for (key, _, _, min) in DAY_TYPES {
-        for i in 0..*min {
-            out.push(q(&format!("Câu {key} số {i}"), key));
-        }
-    }
-    let mut i = 0;
-    while out.len() < QUOTES_TOTAL {
-        out.push(q(&format!("Câu thêm {i}"), "normal"));
-        i += 1;
-    }
-    out
+fn set() -> FortuneSet {
+    FortuneSet { minute: "2026-11-15T07:30".into(), items: vec![item("kieu", "kieu-0001"), item("kinh_dich", "kd-01-1"), item("thich_nhat_hanh", "tnh-001")] }
 }
 
 #[test]
-fn a_full_set_passes_and_bad_ones_are_named() {
-    assert_eq!(validate_quotes(&full_set(), &["Trần Hoàng Yến"]).unwrap().len(), QUOTES_TOTAL);
-    let mut short = full_set();
-    short.pop();
-    assert!(validate_quotes(&short, &[]).unwrap_err().contains("đúng 120"));
-    let mut bad = full_set();
-    bad[0] = q("Đi chơi đi", "lucky");
-    assert!(validate_quotes(&bad, &[]).unwrap_err().starts_with("Câu 1"));
-    let mut unranked = full_set();
-    unranked[2].rank = String::new();
-    assert!(validate_quotes(&unranked, &[]).unwrap_err().contains("rank"));
-    let mut one_rank = full_set();
-    one_rank.iter_mut().for_each(|x| x.rank = "trung".into());
-    assert!(validate_quotes(&one_rank, &[]).unwrap_err().contains("hạng"));
-    let mut link = full_set();
-    link[3] = q("Xem https://x.vn", "normal");
-    assert!(validate_quotes(&link, &[]).is_err());
+fn a_set_passes_and_bad_ones_are_named() {
+    assert!(validate_set(&set()).is_ok());
+    let mut s = set();
+    s.minute = "2026-11-15 07:30".into();
+    assert!(validate_set(&s).unwrap_err().contains("minute"));
+    let mut s = set();
+    s.items.clear();
+    assert!(validate_set(&s).is_err());
+    let mut s = set();
+    s.items[0].deck = "tarot".into();
+    assert!(validate_set(&s).unwrap_err().contains("tarot"));
+    let mut s = set();
+    s.items[1].deck = "kieu".into();
+    assert!(validate_set(&s).unwrap_err().contains("lặp"));
+    let mut s = set();
+    s.items[0].text = "x".repeat(TEXT_MAX_CHARS + 1);
+    assert!(validate_set(&s).is_err());
+    let mut s = set();
+    s.items[0].source_url = "javascript:alert(1)".into();
+    assert!(validate_set(&s).unwrap_err().contains("https"));
+    let mut s = set();
+    s.items[0].source_url = "https://x.vn/\"><script>".into();
+    assert!(validate_set(&s).is_err());
+    let mut s = set();
+    s.items[0].source_url = String::new();
+    assert!(validate_set(&s).is_ok(), "a source link is optional");
 }
 
 #[test]
-fn text_is_only_the_reading() {
-    for bad in ["Quẻ số 12: Trời yên biển lặng.", "Quẻ 12. Trời yên biển lặng.", "Quẻ Thượng. Trời yên biển lặng.", "Stick no. 3: calm seas.", "Trời yên biển lặng; tin vui sắp tới."] {
-        let mut set = full_set();
-        set[0].text = bad.into();
-        assert!(validate_quotes(&set, &[]).unwrap_err().starts_with("Câu 1"), "{bad}");
-    }
-    let mut ok = full_set();
-    ok[0].text = "Mưa dầm thấm lâu. Chuyện học hành ít hôm nữa sẽ thấy rõ kết quả, quẻ này khuyên cứ làm tiếp.".into();
-    assert!(validate_quotes(&ok, &[]).is_ok());
-    let with_n: Quote = serde_json::from_str(r#"{"n":12,"text":"a","type":"normal","rank":"ha"}"#).unwrap();
-    assert_eq!(with_n.text, "a");
-    let b = brief("", "vi");
-    assert!(b.get("what_a_slip_is").is_none() && b["bad_examples"][0]["why"].is_string());
-    assert!(DAY_TYPES.iter().all(|t| !t.2.contains(';')));
+fn the_site_deck_is_picked_and_a_missing_one_falls_back() {
+    let s = set();
+    assert_eq!(s.item_for("kinh_dich").unwrap().id, "kd-01-1");
+    let only_kieu = FortuneSet { minute: s.minute.clone(), items: vec![item("kieu", "kieu-0002")] };
+    assert_eq!(only_kieu.item_for("thich_nhat_hanh").unwrap().id, "kieu-0002");
 }
 
 #[test]
-fn quotes_never_speak_as_the_owner() {
-    let mut first = full_set();
-    first[5] = q("Hôm nay tôi chúc bạn vui", "normal");
-    assert!(validate_quotes(&first, &[]).unwrap_err().contains("ngôi thứ nhất"));
-    let mut named = full_set();
-    named[5] = q("Như cô Hoàng Yến hay nói, hãy kiên nhẫn", "normal");
-    assert!(validate_quotes(&named, &["Trần Hoàng Yến", "Hoàng Yến"]).unwrap_err().contains("tên"));
+fn settings_default_to_kieu_and_on() {
+    let f: Fortune = serde_json::from_str("{}").unwrap();
+    assert_eq!(f, Fortune { enabled: true, deck: DEFAULT_DECK.into() });
+    assert!(is_deck(DEFAULT_DECK) && is_deck("kinh_dich") && is_deck("thich_nhat_hanh") && !is_deck("xam"));
+    assert_eq!(deck_label("kieu"), Some("Truyện Kiều"));
 }
 
 #[test]
-fn every_day_gets_a_quote_of_its_main_type() {
-    let quotes = validate_quotes(&full_set(), &[]).unwrap();
-    // Day 5 is Nguyệt Kỵ even when the star is good: never a hoàng đạo quote.
-    let day5 = lunar_day_types(5, true);
-    assert_eq!(main_type(&day5), "nguyet_ky");
-    for v in ["a", "b", "c", "d", "e"] {
-        assert_eq!(pick(&quotes, &day5, "s", "2026-11-23", v).unwrap().kind, "nguyet_ky");
-    }
-    assert_eq!(main_type(&lunar_day_types(7, true)), "tam_nuong");
-    assert_eq!(main_type(&lunar_day_types(9, false)), "hac_dao");
-    assert_eq!(main_type(&lunar_day_types(9, true)), "hoang_dao");
-    // Every lunar day, good or bad star, finds a quote.
-    for d in 1..=30 {
-        for good in [true, false] {
-            assert!(pick(&quotes, &lunar_day_types(d, good), "s", "x", "v").is_some());
-        }
-    }
-    // Same visitor, same day: same quote.
-    let t = lunar_day_types(9, true);
-    assert_eq!(pick(&quotes, &t, "s", "2026-11-12", "u"), pick(&quotes, &t, "s", "2026-11-12", "u"));
-    // Only normal quotes: still one, on any day.
-    let normal: Vec<Quote> = quotes.iter().filter(|x| x.kind == "normal").cloned().collect();
-    assert_eq!(pick(&normal, &day5, "s", "x", "v").unwrap().kind, "normal");
-}
-
-#[test]
-fn days_bios_and_switches_are_checked() {
+fn almanac_days_are_checked() {
     let mut day = AlmanacDay { date: "2026-11-12".into(), lunar_day: 4, lunar_month: 10, lunar_year: 2026, leap: false, year_can_chi: "Bính Ngọ".into(), day_can_chi: "Giáp Tý".into(), star: "Kim Quỹ".into(), star_good: true, truc: "Thành".into(), good_hours: vec!["Tý (23–1h)".into()], types: lunar_day_types(4, true) };
     assert!(validate_day(&day).is_ok());
+    assert_eq!(day.lunar_short(false), "4/10");
+    day.leap = true;
+    assert_eq!(day.lunar_short(false), "4/10 nhuận");
     day.types = vec!["lucky".into()];
     assert!(validate_day(&day).is_err());
-    assert!(validate_bio(&"chữ ".repeat(150)).is_ok());
-    assert!(validate_bio(&"chữ ".repeat(151)).is_err());
-    let mut p = Personality::default();
-    assert!(p.fortune_enabled, "on by default");
-    assert!(serde_json::from_str::<Personality>("{}").unwrap().fortune_enabled, "old sites: on");
-    assert!(!p.envelope_on("vi"), "no quotes = no envelope");
-    p.quotes.insert("vi".into(), full_set());
-    p.quotes_bio_hash = bio_hash(&p.bio);
-    assert!(p.envelope_on("vi") && !p.quotes_stale());
-    p.bio = "đổi".into();
-    assert!(p.quotes_stale());
-    // Sets saved before fortune sticks (old hash, no rank) read as stale.
-    p.quotes_bio_hash = format!("{:016x}", 0u64);
-    assert!(p.quotes_stale());
-    assert_eq!(serde_json::from_str::<Quote>(r#"{"text":"a","type":"normal"}"#).unwrap().rank, "");
+    assert_eq!(lunar_day_types(5, true), vec!["nguyet_ky", "hoang_dao"]);
+    assert_eq!(lunar_day_types(7, false), vec!["tam_nuong", "hac_dao"]);
 }

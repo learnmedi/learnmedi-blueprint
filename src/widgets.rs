@@ -20,9 +20,9 @@ pub const NEWSLETTER_PROMPT: &str = "newsletter_prompt";
 pub const WIDGETS: &[WidgetDef] = &[
     WidgetDef {
         key: FORTUNE_BUTTON,
-        label: "Nút xin xăm",
-        description: "Ống xăm nhỏ ở góc mọi trang công khai; mỗi ngày một quẻ theo tính cách của chủ site.",
-        owner_switch: "Cài đặt → Tính cách → Ống xăm mỗi ngày",
+        label: "Lịch bloc",
+        description: "Cuốn lịch xé nhỏ ở góc mọi trang công khai; mỗi ngày xé một tờ để đọc một câu (Truyện Kiều, Kinh Dịch hoặc Thích Nhất Hạnh).",
+        owner_switch: "Cài đặt → Lịch bloc",
     },
     WidgetDef {
         key: NEWSLETTER_PROMPT,

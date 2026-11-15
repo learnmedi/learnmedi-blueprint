@@ -22,12 +22,12 @@ fn existing_plan_keys_keep_their_strings() {
     for key in [
         plans::WEBSITE, plans::AI_ASSISTANT, plans::CUSTOM_DOMAIN, plans::BLOG, plans::NEWSLETTER, plans::COLLECTIONS,
         plans::COMMUNITY, plans::PRODUCTS, plans::SELF_PACED, plans::SURVEYS, plans::TEACHING,
-        plans::ASSETS, plans::PERSONALITY, plans::FORTUNE, plans::ASSOCIATES,
+        plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES,
     ] {
         assert!(plans::feature_def(key).is_some(), "{key}");
     }
     // The new keys are always on, so tiers do not change.
-    for key in [plans::WEBSITE, plans::ASSETS, plans::PERSONALITY, plans::FORTUNE, plans::ASSOCIATES] {
+    for key in [plans::WEBSITE, plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES] {
         assert!(plans::is_locked(key), "{key}");
     }
     assert!(!plans::is_locked(plans::BLOG));
@@ -97,7 +97,8 @@ fn tool_gates() {
     assert_eq!(tool_gate("save_product"), Some(&[plans::PRODUCTS][..]));
     assert_eq!(tool_gate("share_quiz"), Some(&[plans::TEACHING][..]));
     assert_eq!(tool_gate("create_quiz"), Some(&[plans::TEACHING, plans::SELF_PACED][..]));
-    assert_eq!(tool_gate("set_personality"), Some(&[plans::PERSONALITY][..]));
+    assert_eq!(tool_gate("set_fortune"), Some(&[plans::FORTUNE][..]));
+    assert_eq!(tool_gate("set_personality"), None);
     assert_eq!(tool_gate("add_block"), None);
     assert_eq!(tool_gate("nope"), None);
 }
@@ -237,5 +238,5 @@ fn ai_workspaces_are_known() {
     assert_eq!(tool_workspaces("create_quiz"), &["teaching", "content"]);
     assert_eq!(tool_workspaces("share_quiz"), &["teaching"]);
     assert_eq!(tool_workspaces("save_product"), &["content"]);
-    assert_eq!(tool_workspaces("set_personality"), &["studio"]);
+    assert_eq!(tool_workspaces("set_fortune"), &["studio"]);
 }

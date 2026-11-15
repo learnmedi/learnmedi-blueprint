@@ -40,7 +40,6 @@ pub const SELF_PACED: &str = "content.self_paced";
 pub const SURVEYS: &str = "research.surveys";
 pub const TEACHING: &str = "teaching.classes";
 pub const ASSETS: &str = "site.assets";
-pub const PERSONALITY: &str = "site.personality";
 pub const FORTUNE: &str = "site.fortune";
 pub const ASSOCIATES: &str = "site.associates";
 pub const SCHOLAR: &str = "site.scholar";

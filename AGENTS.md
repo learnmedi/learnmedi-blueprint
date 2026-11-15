@@ -48,7 +48,7 @@ changing a feature, a tab kind, a block, a widget, an AI tool or AI prompt text.
 Detailed step-by-step plan (files, schema, tool map, tests, migration, release): `learnmedi_blueprint/docs/feature-architecture-plan.md`. Start any session on this work by reading it.
 
 ### One registry for every feature
-Every feature (Blog, Products, Community, Surveys, Associates, Fortune, Personality,
+Every feature (Blog, Products, Community, Surveys, Associates, Fortune,
 Teaching, Newsletter, Assets, …) and the **core** (pages, blocks, theme, publish, undo)
 is declared once in `learnmedi_blueprint/ui/features/*.yaml`. It extends the existing
 `plans::CATALOG` (`FeatureDef`); it does not replace it. A feature declares:
@@ -56,12 +56,12 @@ is declared once in `learnmedi_blueprint/ui/features/*.yaml`. It extends the exi
 - where it appears to visitors, in three surface kinds (a feature may have several, or none):
   - **Page** — a tab kind with exactly one core block (`tab:` core block, allowed block groups, default slug)
   - **Block** — blocks placed on any page that read the feature's data (`blocks:`)
-  - **Widget** — site-wide element on every public page, switched on by the owner (`widgets:`; e.g. the fortune-stick button, the newsletter prompt)
+  - **Widget** — site-wide element on every public page, switched on by the owner (`widgets:`; e.g. the tear-off calendar (lịch bloc), the newsletter prompt)
 - where it appears to staff (`workspace` / owner overview sections) and its `routes` (public and staff)
 - its AI `tools` (each marked `dangerous: true|false`) and its AI `prompt` text
 - its reserved slugs
 
-Features visitors never see (Personality, Question bank, Classes, …) are features too:
+Features visitors never see (Question bank, Classes, …) are features too:
 they declare routes, tools and prompt, and no Page/Block/Widget.
 
 ### All AI prompt text lives in blueprint
