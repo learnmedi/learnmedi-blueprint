@@ -34,7 +34,9 @@ pub const REVIEW: &str = "review";
 pub const SOURCE: &str = "source";
 /// The journal's ISSNs from Crossref, `;`-separated (`-` = Crossref has none).
 pub const ISSN: &str = "issn";
-pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE, ISSN];
+/// The full author list from Crossref (`; `), kept when the item shows a short one ("X et al.").
+pub const AUTHOR_LIST: &str = "author_list";
+pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE, ISSN, AUTHOR_LIST];
 
 pub const PGS_MIN_POINTS: f64 = 10.0;
 pub const GS_MIN_POINTS: f64 = 20.0;
