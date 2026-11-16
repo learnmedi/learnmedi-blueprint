@@ -36,7 +36,16 @@ pub const SOURCE: &str = "source";
 pub const ISSN: &str = "issn";
 /// The full author list from Crossref (`; `), kept when the item shows a short one ("X et al.").
 pub const AUTHOR_LIST: &str = "author_list";
-pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE, ISSN, AUTHOR_LIST];
+/// The journal's row on the field's list, JSON `journals::JournalPoints` (`-` = not listed).
+pub const JOURNAL_LIST: &str = "journal_list";
+/// The council key `journal_list` was looked up for (another field → look up again).
+pub const JOURNAL_FIELD: &str = "journal_field";
+/// The journal's Scopus quartiles, `journals::sjr_to_text` (`-` = not in Scopus).
+pub const SJR: &str = "sjr";
+/// When the worker last looked this publication up (ms).
+pub const AUTO_CHECKED: &str = "auto_checked";
+pub const SCHOLAR_KEYS: &[&str] = &[DOI, CITATIONS, QUARTILE, HDGS_POINTS, AUTHOR_ROLE, AUTHOR_COUNT, REVIEW, SOURCE, ISSN, AUTHOR_LIST,
+    JOURNAL_LIST, JOURNAL_FIELD, SJR, AUTO_CHECKED];
 
 pub const PGS_MIN_POINTS: f64 = 10.0;
 pub const GS_MIN_POINTS: f64 = 20.0;

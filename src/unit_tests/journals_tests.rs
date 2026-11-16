@@ -123,3 +123,16 @@ fn summary_recommends_one_and_a_half_times_the_minimum() {
     assert_eq!((s.points_total, s.enough, s.recommended_points, s.recommended_enough), (13.0, true, 15.0, false));
     assert_eq!((s.estimated_points, s.auto_papers), (4.0, 1));
 }
+
+#[test]
+fn worker_answers_are_checked() {
+    assert_eq!(sjr_from_text(&sjr_to_text(&[(2022, 1), (2023, 2)])), vec![(2022, 1), (2023, 2)]);
+    assert_eq!(sjr_from_text("-"), vec![]);
+    assert_eq!(sjr_from_text("2023=9;x=1;2024=2"), vec![(2024, 2)]);
+    let ok = ItemFound { id: "a".into(), checked: true, issn: vec!["2071-1050".into()], sjr: vec![(2023, 2)], ..Default::default() };
+    assert!(ok.validate().is_ok());
+    let bad = ItemFound { issn: vec!["2071-1051".into()], ..ok.clone() };
+    assert!(bad.validate().is_err());
+    let r: ScoringResult = serde_json::from_value(json!({"items": [{"id": "a", "checked": false}]})).unwrap();
+    assert!(!r.more && r.error.is_none() && !r.items[0].checked);
+}

@@ -285,3 +285,98 @@ pub fn same_person(a: &str, b: &str) -> bool {
     let (x, y) = (words(a), words(b));
     !x.is_empty() && x.len() >= 2 && x == y
 }
+
+// ───────────────────────────── Scoring jobs ─────────────────────────────────
+//
+// The site queues a job ("Tự tính"); the worker claims it, looks the journals up
+// (Crossref for missing ISSNs, its own copy of the lists above) and sends back
+// what it found per publication. The site keeps that on the publication and the
+// rules above turn it into points when the page is read, so a changed author
+// role or target needs no new job; a changed field does (the list is per field).
+
+/// One publication as the worker needs it.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct JobItem {
+    pub id: String,
+    /// The DOI field, else the DOI read from a doi.org link.
+    pub doi: String,
+    pub year: Option<i32>,
+    /// ISSNs already known (empty: ask Crossref).
+    pub issn: Vec<String>,
+    /// The author line as shown (may be "X et al.").
+    pub authors: String,
+}
+
+/// What the worker is asked to do.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct ScoringJob {
+    pub id: String,
+    pub site_id: String,
+    /// Council key (`kinh_te`), empty when the owner chose none.
+    pub nganh: String,
+    pub items: Vec<JobItem>,
+}
+
+/// What the worker found for one publication.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct ItemFound {
+    pub id: String,
+    /// False when Crossref could not be asked (network): the item is tried again later.
+    pub checked: bool,
+    #[serde(default)]
+    pub issn: Vec<String>,
+    /// Crossref's full author list when longer than the shown one.
+    #[serde(default)]
+    pub authors: Vec<String>,
+    /// The journal's row on the field's list (none: not listed).
+    #[serde(default)]
+    pub listed: Option<JournalPoints>,
+    /// The journal's Scopus quartiles by year (empty: not in Scopus).
+    #[serde(default)]
+    pub sjr: Vec<(i32, u8)>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct ScoringResult {
+    pub items: Vec<ItemFound>,
+    /// Set when the whole job failed (the job is marked failed).
+    #[serde(default)]
+    pub error: Option<String>,
+    /// More parts follow (long lists are sent in parts, so each request stays short).
+    #[serde(default)]
+    pub more: bool,
+}
+
+impl ItemFound {
+    pub fn validate(&self) -> Result<(), String> {
+        if self.id.is_empty() || self.id.len() > 64 {
+            return Err("id".into());
+        }
+        if self.issn.len() > 8 || self.issn.iter().any(|i| normalize_issn(i).as_deref() != Some(i.as_str())) {
+            return Err(format!("{}: ISSN", self.id));
+        }
+        if self.authors.len() > 500 || self.authors.iter().any(|a| a.chars().count() > 200) {
+            return Err(format!("{}: tác giả", self.id));
+        }
+        if let Some(l) = &self.listed {
+            l.validate().map_err(|e| format!("{}: {e}", self.id))?;
+        }
+        if self.sjr.len() > 60 || self.sjr.iter().any(|(y, q)| !(1990..=2100).contains(y) || !(1..=4).contains(q)) {
+            return Err(format!("{}: hạng", self.id));
+        }
+        Ok(())
+    }
+}
+
+/// `2019=1;2020=2` ↔ `[(2019, 1), (2020, 2)]` (how a publication keeps its quartiles).
+pub fn sjr_to_text(q: &[(i32, u8)]) -> String {
+    q.iter().map(|(y, v)| format!("{y}={v}")).collect::<Vec<_>>().join(";")
+}
+
+pub fn sjr_from_text(s: &str) -> Vec<(i32, u8)> {
+    s.split(';').filter_map(|p| {
+        let (y, v) = p.split_once('=')?;
+        let (y, v): (i32, u8) = (y.trim().parse().ok()?, v.trim().parse().ok()?);
+        ((1990..=2100).contains(&y) && (1..=4).contains(&v)).then_some((y, v))
+    }).collect()
+}

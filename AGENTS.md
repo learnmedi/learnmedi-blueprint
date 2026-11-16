@@ -147,14 +147,18 @@ Steps 1–6 are built (blueprint v0.4.0, site v0.2.0, engine v0.2.0); not yet re
    `/overview/cv.doc` (Word). Needs api.crossref.org, api.openalex.org, pub.orcid.org reachable
    from the site. ORCID sync is on demand (no schedule yet).
 7. Automatic HĐGSNN points (blueprint `journals`, built 2026-11-16): a publication whose points, quartile or
-   role the owner left empty gets them filled at read time — the field council's list (`scholar_journals`, by
-   field + ISSN + publication year, QĐ 26/QĐ-HĐGSNN 2025) first, else an estimate from the Scopus quartile of
-   that year (`scholar_sjr`, SCImago SJR) on the field's scale, else nothing; the role comes from the author
-   list and the owner's name (`cv.full_name`, site name). Typed values always win; `set_publication_scholar
-   reset=[…]` hands a field back to the automatic value. The worker sends both lists
-   (`/internal/scholar/data`, only when changed) and asks the site to fetch the ISSNs of older publications
-   (`/internal/scholar/backfill`, Crossref). The summary advises applying at 1.5 × the minimum
-   (`recommended_points`). Data and the OCR scripts: `learnmedi_worker/journals/`.
+   role the owner left empty gets them filled at read time from what the worker found for it — the field
+   council's list row (QĐ 26/QĐ-HĐGSNN 2025, by ISSN and publication year) first, else an estimate from the
+   Scopus quartile of that year (SCImago SJR) on the field's scale, else nothing; the role comes from the
+   author list and the owner's name (`cv.full_name`, site name). Typed values always win;
+   `set_publication_scholar reset=[…]` hands a field back. Lookups go through a pull queue (`scholar_jobs`,
+   like printmedi-engine): "Tự tính" (`POST /api/studio/scholar/score`), a new import, an ORCID sync with new
+   works, a changed field, or opening the overview with publications never looked up queue a job; the worker
+   asks `GET /internal/scholar/queue` every minute, claims (`/next-job`), looks up with its own copy of the
+   lists (`learnmedi_worker/journals/`) and Crossref, and posts per-publication results
+   (`/jobs/{id}/result`, parts of ≤500) that the site keeps in the item's `extra` (`issn`, `journal_list`,
+   `journal_field`, `sjr`, `author_list`, `auto_checked`). The site holds no journal tables. The summary
+   advises applying at 1.5 × the minimum (`recommended_points`).
 Still open: page-view counts on the overview (GA4 only for now), per-block AI switches, a scheduled ORCID sync.
 
 **In this repo:** add `ui/features/*.yaml` and the Rust that loads and validates it (like `ui/blocks`); extend `FeatureDef` and `FeatureSetting` (`ai: bool`, default true; switches for each Page kind, Block and Widget); add tab kinds Products, Community, Surveys, Associates with their core blocks; move the prompt text here; add `User.default_site_id: Option<String>`. Tests: every tool belongs to exactly one feature; every declared block, widget and tab kind exists.
