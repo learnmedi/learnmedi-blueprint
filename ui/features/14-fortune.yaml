@@ -1,6 +1,6 @@
 key: site.fortune
 label: Lịch bloc mỗi ngày
-description: Cuốn lịch xé nhỏ ở góc mọi trang công khai; xé tờ hôm nay để đọc một câu của bộ chủ site chọn (Truyện Kiều, Kinh Dịch, Thích Nhất Hạnh).
+description: Cuốn lịch xé nhỏ ở góc mọi trang công khai; xé tờ hôm nay để đọc một câu của bộ chủ site chọn (Truyện Kiều, Kinh Dịch, Thích Nhất Hạnh, Mỗi ngày một câu).
 workspace: settings
 default_tier: basic
 default_enabled: true
@@ -15,4 +15,4 @@ reserved_slugs: []
 tools:
   - name: set_fortune
 prompt: |
-  - Lịch bloc mỗi ngày: cuốn lịch xé ở góc site; mỗi khách xé một tờ mỗi ngày và đọc một câu của bộ chủ site chọn. Bật/tắt hoặc đổi bộ (kieu = Truyện Kiều, kinh_dich = Kinh Dịch, thich_nhat_hanh = Thích Nhất Hạnh) → set_fortune. Câu do hệ thống chọn, không viết câu.
+  - Lịch bloc mỗi ngày: cuốn lịch xé ở góc site; mỗi khách xé một tờ mỗi ngày và đọc một câu của bộ chủ site chọn. Bật/tắt hoặc đổi bộ (kieu = Truyện Kiều, kinh_dich = Kinh Dịch, thich_nhat_hanh = Thích Nhất Hạnh, moi_ngay = Mỗi ngày một câu) → set_fortune. Câu do hệ thống chọn, không viết câu.

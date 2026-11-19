@@ -1,6 +1,6 @@
 //! The daily tear-off calendar (lịch bloc) in the corner of every public page.
 //!
-//! The owner picks one deck (`DECKS`): Truyện Kiều, Kinh Dịch or Thích Nhất Hạnh.
+//! The owner picks one deck (`DECKS`): Truyện Kiều, Kinh Dịch, Thích Nhất Hạnh or Mỗi ngày một câu.
 //! The worker keeps the decks and, every minute, sends the site one `FortuneSet`:
 //! one item of every deck. A visitor who tears today's page gets the item of the
 //! site's deck in the set of that minute; it is theirs for the day (the browser
@@ -16,6 +16,7 @@ pub const DECKS: &[(&str, &str, &str)] = &[
     ("kieu", "Truyện Kiều", "Một cặp lục bát của Nguyễn Du mỗi ngày."),
     ("kinh_dich", "Kinh Dịch", "Một lời quẻ hoặc một hào, kèm âm Hán Việt và lời giải."),
     ("thich_nhat_hanh", "Thích Nhất Hạnh", "Một câu của thiền sư (tiếng Anh)."),
+    ("moi_ngay", "Mỗi ngày một câu", "Một câu nhẹ nhàng mỗi ngày: chữa lành, triết lý, tình thân, động lực."),
 ];
 pub const DEFAULT_DECK: &str = "kieu";
 

@@ -22,7 +22,7 @@ pub const WIDGETS: &[WidgetDef] = &[
     WidgetDef {
         key: FORTUNE_BUTTON,
         label: "Lịch bloc",
-        description: "Cuốn lịch xé nhỏ ở góc mọi trang công khai; mỗi ngày xé một tờ để đọc một câu (Truyện Kiều, Kinh Dịch hoặc Thích Nhất Hạnh).",
+        description: "Cuốn lịch xé nhỏ ở góc mọi trang công khai; mỗi ngày xé một tờ để đọc một câu (Truyện Kiều, Kinh Dịch, Thích Nhất Hạnh hoặc Mỗi ngày một câu).",
         owner_switch: "Cài đặt → Lịch bloc",
     },
     WidgetDef {

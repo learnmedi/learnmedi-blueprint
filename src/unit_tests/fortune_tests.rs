@@ -58,7 +58,7 @@ fn the_site_deck_is_picked_and_a_missing_one_falls_back() {
 fn settings_default_to_kieu_and_on() {
     let f: Fortune = serde_json::from_str("{}").unwrap();
     assert_eq!(f, Fortune { enabled: true, deck: DEFAULT_DECK.into() });
-    assert!(is_deck(DEFAULT_DECK) && is_deck("kinh_dich") && is_deck("thich_nhat_hanh") && !is_deck("xam"));
+    assert!(is_deck(DEFAULT_DECK) && is_deck("kinh_dich") && is_deck("thich_nhat_hanh") && is_deck("moi_ngay") && !is_deck("xam"));
     assert_eq!(deck_label("kieu"), Some("Truyện Kiều"));
 }
 
