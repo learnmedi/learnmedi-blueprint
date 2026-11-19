@@ -1,0 +1,41 @@
+key: booking
+group: presentation
+label: Đặt lịch khám
+description: 'Bệnh nhân tự đặt lịch: chọn dịch vụ, bác sĩ, giờ còn trống rồi để lại tên + SĐT. Lịch lấy từ phần mềm phòng khám (CRM) và hiện ngay trên lịch của phòng khám. Tự theo màu và phông của site. Cần địa chỉ CRM và mã nhúng pk_… lấy ở CRM → Cài đặt → Nhúng (thêm tên miền của site vào mã đó).'
+fields:
+- type: text
+  max: 160
+  emphasis: true
+  key: title
+  label: Tiêu đề
+  default: Đặt lịch khám
+- type: markdown
+  max: 600
+  key: body
+  label: Mô tả
+  default: ''
+- type: url
+  key: crm_url
+  label: Địa chỉ CRM (vd. https://crm.phongkham.vn)
+  default: ''
+- type: text
+  max: 80
+  key: key
+  label: Mã nhúng (pk_…)
+  default: ''
+- type: text
+  max: 80
+  key: doctor
+  label: Mã bác sĩ trong CRM (để trống = mọi bác sĩ)
+  default: ''
+- type: text
+  max: 80
+  key: branch
+  label: Mã chi nhánh trong CRM (để trống = bệnh nhân tự chọn chi nhánh)
+  default: ''
+- type: number
+  min: 420
+  max: 1600
+  key: height
+  label: Chiều cao ban đầu (px, tự co giãn theo nội dung)
+  default: 720

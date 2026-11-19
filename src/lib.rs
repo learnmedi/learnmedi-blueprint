@@ -1,6 +1,7 @@
 //! Shared Learnmedi data types and validation.
 
 pub mod blocks;
+pub mod contact_buttons;
 pub mod decks;
 pub mod scholar;
 pub mod journals;

@@ -68,6 +68,31 @@ pub struct CustomDomain {
 pub struct NavItem {
     pub label: String,
     pub url: String,
+    /// Links in this item's dropdown (one level only; from tabs whose `nav_parent` is this tab).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub children: Vec<NavItem>,
+}
+
+/// What kind of site this is. Only recorded for now: nothing switches on it yet.
+/// Older sites and templates without the field are `scholar`.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SiteType {
+    /// A lecturer's or researcher's site (profile, research, teaching).
+    #[default]
+    Scholar,
+    /// A clinic's or doctor's practice site (services, booking).
+    Clinic,
+}
+
+impl SiteType {
+    pub const ALL: &'static [SiteType] = &[SiteType::Scholar, SiteType::Clinic];
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            SiteType::Scholar => "scholar",
+            SiteType::Clinic => "clinic",
+        }
+    }
 }
 
 /// Registry entry for a teacher site. OWNED BY THE CONTROL SERVICE
@@ -95,6 +120,9 @@ pub struct SiteRecord {
     /// Starter template used when the sites service first seeds content.
     #[serde(default)]
     pub template: String,
+    /// Kind of site (scholar | clinic). Recorded only; no feature depends on it yet.
+    #[serde(default)]
+    pub site_type: SiteType,
     /// Max newsletter emails per day for this site; None = platform default.
     #[serde(default)]
     pub newsletter_daily_limit: Option<i64>,

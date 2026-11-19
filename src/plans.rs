@@ -41,6 +41,7 @@ pub const SURVEYS: &str = "research.surveys";
 pub const TEACHING: &str = "teaching.classes";
 pub const ASSETS: &str = "site.assets";
 pub const FORTUNE: &str = "site.fortune";
+pub const CONTACT_BUTTONS: &str = "site.contact_buttons";
 pub const ASSOCIATES: &str = "site.associates";
 pub const SCHOLAR: &str = "site.scholar";
 pub const DECKS: &str = "site.decks";

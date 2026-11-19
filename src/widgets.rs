@@ -16,6 +16,7 @@ pub struct WidgetDef {
 
 pub const FORTUNE_BUTTON: &str = "fortune_button";
 pub const NEWSLETTER_PROMPT: &str = "newsletter_prompt";
+pub const CONTACT_BUTTONS: &str = "contact_buttons";
 
 pub const WIDGETS: &[WidgetDef] = &[
     WidgetDef {
@@ -29,6 +30,12 @@ pub const WIDGETS: &[WidgetDef] = &[
         label: "Lời mời đăng ký bản tin",
         description: "Ô nhỏ góc dưới phải mời người đã đăng nhập (chưa đăng ký) nhận bản tin.",
         owner_switch: "Có khi site dùng Bản tin email",
+    },
+    WidgetDef {
+        key: CONTACT_BUTTONS,
+        label: "Nút liên hệ nhanh",
+        description: "Nút tròn Zalo, Gọi điện, Messenger ở góc phải dưới mọi trang công khai; bấm là mở chat Zalo, gọi số hoặc nhắn trang Facebook.",
+        owner_switch: "Cài đặt → Nút liên hệ nhanh",
     },
 ];
 

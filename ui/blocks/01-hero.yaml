@@ -1,7 +1,7 @@
 key: hero
 group: presentation
 label: Banner đầu trang
-description: Hiển thị tiêu đề, mô tả, nhãn, nút và tối đa hai ảnh. Bố cục tách đặt chữ và ảnh cạnh nhau; bố
+description: Hiển thị tiêu đề, mô tả, nhãn, nút, tối đa hai ảnh và một video nền. Bố cục tách đặt chữ và ảnh cạnh nhau; bố
   cục căn giữa đặt nội dung ở giữa.
 fields:
 - type: text
@@ -86,6 +86,10 @@ fields:
   max: 200
   key: image_alt
   label: Mô tả ảnh chính
+  default: ''
+- type: video
+  key: video
+  label: Video nền thay cho ảnh chính (mp4/webm đã tải lên hoặc link https tới tệp .mp4/.webm; tự chạy, tắt tiếng, lặp lại; ảnh chính là ảnh chờ và hiện thay video khi người xem tắt chuyển động)
   default: ''
 - type: image
   key: image_secondary

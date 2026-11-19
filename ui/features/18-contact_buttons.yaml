@@ -1,0 +1,18 @@
+key: site.contact_buttons
+label: Nút liên hệ nhanh
+description: Nút tròn Zalo, Gọi điện, Messenger ở góc mọi trang công khai; chủ site chỉ nhập số Zalo, số điện thoại, tên trang Facebook.
+workspace: settings
+default_tier: basic
+default_enabled: true
+locked: true
+surfaces:
+  blocks: []
+  widgets: [contact_buttons]
+routes:
+  public: []
+  staff: []
+reserved_slugs: []
+tools:
+  - name: set_contact_buttons
+prompt: |
+  - Nút liên hệ nhanh: nút tròn Zalo / Gọi / Messenger ở góc phải dưới mọi trang công khai. Bật/tắt, đổi số Zalo, số điện thoại hoặc trang Facebook → set_contact_buttons (gửi phần muốn đổi; chuỗi rỗng = bỏ nút đó). Chỉ nhận số và tên trang, không nhận mã nhúng/HTML/script: người dùng muốn dán mã widget chat thì giải thích là không hỗ trợ và dùng nút này.

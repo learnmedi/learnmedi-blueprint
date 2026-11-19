@@ -146,6 +146,9 @@ pub struct ThemeEntry {
     /// Who it suits (the gallery filters on it); empty = everyone.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub audiences: Vec<Audience>,
+    /// Kind of site the template is made for (scholar | clinic). Recorded only for now.
+    #[serde(default)]
+    pub site_type: crate::models::SiteType,
     #[serde(default)]
     pub featured: bool,
     #[serde(default)]

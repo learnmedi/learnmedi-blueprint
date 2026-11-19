@@ -11,3 +11,4 @@ mod features_tests;
 mod scholar_tests;
 mod decks_tests;
 mod journals_tests;
+mod contact_buttons_tests;

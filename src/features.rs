@@ -178,6 +178,7 @@ const FILES: &[(&str, &str)] = &[
     ("15-associates.yaml", include_str!("../ui/features/15-associates.yaml")),
     ("16-scholar.yaml", include_str!("../ui/features/16-scholar.yaml")),
     ("17-decks.yaml", include_str!("../ui/features/17-decks.yaml")),
+    ("18-contact_buttons.yaml", include_str!("../ui/features/18-contact_buttons.yaml")),
 ];
 
 /// Every feature in file order (routes are matched in this order).

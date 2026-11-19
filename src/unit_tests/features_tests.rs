@@ -22,12 +22,12 @@ fn existing_plan_keys_keep_their_strings() {
     for key in [
         plans::WEBSITE, plans::AI_ASSISTANT, plans::CUSTOM_DOMAIN, plans::BLOG, plans::NEWSLETTER, plans::COLLECTIONS,
         plans::COMMUNITY, plans::PRODUCTS, plans::SELF_PACED, plans::SURVEYS, plans::TEACHING,
-        plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES,
+        plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES, plans::CONTACT_BUTTONS,
     ] {
         assert!(plans::feature_def(key).is_some(), "{key}");
     }
     // The new keys are always on, so tiers do not change.
-    for key in [plans::WEBSITE, plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES] {
+    for key in [plans::WEBSITE, plans::ASSETS, plans::FORTUNE, plans::ASSOCIATES, plans::CONTACT_BUTTONS] {
         assert!(plans::is_locked(key), "{key}");
     }
     assert!(!plans::is_locked(plans::BLOG));
@@ -98,6 +98,7 @@ fn tool_gates() {
     assert_eq!(tool_gate("share_quiz"), Some(&[plans::TEACHING][..]));
     assert_eq!(tool_gate("create_quiz"), Some(&[plans::TEACHING, plans::SELF_PACED][..]));
     assert_eq!(tool_gate("set_fortune"), Some(&[plans::FORTUNE][..]));
+    assert_eq!(tool_gate("set_contact_buttons"), Some(&[plans::CONTACT_BUTTONS][..]));
     assert_eq!(tool_gate("set_personality"), None);
     assert_eq!(tool_gate("add_block"), None);
     assert_eq!(tool_gate("nope"), None);

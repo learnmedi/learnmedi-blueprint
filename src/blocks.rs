@@ -179,6 +179,7 @@ const BLOCK_FILES: &[(&str, &str)] = &[
     ("30-community_index.yaml", include_str!("../ui/blocks/30-community_index.yaml")),
     ("31-survey_index.yaml", include_str!("../ui/blocks/31-survey_index.yaml")),
     ("32-associate_index.yaml", include_str!("../ui/blocks/32-associate_index.yaml")),
+    ("33-booking.yaml", include_str!("../ui/blocks/33-booking.yaml")),
 ];
 
 pub static REGISTRY: std::sync::LazyLock<Vec<BlockType>> = std::sync::LazyLock::new(|| {

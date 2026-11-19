@@ -78,6 +78,7 @@ pub const HEADER_STYLES: &[&str] = &[
     "ledger",    // round badge left, links in two stacked columns of faint caps
     "underline", // small serif name left, spaced grey caps links right, the current one dark and underlined
     "ruled",     // script-size name centred, a row of caps links between two coloured rules
+    "phone-cta", // logo left, links centred, the phone number and a dark pill (the last link) right
     // not a bar
     "stack",     // wordmark top left, links as a small vertical list top right
     "frame",     // spaced caps across the top, small labels in the bottom corners
@@ -147,8 +148,12 @@ pub const FX: &[(&str, &str, &str)] = &[
     ("blinds", "burst", "the opening picture opens like venetian blinds"),
     ("typewriter", "burst", "large statements type themselves with a caret"),
     ("constellation", "burst", "a net of points and lines around the opening picture follows the pointer"),
+    ("plus-marks", "rich", "the dots around the opening picture become small soft-pink plus signs, like a clinic's mark"),
     ("odometer", "burst", "numbers roll into place digit by digit"),
     ("gold-shine", "burst", "a gold-foil sheen passes over titles and award cards"),
+    ("video-window", "burst", "the hero video starts as a rounded window and widens to the full width as it reaches the middle of the screen"),
+    ("glow-hover", "rich", "a soft glow in the accent colour follows the pointer over cards and tiles"),
+    ("bubbles", "burst", "small clear bubbles drift up behind the opening section"),
     // opening animations (one per burst theme, see OPENERS)
     ("op-collage", "burst", "opening: photos from the page fly in around the name, then the page lifts like a sheet"),
     ("op-hex", "burst", "opening: a hexagon draws itself, the name and key numbers fly out, the hexagon closes onto the page"),
@@ -157,9 +162,10 @@ pub const FX: &[(&str, &str, &str)] = &[
     ("op-noise", "burst", "opening: a screen of flickering signs resolves into the name, then splits into slices"),
     ("op-paper", "burst", "opening: coloured paper sheets with the name peel away one after another"),
     ("op-leader", "burst", "opening: a film countdown 3-2-1 with a sweeping hand, a flash, then the name"),
+    ("op-smile", "burst", "opening: a smile line draws itself across the screen, the name rises under it, then the page opens from the middle"),
 ];
 /// Effects that are opening animations; a page runs at most one, and none when the site has its own intro.
-pub const OPENERS: &[&str] = &["curtain", "op-collage", "op-hex", "op-marquee", "op-stars", "op-noise", "op-paper", "op-leader"];
+pub const OPENERS: &[&str] = &["curtain", "op-collage", "op-hex", "op-marquee", "op-stars", "op-noise", "op-paper", "op-leader", "op-smile"];
 pub const FX_MAX: usize = 7;
 /// The shared sets every rich / burst look used before effects were split; a stored look
 /// with no `fx` keeps them.
